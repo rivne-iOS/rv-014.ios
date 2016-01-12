@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>IDESourceControlProjectFavoriteDictionaryKey</key>
+	<false/>
+	<key>IDESourceControlProjectIdentifier</key>
+	<string>B789E8FB-3E05-4E08-96DD-5B9149FA6249</string>
+	<key>IDESourceControlProjectName</key>
+	<string>net</string>
+	<key>IDESourceControlProjectOriginsDictionary</key>
+	<dict>
+		<key>682E71221CA0D4C7945E8AB1CABB9A7A54D3FE78</key>
+		<string>https://github.com/rivne-iOS/rv-014.ios.git</string>
+	</dict>
+	<key>IDESourceControlProjectPath</key>
+	<string>net.xcodeproj</string>
+	<key>IDESourceControlProjectRelativeInstallPathDictionary</key>
+	<dict>
+		<key>682E71221CA0D4C7945E8AB1CABB9A7A54D3FE78</key>
+		<string>../..</string>
+	</dict>
+	<key>IDESourceControlProjectURL</key>
+	<string>https://github.com/rivne-iOS/rv-014.ios.git</string>
+	<key>IDESourceControlProjectVersion</key>
+	<integer>111</integer>
+	<key>IDESourceControlProjectWCCIdentifier</key>
+	<string>682E71221CA0D4C7945E8AB1CABB9A7A54D3FE78</string>
+	<key>IDESourceControlProjectWCConfigurations</key>
+	<array>
+		<dict>
+			<key>IDESourceControlRepositoryExtensionIdentifierKey</key>
+			<string>public.vcs.git</string>
+			<key>IDESourceControlWCCIdentifierKey</key>
+			<string>682E71221CA0D4C7945E8AB1CABB9A7A54D3FE78</string>
+			<key>IDESourceControlWCCName</key>
+			<string>rv-014.ios</string>
+		</dict>
+	</array>
+</dict>
+</plist>

@@ -18,23 +18,6 @@
                         <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                         <subviews>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="sdf-bJ-hWM">
-                                <rect key="frame" x="301" y="478" width="263" height="85"/>
-                                <color key="backgroundColor" red="1" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
-                                <constraints>
-                                    <constraint firstAttribute="width" secondItem="sdf-bJ-hWM" secondAttribute="height" multiplier="123:40" id="lQW-ph-4hV"/>
-                                </constraints>
-                                <state key="normal" title="Sing up">
-                                    <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                                    <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
-                                </state>
-                                <variation key="heightClass=compact" misplaced="YES">
-                                    <rect key="frame" x="301" y="371" width="263" height="85"/>
-                                </variation>
-                                <connections>
-                                    <segue destination="Aey-vS-ATN" kind="show" identifier="fromLogInToSingUp" id="cy4-6X-MQg"/>
-                                </connections>
-                            </button>
                             <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" text="admin" borderStyle="roundedRect" textAlignment="center" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="nfW-Nw-e4d">
                                 <rect key="frame" x="36" y="428" width="528" height="30"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="18"/>
@@ -65,7 +48,7 @@
                             </imageView>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Bh4-qj-63C">
                                 <rect key="frame" x="36" y="478" width="263" height="85"/>
-                                <color key="backgroundColor" red="1" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                                <color key="backgroundColor" red="0.88235294117647056" green="0.21176470588235294" blue="0.33333333333333331" alpha="1" colorSpace="calibratedRGB"/>
                                 <constraints>
                                     <constraint firstAttribute="width" secondItem="Bh4-qj-63C" secondAttribute="height" multiplier="123:40" id="bfF-tL-DcL"/>
                                 </constraints>
@@ -78,6 +61,23 @@
                                 </variation>
                                 <connections>
                                     <action selector="logInButton:" destination="vXZ-lx-hvc" eventType="touchUpInside" id="A6a-Nn-mre"/>
+                                </connections>
+                            </button>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="sdf-bJ-hWM">
+                                <rect key="frame" x="301" y="478" width="263" height="85"/>
+                                <color key="backgroundColor" red="0.88235294117647056" green="0.21176470588235294" blue="0.33333333333333331" alpha="1" colorSpace="calibratedRGB"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" secondItem="sdf-bJ-hWM" secondAttribute="height" multiplier="123:40" id="lQW-ph-4hV"/>
+                                </constraints>
+                                <state key="normal" title="Sing up">
+                                    <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                    <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                </state>
+                                <variation key="heightClass=compact" misplaced="YES">
+                                    <rect key="frame" x="301" y="371" width="263" height="85"/>
+                                </variation>
+                                <connections>
+                                    <segue destination="Aey-vS-ATN" kind="show" identifier="fromLogInToSingUp" id="cy4-6X-MQg"/>
                                 </connections>
                             </button>
                         </subviews>
@@ -157,7 +157,7 @@
                             </textField>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="jjJ-B9-hOD">
                                 <rect key="frame" x="116" y="478" width="180" height="30"/>
-                                <color key="backgroundColor" red="1" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                                <color key="backgroundColor" red="0.88235294117647056" green="0.21176470588235294" blue="0.33333333333333331" alpha="1" colorSpace="calibratedRGB"/>
                                 <state key="normal" title="Sing Up">
                                     <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                     <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
@@ -168,7 +168,7 @@
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="wkI-qp-mFR">
                                 <rect key="frame" x="304" y="478" width="180" height="30"/>
-                                <color key="backgroundColor" red="1" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                                <color key="backgroundColor" red="0.88235294117647056" green="0.21176470588235294" blue="0.33333333333333331" alpha="1" colorSpace="calibratedRGB"/>
                                 <state key="normal" title="Back">
                                     <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                     <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
