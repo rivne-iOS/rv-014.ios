@@ -1,7 +1,5 @@
-.DS_Store
+≈.DS_Store
 build/
-Bowl.xcodeproj/
-Bowl.xcworkspace/
 *.pbxuser
 !default.pbxuser
 *.mode1v3
