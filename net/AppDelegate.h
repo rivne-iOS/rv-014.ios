@@ -7,6 +7,9 @@
 //
 
 #import <UIKit/UIKit.h>
+@import GoogleMaps;
+
+#define GOOGLE_API_KEY @"AIzaSyDyYGVLDiewcI5yYqTwYzeQM4EWkGtcVbQ"
 
 @interface AppDelegate : UIResponder <UIApplicationDelegate>
 

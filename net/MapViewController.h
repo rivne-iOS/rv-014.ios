@@ -11,6 +11,7 @@
 
 
 @interface MapViewController : UIViewController
+
 @property(strong,nonatomic) User *currentPerson;
 
 @end

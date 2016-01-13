@@ -15,7 +15,7 @@ DerivedData
 .idea/.DS_Store
 *.swp
 *~.nib
-
+Pods/
 build/
 
 *.pbxuser
