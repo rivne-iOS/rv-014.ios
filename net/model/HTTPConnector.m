@@ -7,6 +7,13 @@
 //
 
 #import "HTTPConnector.h"
+@interface HTTPConnector()
+
+-(void)postRequest:(NSData*) postData
+             toURL:(NSString*) textUrl
+        andHandler:(void(^)(NSData *data, NSError *error))handler;
+@end
+
 
 @implementation HTTPConnector
 
@@ -18,6 +25,8 @@
         _allPersURL = @"users/all";
         _allPointsURL = @"issue/all";
         _userLogIn = @"users/auth/login";
+        _userSingUp = @"users";
+        
     }
     return self;
 }
@@ -42,41 +51,43 @@
     
 }
 
--(void)requestLogInWithUser:(NSString*)user
-                    andPass:(NSString*)pass
+-(void)requestLogInWithData:(NSData*)data
         andDataSorceHandler:(void(^)(NSData *data, NSError *error))dataSorceHandler;
 {
-    NSURL *url = [NSURL URLWithString: [self.globalURL stringByAppendingString:self.userLogIn]];
+    [self postRequest:data toURL:[self.globalURL stringByAppendingString:self.userLogIn] andHandler:dataSorceHandler];
+}
+
+-(void)requestSingUpWithData:(NSData*)data
+        andDataSorceHandler:(void(^)(NSData *data, NSError *error))dataSorceHandler;
+{
+    [self postRequest:data toURL:[self.globalURL stringByAppendingString:self.userSingUp] andHandler:dataSorceHandler];
+}
+
+-(void)postRequest:(NSData*) postData
+             toURL:(NSString*) textUrl
+        andHandler:(void(^)(NSData *data, NSError *error))handler
+{
+    NSURL *url = [NSURL URLWithString: textUrl];
     NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:url];
     
-    NSDictionary *dic = [[NSDictionary alloc] initWithObjectsAndKeys:
-                         user, @"login",
-                         pass, @"password", nil];
-    NSError *err;
-    NSData *postData = [NSJSONSerialization dataWithJSONObject:dic
-                                                       options:0
-                                                         error:&err];
     [request setHTTPMethod:@"POST"];
     [request setValue:@"application/json" forHTTPHeaderField:@"Content-Type"];
-    // two headers, that our server doesn't need
-    // [request setValue:@"application/json" forHTTPHeaderField:@"Accept"];
-    // [request setValue:[NSString stringWithFormat:@"%d", [postData length]] forHTTPHeaderField:@"Content-Length"];
+
     [request setHTTPBody:postData];
     
     NSURLSessionDataTask *dataTask = [[NSURLSession sharedSession] dataTaskWithRequest:request
                                                                      completionHandler:
-    ^(NSData *data, NSURLResponse *response, NSError *error)
-    {
-      // result with error (for testing)
-      //        dataSorceHandler(data, [[NSError alloc] init]);
-      dataSorceHandler(data, error);
-    }
-    ];
+                                      ^(NSData *data, NSURLResponse *response, NSError *error)
+                                      {
+                                          // result with error (for testing)
+                                          //        dataSorceHandler(data, [[NSError alloc] init]);
+                                          handler(data, error);
+                                      }
+                                      ];
     
     [dataTask resume];
     
 }
-
 
 
 

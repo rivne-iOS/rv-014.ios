@@ -51,13 +51,31 @@
             andErrorHandler:(void(^)(NSError *error)) errorHandler;
 {
     HTTPConnector *wizard = [[HTTPConnector alloc] init];
-    [wizard requestLogInWithUser:user andPass:pass andDataSorceHandler:^(NSData *data, NSError *error) {
+    
+    [wizard requestLogInWithData:[Parser parseToDataWithLogIn:user andPassword:pass]
+             andDataSorceHandler:^(NSData *data, NSError *error) {
         if(data.length >0 && error == nil)
         {
             viewControllerHandler([Parser parseDataToUser:data]);
         }
-}];
+             }];
+    
 }
 
+
+-(void)requestSingUpWithUser:(User*)user
+    andViewControllerHandler:(void (^)(User *resPerson))viewControllerHandler
+             andErrorHandler:(void(^)(NSError *error)) errorHandler
+{
+    HTTPConnector *connector = [[HTTPConnector alloc] init];
+    [connector requestSingUpWithData:[Parser parseUserToData:user]
+                 andDataSorceHandler:^(NSData *data, NSError *error) {
+                     if(data.length >0 && error == nil)
+                     {
+                         viewControllerHandler([Parser parseDataToUser:data]);
+                     }
+                 }];
+
+}
 
 @end

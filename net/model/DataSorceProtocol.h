@@ -19,6 +19,11 @@
    andViewControllerHandler:(void (^)(User *resPerson))viewControllerHandler
             andErrorHandler:(void(^)(NSError *error)) errorHandler;
 
+-(void)requestSingUpWithUser:(User*)user
+   andViewControllerHandler:(void (^)(User *resPerson))viewControllerHandler
+            andErrorHandler:(void(^)(NSError *error)) errorHandler;
+
+
 @end
 
 

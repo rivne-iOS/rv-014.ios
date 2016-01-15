@@ -24,6 +24,7 @@ typedef enum : NSUInteger {
 @property(strong, nonatomic)NSString *login;
 @property(strong, nonatomic)NSString *name;
 @property(strong, nonatomic)NSString *email;
+@property(strong, nonatomic)NSString *password;
 @property(nonatomic) Role role;
 
 

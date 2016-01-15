@@ -24,6 +24,7 @@
     NSDictionary *PersonDic = [NSJSONSerialization JSONObjectWithData:data
                                                              options:0
                                                                error:NULL];
+    NSLog(@"%@", PersonDic);
     return [Parser parseDictionaryToUser:PersonDic];
 }
 
@@ -69,6 +70,38 @@
     
     return pers;
 }
+
++(NSData*)parseUserToData:(User*)user
+{
+    NSDictionary *dictionary = [NSDictionary dictionaryWithObjectsAndKeys:
+                                 user.name, @"name",
+                                 user.login, @"login",
+                                 user.password, @"password",
+                                 user.email, @"email",
+                                nil];
+    
+    NSError *err;
+    NSData *postData = [NSJSONSerialization dataWithJSONObject:dictionary
+                                                       options:0
+                                                         error:&err];
+    return postData;
+
+}
+
++(NSData*)parseToDataWithLogIn:(NSString*)login andPassword:(NSString*)password
+{
+    
+    NSDictionary *dictionary = [[NSDictionary alloc] initWithObjectsAndKeys:
+                         login, @"login",
+                         password, @"password", nil];
+    NSError *err;
+    NSData *postData = [NSJSONSerialization dataWithJSONObject:dictionary
+                                                       options:0
+                                                         error:&err];
+    return postData;
+
+}
+
 
 +(NSUInteger)stringPersonRoleToUInteger:(NSString*) str
 {

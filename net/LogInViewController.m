@@ -64,11 +64,11 @@
         {
             NSLog(@"good!!!!");
             
-            __weak LogInViewController *weakVC = self;
+            __weak LogInViewController *weakSelf = self;
             dispatch_async(dispatch_get_main_queue(), ^
                        {
-                           self.mapDelegate.currentPerson = resPerson;
-                           [weakVC.navigationController popViewControllerAnimated:YES];
+                           weakSelf.mapDelegate.currentPerson = resPerson;
+                           [weakSelf.navigationController popViewControllerAnimated:YES];
                        });
         }
     } andErrorHandler:^(NSError *error) {
