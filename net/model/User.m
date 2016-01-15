@@ -15,25 +15,15 @@
 
 @implementation User
 
-+(NSArray*)BPPersonStringRoles
++(NSArray*)UserStringRoles
 {
     return @[@"ADMIN", @"MANAGER", @"USER", @"SUBSCRIBER"];
 }
 
 
-//-(instancetype)init
-//{
-//    if(self = [super init])
-//    {
-//        _stringRoles = [[NSArray alloc] initWithObjects:@"ADMIN", @"MANAGER", @"USER", @"SUBSCRIBER", nil];
-//    }
-//    return self;
-//}
-
-
 -(NSString*)description
 {
-    return [NSString stringWithFormat:@"I am %@, my name is %@, email - %@, role - %@", self.login, self.name, self.email, [[User BPPersonStringRoles] objectAtIndex:self.role]];
+    return [NSString stringWithFormat:@"I am %@, my name is %@, email - %@, role - %@", self.login, self.name, self.email, [[User UserStringRoles] objectAtIndex:self.role]];
 }
 
 @end

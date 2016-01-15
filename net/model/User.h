@@ -27,6 +27,6 @@ typedef enum : NSUInteger {
 @property(nonatomic) Role role;
 
 
-+(NSArray*)BPPersonStringRoles;
++(NSArray*)UserStringRoles;
 
 @end

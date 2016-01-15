@@ -7,8 +7,9 @@
 //
 
 #import "SingUpViewController.h"
+#import "User.h"
 
-@interface SingUpViewController ()
+@interface SingUpViewController () <UITextFieldDelegate>
 @property (weak, nonatomic) IBOutlet UITextField *fullNameText;
 @property (weak, nonatomic) IBOutlet UITextField *userNameText;
 @property (weak, nonatomic) IBOutlet UITextField *emailText;
@@ -19,15 +20,17 @@
 
 @implementation SingUpViewController
 
-- (void)viewDidLoad {
-    [super viewDidLoad];
-    // Do any additional setup after loading the view.
+- (void)textFieldDidBeginEditing:(UITextField *)textField
+{
+    textField.placeholder = nil;
 }
 
-- (void)didReceiveMemoryWarning {
-    [super didReceiveMemoryWarning];
-    // Dispose of any resources that can be recreated.
+- (void)textFieldDidEndEditing:(UITextField *)textField
+{
+    textField.placeholder = textField.restorationIdentifier;
 }
+
+
 - (IBAction)backButton:(UIButton *)sender {
     [self.navigationController popViewControllerAnimated:YES];
 
@@ -36,6 +39,9 @@
 {
   if([self isValidationGood])
   {
+      
+      
+      
       self.mapDelegate.currentPerson.login = self.userNameText.text;
       self.mapDelegate.currentPerson.name = self.fullNameText.text;
       self.mapDelegate.currentPerson.email = self.emailText.text;

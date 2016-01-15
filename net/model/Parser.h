@@ -13,12 +13,12 @@
 @interface Parser : NSObject
 
 
-+(User*)parseDataToPerson:(NSData*)data;
-+(User*)parseDictionaryToPerSon:(NSDictionary*)dic;
++(User*)parseDataToUser:(NSData*)data;
++(User*)parseDictionaryToUser:(NSDictionary*)dic;
 
 
 //array of persons
-+(NSArray*)parseDataToArrayOfPersons:(NSData*)data;
++(NSArray*)parseDataToArrayOfUsers:(NSData*)data;
 
 
 +(Issue*)parseDataToPoint:(NSData*)data;

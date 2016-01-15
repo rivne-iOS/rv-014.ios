@@ -24,7 +24,7 @@
     {
         if (data.length > 0 && error == nil)
         {
-            NSArray *arrOfPers = [Parser parseDataToArrayOfPersons:data];
+            NSArray *arrOfPers = [Parser parseDataToArrayOfUsers:data];
             NSMutableArray *arrOfStringPers = [[NSMutableArray alloc] init];
             for (User *p in arrOfPers)
             {
@@ -54,7 +54,7 @@
     [wizard requestLogInWithUser:user andPass:pass andDataSorceHandler:^(NSData *data, NSError *error) {
         if(data.length >0 && error == nil)
         {
-            viewControllerHandler([Parser parseDataToPerson:data]);
+            viewControllerHandler([Parser parseDataToUser:data]);
         }
 }];
 }

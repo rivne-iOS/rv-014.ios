@@ -32,7 +32,7 @@
                                                                      completionHandler:
                                       ^(NSData *data, NSURLResponse *response, NSError *error)
     {
-        // result with error
+        // result with error (for testing)
         //        dataSorceHandler(data, [[NSError alloc] init]);
         dataSorceHandler(data, error);
     }
@@ -57,8 +57,9 @@
                                                        options:0
                                                          error:&err];
     [request setHTTPMethod:@"POST"];
-    // [request setValue:@"application/json" forHTTPHeaderField:@"Accept"];
     [request setValue:@"application/json" forHTTPHeaderField:@"Content-Type"];
+    // two headers, that our server doesn't need
+    // [request setValue:@"application/json" forHTTPHeaderField:@"Accept"];
     // [request setValue:[NSString stringWithFormat:@"%d", [postData length]] forHTTPHeaderField:@"Content-Length"];
     [request setHTTPBody:postData];
     
@@ -66,7 +67,7 @@
                                                                      completionHandler:
     ^(NSData *data, NSURLResponse *response, NSError *error)
     {
-      // result with error
+      // result with error (for testing)
       //        dataSorceHandler(data, [[NSError alloc] init]);
       dataSorceHandler(data, error);
     }

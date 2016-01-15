@@ -12,10 +12,11 @@
 #import "SingUpViewController.h"
 
 
-@interface LogInViewController ()
+@interface LogInViewController () <UITextFieldDelegate>
 @property (weak, nonatomic) IBOutlet UITextField *userTextFild;
 @property (weak, nonatomic) IBOutlet UITextField *passTextField;
 @property (strong,nonatomic) id <DataSorceProtocol> dataSorce;
+
 @end
 
 @implementation LogInViewController
@@ -27,7 +28,15 @@
     
 }
 
+- (void)textFieldDidBeginEditing:(UITextField *)textField
+{
+    textField.placeholder = nil;
+}
 
+- (void)textFieldDidEndEditing:(UITextField *)textField
+{
+    textField.placeholder = textField.restorationIdentifier;
+}
 
 - (IBAction)logInButton:(UIButton *)sender
 {
