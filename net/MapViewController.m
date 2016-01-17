@@ -76,14 +76,8 @@
     GMSCameraPosition *camera = [GMSCameraPosition cameraWithLatitude:50.6283612
                                                             longitude:26.2604453
                                                                  zoom:14];
-    // Creates a marker in the center of the map.
-    //    GMSMapView *mapView_ = [GMSMapView mapWithFrame:CGRectZero camera:camera];
- //   mapView_.myLocationEnabled = YES;
     self.mapView.camera = camera;
     self.mapView.myLocationEnabled = YES;
-//    self.mapView = mapView_;
-
-//    self.mapView = mapView_;
     
     [self requestIssues];
 }
@@ -120,10 +114,10 @@
 
 -(void)setButtonImages
 {
-    [_locationButton setImage:[UIImage imageNamed:@"location_enabled.png"] forState:UIControlStateNormal]; //ask?
-    [_descriptionButton setImage:[UIImage imageNamed:@"description_disabled.png"] forState:UIControlStateNormal]; //ask?
-    [_historyButton setImage:[UIImage imageNamed:@"history_disabled.png"] forState:UIControlStateNormal]; //ask?
-    [_moreButton setImage:[UIImage imageNamed:@"more.png"] forState:UIControlStateNormal]; //ask?
+    [_locationButton setImage:[UIImage imageNamed:@"location_enabled.png"] forState:UIControlStateNormal];
+    [_descriptionButton setImage:[UIImage imageNamed:@"description_disabled.png"] forState:UIControlStateNormal];
+    [_historyButton setImage:[UIImage imageNamed:@"history_disabled.png"] forState:UIControlStateNormal];
+    [_moreButton setImage:[UIImage imageNamed:@"more.png"] forState:UIControlStateNormal];
 }
 
 @end
