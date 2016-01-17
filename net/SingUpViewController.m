@@ -9,6 +9,7 @@
 #import "NetworkDataSorce.h"
 #import "SingUpViewController.h"
 #import "User.h"
+#import "TextFieldValidation.h"
 
 @interface SingUpViewController () <UITextFieldDelegate>
 @property (weak, nonatomic) IBOutlet UITextField *fullNameText;
@@ -19,6 +20,7 @@
 
 @property (strong,nonatomic) id <DataSorceProtocol> dataSorce;
 @property (strong, nonatomic) User *tempUser;
+@property (strong, nonatomic) TextFieldValidation *textFieldValidator;
 
 @end
 
@@ -28,10 +30,13 @@
 {
     self.dataSorce = [[NetworkDataSorce alloc] init];
     self.tempUser = [[User alloc] init];
+    _textFieldValidator = [[TextFieldValidation alloc] init];
+
 }
 
 - (void)textFieldDidBeginEditing:(UITextField *)textField
 {
+    textField.backgroundColor = nil;
     textField.placeholder = nil;
 }
 
@@ -47,12 +52,29 @@
 }
 - (IBAction)singUpButton:(UIButton *)sender
 {
+ 
+    self.textFieldValidator.fields = [NSArray arrayWithObjects: self.fullNameText, self.userNameText,
+                               self.emailText, self.passwordText, self.confirmPassword, nil];
+    
+    if (![self.textFieldValidator isFilled])
+    {
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Attention!"
+                                                        message:@"Clear fields!"
+                                                       delegate:nil
+                                              cancelButtonTitle:@"I understood"
+                                              otherButtonTitles:nil];
+        [alert show];
+
+    }
+    
+    return;
+    
     self.tempUser.name = self.fullNameText.text;
     self.tempUser.login = self.userNameText.text;
     self.tempUser.password = self.passwordText.text;
     self.tempUser.email = self.emailText.text;
 
-    if([self isValidationGood])
+    if(YES)
     {
         [self.dataSorce requestSingUpWithUser:self.tempUser
                      andViewControllerHandler:^(User *resPerson)
@@ -95,10 +117,6 @@
     }
 }
 
--(bool)isValidationGood
-{
-    return YES;
-}
 
 
 

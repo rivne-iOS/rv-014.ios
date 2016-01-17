@@ -19,6 +19,7 @@
 		8460F99C1C3C5E1A00ECB3A4 /* IssueHistory.m in Sources */ = {isa = PBXBuildFile; fileRef = 8460F99B1C3C5E1A00ECB3A4 /* IssueHistory.m */; };
 		8460F99F1C3C651500ECB3A4 /* HTTPConnector.m in Sources */ = {isa = PBXBuildFile; fileRef = 8460F99E1C3C651500ECB3A4 /* HTTPConnector.m */; };
 		8460F9A21C3C666100ECB3A4 /* Parser.m in Sources */ = {isa = PBXBuildFile; fileRef = 8460F9A11C3C666100ECB3A4 /* Parser.m */; };
+		84E19B211C4C131E00AABD7D /* TextFieldValidation.m in Sources */ = {isa = PBXBuildFile; fileRef = 84E19B201C4C131E00AABD7D /* TextFieldValidation.m */; };
 		84E3347F1C4435E800BEE6BA /* MapViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 84E3347E1C4435E800BEE6BA /* MapViewController.m */; };
 		84E334821C4436B200BEE6BA /* SingUpViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 84E334811C4436B200BEE6BA /* SingUpViewController.m */; };
 		84E7BF461C430AA600E66585 /* NetworkDataSorce.m in Sources */ = {isa = PBXBuildFile; fileRef = 84E7BF451C430AA600E66585 /* NetworkDataSorce.m */; };
@@ -58,6 +59,8 @@
 		8460F99E1C3C651500ECB3A4 /* HTTPConnector.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = HTTPConnector.m; path = model/HTTPConnector.m; sourceTree = "<group>"; };
 		8460F9A01C3C666100ECB3A4 /* Parser.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Parser.h; path = model/Parser.h; sourceTree = "<group>"; };
 		8460F9A11C3C666100ECB3A4 /* Parser.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = Parser.m; path = model/Parser.m; sourceTree = "<group>"; };
+		84E19B1F1C4C131E00AABD7D /* TextFieldValidation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TextFieldValidation.h; sourceTree = "<group>"; };
+		84E19B201C4C131E00AABD7D /* TextFieldValidation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TextFieldValidation.m; sourceTree = "<group>"; };
 		84E3347D1C4435E800BEE6BA /* MapViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MapViewController.h; sourceTree = "<group>"; };
 		84E3347E1C4435E800BEE6BA /* MapViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MapViewController.m; sourceTree = "<group>"; };
 		84E334801C4436B200BEE6BA /* SingUpViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SingUpViewController.h; sourceTree = "<group>"; };
@@ -165,6 +168,8 @@
 				84E7BF431C430A3700E66585 /* DataSorceProtocol.h */,
 				84E7BF441C430AA600E66585 /* NetworkDataSorce.h */,
 				84E7BF451C430AA600E66585 /* NetworkDataSorce.m */,
+				84E19B1F1C4C131E00AABD7D /* TextFieldValidation.h */,
+				84E19B201C4C131E00AABD7D /* TextFieldValidation.m */,
 			);
 			name = model;
 			sourceTree = "<group>";
@@ -277,6 +282,7 @@
 				8460F9A21C3C666100ECB3A4 /* Parser.m in Sources */,
 				84E334821C4436B200BEE6BA /* SingUpViewController.m in Sources */,
 				8460F9951C3C537900ECB3A4 /* User.m in Sources */,
+				84E19B211C4C131E00AABD7D /* TextFieldValidation.m in Sources */,
 				84E3347F1C4435E800BEE6BA /* MapViewController.m in Sources */,
 				8460F9701C3C531E00ECB3A4 /* main.m in Sources */,
 				8460F9991C3C5C3B00ECB3A4 /* Issue.m in Sources */,
