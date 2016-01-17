@@ -28,6 +28,7 @@
     self.navigationItem.rightBarButtonItem.title = @"Log In";
     // [self updateUserInfoText];
     // Do any additional setup after loading the view.
+    [self setButtonImages];
     [self createAndShowMap];
 }
 
@@ -72,44 +73,57 @@
 
 -(void)createAndShowMap
 {
-    // Create a GMSCameraPosition that tells the map to display the
-    // coordinate -33.86,151.20 at zoom level 6.
     GMSCameraPosition *camera = [GMSCameraPosition cameraWithLatitude:50.6283612
                                                             longitude:26.2604453
                                                                  zoom:14];
-//    GMSMapView *mapView_ = [GMSMapView mapWithFrame:CGRectZero camera:camera];
+    // Creates a marker in the center of the map.
+    //    GMSMapView *mapView_ = [GMSMapView mapWithFrame:CGRectZero camera:camera];
  //   mapView_.myLocationEnabled = YES;
     self.mapView.camera = camera;
+    self.mapView.myLocationEnabled = YES;
+//    self.mapView = mapView_;
+
 //    self.mapView = mapView_;
     
-    // Creates a marker in the center of the map.
-    GMSMarker *marker = [[GMSMarker alloc] init];
-    marker.position = CLLocationCoordinate2DMake(50.6283612, 26.2604453);
-    marker.title = @"Sydney";
-    marker.snippet = @"Australia";
-    marker.map = self.mapView;
-//    self.mapView = mapView_;
-    
-    self.mapView.camera = camera;
+    [self requestIssues];
 }
+
 
 -(void)requestIssues
 {
-        NSURL *url = [NSURL URLWithString:@"https://bawl-rivne.rhcloud.com/issues/all"];
+        NSURL *url = [NSURL URLWithString:@"https://bawl-rivne.rhcloud.com/issue/all"];
         NSURLRequest *request = [NSURLRequest requestWithURL:url];
     
         [[[NSURLSession sharedSession]dataTaskWithRequest:request
                                         completionHandler:^(NSData * _Nullable data, NSURLResponse * _Nullable response, NSError * _Nullable connectionError) {
                                             if (data.length > 0 && connectionError == nil)
                                             {
-                                                NSArray *issuesArray = [NSJSONSerialization JSONObjectWithData:data
+                                                NSArray *issuesDictionaryArray = [NSJSONSerialization JSONObjectWithData:data
                                                                                                          options:0
                                                                                                            error:NULL];
+                                                
+                                                NSMutableArray *issuesClassArray = [[NSMutableArray alloc] init];
+                                                for (NSDictionary *issue in issuesDictionaryArray) {
+                                                    [issuesClassArray addObject:[[Issue alloc] initWithDictionary:issue]];
+                                                }
+                                                
                                                 dispatch_async(dispatch_get_main_queue(), ^{
-                                                    // Main thread
+                                                    for (Issue *issue in issuesClassArray) {
+                                                        GMSMarker *marker = [[GMSMarker alloc] init];
+                                                        marker.position = CLLocationCoordinate2DMake(issue.getLatitude, issue.getLongitude);
+                                                        marker.map = self.mapView;
+                                                    }
                                                 });
                                             }
                                         }] resume];
+}
+
+-(void)setButtonImages
+{
+    [_locationButton setImage:[UIImage imageNamed:@"location_enabled.png"] forState:UIControlStateNormal]; //ask?
+    [_descriptionButton setImage:[UIImage imageNamed:@"description_disabled.png"] forState:UIControlStateNormal]; //ask?
+    [_historyButton setImage:[UIImage imageNamed:@"history_disabled.png"] forState:UIControlStateNormal]; //ask?
+    [_moreButton setImage:[UIImage imageNamed:@"more.png"] forState:UIControlStateNormal]; //ask?
 }
 
 @end

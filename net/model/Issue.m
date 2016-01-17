@@ -22,6 +22,49 @@
     return @[@"APPREVED", @"TO_RESOLVE", @"RESOLVED"];
 }
 
+-(instancetype)initWithDictionary:(NSDictionary *)issueDictionary
+{
+    self = [super init];
+    if (self) {
+            //Loop method
+            for (NSString* key in issueDictionary) {
+                [self setValue:[issueDictionary valueForKey:key] forKey:key];
+            }
+            // Instead of Loop method you can also use:
+            // [self setValuesForKeysWithDictionary:JSONDictionary];
+    }
+    return self;
+}
+
+-(double)getLongitude
+{
+    NSString *mapPointer = [self.MAP_POINTER copy];
+    NSString *resultedString = [self findMatchedStringByPattern:@"[1234567890.]+" andString:mapPointer];
+    mapPointer = [mapPointer stringByReplacingOccurrencesOfString:resultedString withString:@""];
+    return [[self findMatchedStringByPattern:@"[1234567890.]+" andString:mapPointer] doubleValue];
+}
+
+-(double)getLatitude
+{
+    return [[self findMatchedStringByPattern:@"[1234567890.]+" andString:self.MAP_POINTER] doubleValue];
+}
+
+-(NSString *)findMatchedStringByPattern:(NSString *)inputPattern andString:(NSString *)inputString {
+    NSString *searchedString = inputString;
+    NSRange  searchedRange = NSMakeRange(0, [searchedString length]);
+    NSString *pattern = inputPattern;
+    NSError  *error = nil;
+    NSString *matchText;
+    
+    NSRegularExpression* regex = [NSRegularExpression regularExpressionWithPattern: pattern options:0 error:&error];
+    NSArray* matches = [regex matchesInString:searchedString options:0 range: searchedRange];
+    for (NSTextCheckingResult* match in matches) {
+        matchText = [searchedString substringWithRange:[match range]];
+        NSLog(@"match: %@", matchText);
+        break;
+    }
+    return matchText;
+}
 
 //-(instancetype)init
 //{

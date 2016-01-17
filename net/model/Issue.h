@@ -27,8 +27,30 @@ typedef enum : NSUInteger {
 @property(strong, nonatomic)NSString *name;
 @property(strong, nonatomic)NSArray *pointHistory; // of IssueHistory
 
+//{
+//    "ATTACHMENTS": "../img/attacments/incident01272.png",
+//    "CATEGORY_ID": "1",
+//    "DESCRIPTION": "Some big description to this issue",
+//    "ID": 2,
+//    "MAP_POINTER": "LatLng(50.622647, 26.265234)",
+//    "NAME": "Remove graffiti please",
+//    "PRIORITY_ID": 1,
+//    "STATUS": "TO_RESOLVE"
+//},
 
+@property (strong, nonatomic) NSString *ATTACHMENTS;
+@property (strong, nonatomic) NSString *CATEGORY_ID;
+@property (strong, nonatomic) NSString *DESCRIPTION;
+@property (strong, nonatomic) NSArray *HISTORY;
+@property (strong, nonatomic) NSNumber *ID;
+@property (strong, nonatomic) NSString *MAP_POINTER;
+@property (strong, nonatomic) NSString *NAME;
+@property (strong, nonatomic) NSNumber *PRIORITY_ID;
+@property (strong, nonatomic) NSString *STATUS;
 
 +(NSArray*)BPPointStringStatuses;
+-(instancetype)initWithDictionary:(NSDictionary *)issueDictionary;
+-(double)getLongitude;
+-(double)getLatitude;
 
 @end
