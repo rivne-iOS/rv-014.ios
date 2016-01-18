@@ -19,55 +19,43 @@
 @implementation Parser
 
 
-+(User*)parseDataToPerson:(NSData*)data
++(User*)parseDataToUser:(NSData*)data
 {
     NSDictionary *PersonDic = [NSJSONSerialization JSONObjectWithData:data
                                                              options:0
                                                                error:NULL];
-    return [Parser parseDictionaryToPerSon:PersonDic];
+    NSLog(@"%@", PersonDic);
+    return [Parser parseDictionaryToUser:PersonDic];
 }
 
-
-
-+(NSArray*)parseDataToArrayOfPersons:(NSData *)data
++(NSArray*)parseDataToArrayOfUsers:(NSData *)data
 {
-    id fewPersonDic = [NSJSONSerialization JSONObjectWithData:data
-                                                              options:0
-                                                                error:NULL];
     NSError *err; //we might have problems here, so let's check
-    
+
+    id users = [NSJSONSerialization JSONObjectWithData:data
+                                                  options:0
+                                                    error:NULL];
     if(err!=nil)
         return nil; //:)
+    // TODO: add nserror or some like this (when func returns nil)
     
-    if([fewPersonDic isKindOfClass:[NSDictionary class]])
+    //we have a few persons
+    NSMutableArray *arr = [[NSMutableArray alloc] init];
+    for(id oneUser in users)
     {
-        //so we have one preson
-        NSLog(@"//so we have one preson");
-        return [NSArray arrayWithObject:[Parser parseDictionaryToPerSon:fewPersonDic]];
-    }
-    else
-    {
-        //we have a few persons
-        NSMutableArray *arr = [[NSMutableArray alloc] init];
-        NSLog(@"//we have a few persons");
-        for(id mustBeDic in fewPersonDic)
+        if(![oneUser isKindOfClass:[NSDictionary class]])
         {
-            if(![mustBeDic isKindOfClass:[NSDictionary class]])
-            {
-                // a is not a dictionary too. so fail
-                NSLog(@"// a is not a dictionary too. so fail");
-                return nil;
-            }
-           [arr addObject:[Parser parseDictionaryToPerSon:mustBeDic]];
+            // a is not a dictionary too. so fail
+            NSLog(@"// a is not a dictionary too. so fail");
+            return nil;
         }
-        return arr;
+       [arr addObject:[Parser parseDictionaryToUser:oneUser]];
     }
+    return arr;
+    
 }
 
-
-
-
-+(User*)parseDictionaryToPerSon:(NSDictionary*)dic
++(User*)parseDictionaryToUser:(NSDictionary*)dic
 {
     User *pers = [[User alloc] init];
     
@@ -83,9 +71,41 @@
     return pers;
 }
 
++(NSData*)parseUserToData:(User*)user
+{
+    NSDictionary *dictionary = [NSDictionary dictionaryWithObjectsAndKeys:
+                                 user.name, @"name",
+                                 user.login, @"login",
+                                 user.password, @"password",
+                                 user.email, @"email",
+                                nil];
+    
+    NSError *err;
+    NSData *postData = [NSJSONSerialization dataWithJSONObject:dictionary
+                                                       options:0
+                                                         error:&err];
+    return postData;
+
+}
+
++(NSData*)parseToDataWithLogIn:(NSString*)login andPassword:(NSString*)password
+{
+    
+    NSDictionary *dictionary = [[NSDictionary alloc] initWithObjectsAndKeys:
+                         login, @"login",
+                         password, @"password", nil];
+    NSError *err;
+    NSData *postData = [NSJSONSerialization dataWithJSONObject:dictionary
+                                                       options:0
+                                                         error:&err];
+    return postData;
+
+}
+
+
 +(NSUInteger)stringPersonRoleToUInteger:(NSString*) str
 {
-    NSArray *tempArr = [User BPPersonStringRoles];
+    NSArray *tempArr = [User UserStringRoles];
     for (NSUInteger a=0; a<[tempArr count]; ++a)
     {
         if([str isEqualToString:tempArr[a]])

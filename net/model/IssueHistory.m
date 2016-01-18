@@ -13,7 +13,7 @@
 
 -(NSString*)description
 {
-    return [NSString stringWithFormat:@"UserId - %d, made an action - %@, at:", (unsigned int)self.userId, self.action, [self.date description]];
+    return [NSString stringWithFormat:@"UserId - %d, made an action - %@, at:%@", (unsigned int)self.userId, self.action, [self.date description]];
 }
 
 
