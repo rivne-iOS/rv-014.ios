@@ -49,7 +49,13 @@
 - (void)textFieldDidEndEditing:(UITextField *)textField
 {
     textField.placeholder = textField.restorationIdentifier;
-    [self.textFieldValidator isValidField:textField];
+    if([textField.restorationIdentifier isEqualToString:@"Confirm password"])
+    {
+        if(![self.passwordText.text isEqualToString:self.confirmPassword.text])
+            self.confirmPassword.backgroundColor = [UIColor redColor];
+    }
+    else
+        [self.textFieldValidator isValidField:textField];
 }
 
 

@@ -29,9 +29,9 @@
     {
         _fieldsDic = [NSDictionary dictionaryWithObjectsAndKeys:
                             @"[A-Z][a-z]+ [A-Z][a-z]+ [A-Z][a-z]+", @"Full name",
-                            @"[A-Za-z0-9\\-_\\.]{5,20}[A-Za-z0-9]+", @"User name",
+                            @"[A-Za-z0-9\\-_\\.]{3,20}[A-Za-z0-9]+", @"User name",
                             @"[A-Za-z]+[A-Za-z0-9\\-_\\.]*[A-Za-z0-9]@[a-z]{3,}\\.[a-z]{3}", @"Email",
-                            @"[A-Za-z0-9\\.\\|\\!\\@\\#\\$\\%\\^\\&\\*]{6,20}", @"Password",
+                            @"[A-Za-z0-9\\.\\|\\!\\@\\#\\$\\%\\^\\&\\*]{4,20}", @"Password",
                             nil];
         
     }
