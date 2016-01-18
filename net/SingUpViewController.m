@@ -19,7 +19,7 @@
 @property (weak, nonatomic) IBOutlet UITextField *confirmPassword;
 
 @property (strong,nonatomic) id <DataSorceProtocol> dataSorce;
-@property (strong, nonatomic) User *tempUser;
+// @property (strong, nonatomic) User *tempUser;
 @property (strong, nonatomic) TextFieldValidation *textFieldValidator;
 
 @end
@@ -29,7 +29,7 @@
 -(void)viewDidLoad
 {
     self.dataSorce = [[NetworkDataSorce alloc] init];
-    self.tempUser = [[User alloc] init];
+//    self.tempUser = [[User alloc] init];
     _textFieldValidator = [[TextFieldValidation alloc] init];
 
 }
@@ -49,7 +49,9 @@
 - (void)textFieldDidEndEditing:(UITextField *)textField
 {
     textField.placeholder = textField.restorationIdentifier;
+    [self.textFieldValidator isValidField:textField];
 }
+
 
 
 - (IBAction)backButton:(UIButton *)sender {
@@ -60,67 +62,65 @@
 {
  
     self.textFieldValidator.fields = [NSArray arrayWithObjects: self.fullNameText, self.userNameText,
-                               self.emailText, self.passwordText, self.confirmPassword, nil];
+                               self.emailText, self.passwordText, nil];
     
     if (![self.textFieldValidator isFilled])
+        return;
+    
+    if(![self.textFieldValidator isValidFields])
+        return;
+
+    if(![self.passwordText.text isEqualToString:self.confirmPassword.text])
     {
+        self.confirmPassword.backgroundColor = [UIColor redColor];
+        return;
+    }
+    
+    
+    User *tempUser = [[User alloc] initWithName:self.fullNameText.text
+                                       andLogin:self.userNameText.text
+                                        andPass:self.passwordText.text
+                                       andEmail:self.emailText.text];
+    
+
+    [self.dataSorce requestSingUpWithUser:tempUser
+                 andViewControllerHandler:^(User *resPerson)
+    {
+        if (resPerson == nil)
+        {
+            NSLog(@"fail!!!!");
+            dispatch_async(dispatch_get_main_queue(), ^
+                           {
+                               UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Attention!"
+                                                                               message:@"Fail to sing Up!"
+                                                                              delegate:nil
+                                                                     cancelButtonTitle:@"I understood"
+                                                                     otherButtonTitles:nil];
+                               [alert show];
+                           });
+            
+        }
+        else
+        {
+            NSLog(@"good!!!!");
+            
+            __weak SingUpViewController *weakSelf = self;
+            dispatch_async(dispatch_get_main_queue(), ^
+                           {
+                               weakSelf.mapDelegate.currentPerson = resPerson;
+                               [weakSelf.navigationController popToViewController:weakSelf.mapDelegate animated:YES];
+                           });
+        }
+        
+    
+    } andErrorHandler:^(NSError *error) {
         UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Attention!"
-                                                        message:@"Clear fields!"
+                                                        message:@"some system problem!"
                                                        delegate:nil
                                               cancelButtonTitle:@"I understood"
                                               otherButtonTitles:nil];
         [alert show];
-
-    }
-    
-    return;
-    
-    self.tempUser.name = self.fullNameText.text;
-    self.tempUser.login = self.userNameText.text;
-    self.tempUser.password = self.passwordText.text;
-    self.tempUser.email = self.emailText.text;
-
-    if(YES)
-    {
-        [self.dataSorce requestSingUpWithUser:self.tempUser
-                     andViewControllerHandler:^(User *resPerson)
-        {
-            if (resPerson == nil)
-            {
-                NSLog(@"fail!!!!");
-                dispatch_async(dispatch_get_main_queue(), ^
-                               {
-                                   UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Attention!"
-                                                                                   message:@"Fail to sing Up!"
-                                                                                  delegate:nil
-                                                                         cancelButtonTitle:@"I understood"
-                                                                         otherButtonTitles:nil];
-                                   [alert show];
-                               });
-                
-            }
-            else
-            {
-                NSLog(@"good!!!!");
-                
-                __weak SingUpViewController *weakSelf = self;
-                dispatch_async(dispatch_get_main_queue(), ^
-                               {
-                                   weakSelf.mapDelegate.currentPerson = resPerson;
-                                   [weakSelf.navigationController popToViewController:weakSelf.mapDelegate animated:YES];
-                               });
-            }
-            
-        
-        } andErrorHandler:^(NSError *error) {
-            UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Attention!"
-                                                            message:@"some system problem!"
-                                                           delegate:nil
-                                                  cancelButtonTitle:@"I understood"
-                                                  otherButtonTitles:nil];
-            [alert show];
-        }];
-    }
+    }];
 }
 
 

@@ -15,6 +15,19 @@
 
 @implementation User
 
+
+-(instancetype)initWithName:(NSString *)name andLogin:(NSString *)login andPass:(NSString *)pass andEmail:(NSString *)email
+{
+    if(self = [super init])
+    {
+        _name=name;
+        _login=login;
+        _password=pass;
+        _email=email;
+    }
+    return self;
+}
+
 +(NSArray*)UserStringRoles
 {
     return @[@"ADMIN", @"MANAGER", @"USER", @"SUBSCRIBER"];

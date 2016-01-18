@@ -14,6 +14,7 @@
 @property(strong, nonatomic)NSArray *fields; // arr of fields to validate
 
 -(BOOL)isFilled;
+-(BOOL)isValidField:(UITextField*)field;
 -(BOOL)isValidFields;
 
 

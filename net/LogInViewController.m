@@ -10,12 +10,14 @@
 #import "DataSorceProtocol.h"
 #import "NetworkDataSorce.h"
 #import "SingUpViewController.h"
+#import "TextFieldValidation.h"
 
 
 @interface LogInViewController () <UITextFieldDelegate>
 @property (weak, nonatomic) IBOutlet UITextField *userTextFild;
 @property (weak, nonatomic) IBOutlet UITextField *passTextField;
 @property (strong,nonatomic) id <DataSorceProtocol> dataSorce;
+@property(strong, nonatomic) TextFieldValidation *textFieldValidator;
 
 @end
 
@@ -25,22 +27,38 @@
 -(void)viewDidLoad
 {
     self.dataSorce = [[NetworkDataSorce alloc] init];
-    
+    self.textFieldValidator = [[TextFieldValidation alloc] init];
 }
 
 - (void)textFieldDidBeginEditing:(UITextField *)textField
 {
+    textField.backgroundColor = [UIColor whiteColor];
     textField.placeholder = nil;
+}
+
+- (BOOL)textField:(UITextField *)textField shouldChangeCharactersInRange:(NSRange)range replacementString:(NSString *)string
+{
+    textField.backgroundColor = [UIColor whiteColor];
+    return YES;
 }
 
 - (void)textFieldDidEndEditing:(UITextField *)textField
 {
     textField.placeholder = textField.restorationIdentifier;
+    [self.textFieldValidator isValidField:textField];
 }
 
 - (IBAction)logInButton:(UIButton *)sender
 {
     
+    self.textFieldValidator.fields = [NSArray arrayWithObjects:self.userTextFild,
+                                      self.passTextField, nil];
+    
+    if (![self.textFieldValidator isFilled])
+        return;
+    
+    if(![self.textFieldValidator isValidFields])
+        return;
     
     [self.dataSorce requestLogInWithUser:self.userTextFild.text
                                  andPass:self.passTextField.text

@@ -74,6 +74,10 @@
                      {
                          viewControllerHandler([Parser parseDataToUser:data]);
                      }
+                     else if (error!=nil)
+                     {
+                         errorHandler(error);
+                     }
                  }];
 
 }
