@@ -18,5 +18,6 @@
 @property (weak, nonatomic) IBOutlet UIButton *historyButton;
 @property (weak, nonatomic) IBOutlet UIButton *moreButton;
 @property (weak, nonatomic) IBOutlet UIView *bottomBar;
+@property (weak, nonatomic) IBOutlet NSLayoutConstraint *bottomBarConstraint;
 
 @end

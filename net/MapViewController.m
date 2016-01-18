@@ -11,7 +11,7 @@
 #import "LogInViewController.h"
 @import GoogleMaps;
 
-@interface MapViewController ()
+@interface MapViewController () <GMSMapViewDelegate>
 
 @property(strong,nonatomic) NSArray *arrayOfPoints;
 @property (weak, nonatomic) IBOutlet UITextView *userInfoText;
@@ -28,7 +28,6 @@
     self.navigationItem.rightBarButtonItem.title = @"Log In";
     // [self updateUserInfoText];
     // Do any additional setup after loading the view.
-    [self setButtonImages];
     [self createAndShowMap];
 }
 
@@ -78,6 +77,7 @@
                                                                  zoom:14];
     self.mapView.camera = camera;
     self.mapView.myLocationEnabled = YES;
+    self.mapView.delegate = self;
     
     [self requestIssues];
 }
@@ -112,12 +112,21 @@
                                         }] resume];
 }
 
--(void)setButtonImages
+-(BOOL)mapView:(GMSMapView *)mapView didTapMarker:(GMSMarker *)marker
 {
-    [_locationButton setImage:[UIImage imageNamed:@"location_enabled.png"] forState:UIControlStateNormal];
-    [_descriptionButton setImage:[UIImage imageNamed:@"description_disabled.png"] forState:UIControlStateNormal];
-    [_historyButton setImage:[UIImage imageNamed:@"history_disabled.png"] forState:UIControlStateNormal];
-    [_moreButton setImage:[UIImage imageNamed:@"more.png"] forState:UIControlStateNormal];
+    [UIView animateWithDuration:1 animations:^(void){
+        self.bottomBarConstraint.constant = 0;
+        [self.view layoutIfNeeded];
+    }];
+    return NO;
+}
+
+-(void)mapView:(GMSMapView *)mapView didTapAtCoordinate:(CLLocationCoordinate2D)coordinate
+{
+    [UIView animateWithDuration:1 animations:^(void){
+        self.bottomBarConstraint.constant = -60;
+        [self.view layoutIfNeeded];
+    }];
 }
 
 @end
