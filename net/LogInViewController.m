@@ -99,19 +99,4 @@
 
 
 
-//-(UIViewController*)giveViewControllerByTittleUpToStackWithTitle:(NSString*)tittle
-//{
-//    for (UIViewController *vc in ((UINavigationController*)self.parentViewController).viewControllers)
-//    {
-//        
-//        NSString *t = vc.title;
-//        if([vc.title isEqualToString:tittle])
-//            return vc;
-//    }
-//    
-//    return nil;
-//    
-//}
-
-
 @end

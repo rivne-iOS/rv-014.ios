@@ -14,6 +14,8 @@
 @property(strong, nonatomic)NSArray *fields; // arr of fields to validate
 
 -(BOOL)isFilled;
+-(BOOL)isValidFields;
+
 
 
 @end

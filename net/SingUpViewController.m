@@ -36,8 +36,14 @@
 
 - (void)textFieldDidBeginEditing:(UITextField *)textField
 {
-    textField.backgroundColor = nil;
+    textField.backgroundColor = [UIColor whiteColor];
     textField.placeholder = nil;
+}
+
+- (BOOL)textField:(UITextField *)textField shouldChangeCharactersInRange:(NSRange)range replacementString:(NSString *)string
+{
+    textField.backgroundColor = [UIColor whiteColor];
+    return YES;
 }
 
 - (void)textFieldDidEndEditing:(UITextField *)textField
