@@ -19,6 +19,7 @@
 @property (weak, nonatomic) IBOutlet UITextView *userInfoText;
 @property (strong, nonatomic) id <DataSorceProtocol> dataSorce;
 @property (weak, nonatomic) IBOutlet GMSMapView *mapView;
+@property (strong, nonatomic) GMSMarker *currentMarker;
 
 @end
 
@@ -73,6 +74,16 @@
             LogInViewController *logInVC = (LogInViewController*)segue.destinationViewController;
             logInVC.mapDelegate = self;
             
+        }
+    }
+    
+    if([segue.identifier isEqualToString:@"fromMapToDescription"])
+    {
+        if([segue.destinationViewController isKindOfClass:[DescriptionViewController class]])
+        {
+            DescriptionViewController *DescriptionVC = (DescriptionViewController *)segue.destinationViewController;
+            DescriptionVC.currentIssue = self.currentMarker.userData;
+//            DescriptionVC.mapDelegate = self;
         }
     }
 }
@@ -149,9 +160,8 @@
                                         completionHandler:^(NSData * _Nullable data, NSURLResponse * _Nullable response, NSError * _Nullable connectionError) {
                                             if (data.length > 0 && connectionError == nil)
                                             {
-                                                NSArray *issuesDictionaryArray = [NSJSONSerialization JSONObjectWithData:data
-                                                                                                         options:0
-                                                                                                           error:NULL];
+                                        
+                                                NSArray *issuesDictionaryArray = [NSJSONSerialization JSONObjectWithData:data options:0                                                                                                    error:NULL];
                                                 
                                                 NSMutableArray *issuesClassArray = [[NSMutableArray alloc] init];
                                                 for (NSDictionary *issue in issuesDictionaryArray) {
@@ -162,6 +172,7 @@
                                                     for (Issue *issue in issuesClassArray) {
                                                         GMSMarker *marker = [[GMSMarker alloc] init];
                                                         marker.position = CLLocationCoordinate2DMake(issue.getLatitude, issue.getLongitude);
+                                                        marker.userData = issue;
                                                         marker.map = self.mapView;
                                                     }
                                                 });
@@ -171,16 +182,17 @@
 
 -(BOOL)mapView:(GMSMapView *)mapView didTapMarker:(GMSMarker *)marker
 {
-    [UIView animateWithDuration:1 animations:^(void){
+    [UIView animateWithDuration:0.5 animations:^(void){
         self.bottomBarConstraint.constant = 0;
         [self.view layoutIfNeeded];
     }];
+    self.currentMarker = marker;
     return NO;
 }
 
 -(void)mapView:(GMSMapView *)mapView didTapAtCoordinate:(CLLocationCoordinate2D)coordinate
 {
-    [UIView animateWithDuration:1 animations:^(void){
+    [UIView animateWithDuration:0.5 animations:^(void){
         self.bottomBarConstraint.constant = -60;
         [self.view layoutIfNeeded];
     }];

@@ -25,10 +25,17 @@
 -(instancetype)initWithDictionary:(NSDictionary *)issueDictionary
 {
     self = [super init];
+    
+    NSString *camelStyleKey;
     if (self) {
             //Loop method
             for (NSString* key in issueDictionary) {
-                [self setValue:[issueDictionary valueForKey:key] forKey:key];
+                camelStyleKey = [self fromConstFontStyleToCamel:key];
+                if ([camelStyleKey isEqualToString:@"id"])
+                    camelStyleKey = @"issueId";
+                if ([camelStyleKey isEqualToString:@"description"])
+                    camelStyleKey = @"issueDescription";
+                [self setValue:[issueDictionary valueForKey:key] forKey:camelStyleKey];
             }
             // Instead of Loop method you can also use:
             // [self setValuesForKeysWithDictionary:JSONDictionary];
@@ -38,7 +45,7 @@
 
 -(double)getLongitude
 {
-    NSString *mapPointer = [self.MAP_POINTER copy];
+    NSString *mapPointer = [self.mapPointer copy];
     NSString *resultedString = [self findMatchedStringByPattern:@"[1234567890.]+" andString:mapPointer];
     mapPointer = [mapPointer stringByReplacingOccurrencesOfString:resultedString withString:@""];
     return [[self findMatchedStringByPattern:@"[1234567890.]+" andString:mapPointer] doubleValue];
@@ -46,7 +53,7 @@
 
 -(double)getLatitude
 {
-    return [[self findMatchedStringByPattern:@"[1234567890.]+" andString:self.MAP_POINTER] doubleValue];
+    return [[self findMatchedStringByPattern:@"[1234567890.]+" andString:self.mapPointer] doubleValue];
 }
 
 -(NSString *)findMatchedStringByPattern:(NSString *)inputPattern andString:(NSString *)inputString {
@@ -97,6 +104,32 @@
     return mStr;
 }
 
-
+-(NSString *)fromConstFontStyleToCamel:(NSString *)inputString
+{
+    //Example PRIORITY_ID -> priorityId
+    
+    BOOL underscoreFound = NO;
+    unichar letter;
+    NSString *resultString = [[NSString alloc] init];
+    NSString *stringTypeLetter;
+    
+    for (int i = 0; i < inputString.length; ++i){
+        letter = [inputString characterAtIndex:i];
+        stringTypeLetter = [NSString stringWithCharacters:&letter length:1];
+        
+        if ([stringTypeLetter isEqualToString:@"_"]){
+            underscoreFound = YES;
+            continue;
+        }
+        if (underscoreFound == NO)
+            resultString = [resultString stringByAppendingString:[stringTypeLetter lowercaseString]];
+        else {
+            resultString = [resultString stringByAppendingString:stringTypeLetter];
+            underscoreFound = NO;
+        }
+    }
+    
+    return resultString;
+}
 
 @end
