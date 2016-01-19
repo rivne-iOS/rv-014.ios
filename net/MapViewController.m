@@ -11,12 +11,12 @@
 #import "LogInViewController.h"
 #import "NetworkDataSorce.h"
 
+#import "DescriptionViewController.h"
 @import GoogleMaps;
 
 @interface MapViewController () <GMSMapViewDelegate>
 
 @property(strong,nonatomic) NSArray *arrayOfPoints;
-@property (weak, nonatomic) IBOutlet UITextView *userInfoText;
 @property (strong, nonatomic) id <DataSorceProtocol> dataSorce;
 @property (weak, nonatomic) IBOutlet GMSMapView *mapView;
 @property (strong, nonatomic) GMSMarker *currentMarker;
@@ -29,40 +29,25 @@
     [super viewDidLoad];
     self.title = @"Bowl";
     self.dataSorce = [[NetworkDataSorce alloc] init];
-    self.userInfoText.text = @"There is no user";
     self.navigationItem.rightBarButtonItem.title = @"Log In";
-    // [self updateUserInfoText];
-    // Do any additional setup after loading the view.
     [self createAndShowMap];
 }
-
 
 -(void)setCurrentUser:(User *) user
 {
     _currentUser = user;
     if(user == nil)
     {
-        self.userInfoText.text = @"There is no user";
         self.title = [NSString stringWithFormat:@"Bowl"];
         self.navigationItem.rightBarButtonItem.title = @"Log In";
 
     }
     else
     {
-        self.userInfoText.text = [user description];
         self.title = [NSString stringWithFormat:@"Bowl(%@)", user.name];
         self.navigationItem.rightBarButtonItem.title = @"Sing Out";
     }
 }
-
-
-- (void)didReceiveMemoryWarning {
-    [super didReceiveMemoryWarning];
-    // Dispose of any resources that can be recreated.
-}
-
-
-
 
 #pragma mark - Navigation
 -(void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
