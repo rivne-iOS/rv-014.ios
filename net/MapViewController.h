@@ -7,12 +7,16 @@
 //
 
 #import <UIKit/UIKit.h>
+# import <GoogleMaps/GoogleMaps.h>
 #import "User.h"
 
+#import "IssueHistoryViewController.h"
 
-@interface MapViewController : UIViewController
+
+@interface MapViewController : UIViewController <GMSMapViewDelegate>
 
 @property(strong,nonatomic) User *currentPerson;
+@property (weak, nonatomic) Issue *selectedIssue;
 @property (weak, nonatomic) IBOutlet UIButton *locationButton;
 @property (weak, nonatomic) IBOutlet UIButton *descriptionButton;
 @property (weak, nonatomic) IBOutlet UIButton *historyButton;

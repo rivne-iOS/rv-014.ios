@@ -23,6 +23,7 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
+    self.mapView.delegate = self;
     self.title = @"Map";
     self.userInfoText.text = @"There is no user";
     self.navigationItem.rightBarButtonItem.title = @"Log In";
@@ -69,6 +70,13 @@
             
         }
     }
+    
+    if ([segue.identifier isEqualToString:@"showIssueHistory"]) {
+        if ([segue.destinationViewController isKindOfClass:[IssueHistoryViewController class]]) {
+            IssueHistoryViewController *issueViewController = (IssueHistoryViewController*) segue.destinationViewController;
+            issueViewController.issue = self.selectedIssue;
+        }
+    }
 }
 
 -(void)createAndShowMap
@@ -106,6 +114,7 @@
                                                         GMSMarker *marker = [[GMSMarker alloc] init];
                                                         marker.position = CLLocationCoordinate2DMake(issue.getLatitude, issue.getLongitude);
                                                         marker.map = self.mapView;
+                                                        marker.userData = issue;
                                                     }
                                                 });
                                             }
@@ -120,4 +129,9 @@
     [_moreButton setImage:[UIImage imageNamed:@"more.png"] forState:UIControlStateNormal];
 }
 
+- (BOOL) mapView:(GMSMapView *) mapView didTapMarker:(GMSMarker *) 	marker {
+    self.selectedIssue = (Issue*)marker.userData;
+    
+    return true;
+}
 @end

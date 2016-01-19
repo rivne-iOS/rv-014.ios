@@ -24,6 +24,7 @@
 		84E3347F1C4435E800BEE6BA /* MapViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 84E3347E1C4435E800BEE6BA /* MapViewController.m */; };
 		84E334821C4436B200BEE6BA /* SingUpViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 84E334811C4436B200BEE6BA /* SingUpViewController.m */; };
 		84E7BF461C430AA600E66585 /* NetworkDataSorce.m in Sources */ = {isa = PBXBuildFile; fileRef = 84E7BF451C430AA600E66585 /* NetworkDataSorce.m */; };
+		CEBE9EAD1C4E89CB00C6C337 /* IssueHistoryViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = CEBE9EAC1C4E89CB00C6C337 /* IssueHistoryViewController.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -70,6 +71,8 @@
 		84E7BF431C430A3700E66585 /* DataSorceProtocol.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = DataSorceProtocol.h; path = model/DataSorceProtocol.h; sourceTree = "<group>"; };
 		84E7BF441C430AA600E66585 /* NetworkDataSorce.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = NetworkDataSorce.h; path = model/NetworkDataSorce.h; sourceTree = "<group>"; };
 		84E7BF451C430AA600E66585 /* NetworkDataSorce.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = NetworkDataSorce.m; path = model/NetworkDataSorce.m; sourceTree = "<group>"; };
+		CEBE9EAB1C4E89CB00C6C337 /* IssueHistoryViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = IssueHistoryViewController.h; sourceTree = "<group>"; };
+		CEBE9EAC1C4E89CB00C6C337 /* IssueHistoryViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = IssueHistoryViewController.m; sourceTree = "<group>"; };
 		F4AC75DBD87C887E9CEC39A4 /* Pods.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.release.xcconfig; path = "Pods/Target Support Files/Pods/Pods.release.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -136,6 +139,8 @@
 				8460F97A1C3C531E00ECB3A4 /* Images.xcassets */,
 				8460F97C1C3C531E00ECB3A4 /* LaunchScreen.xib */,
 				8460F96D1C3C531E00ECB3A4 /* Supporting Files */,
+				CEBE9EAB1C4E89CB00C6C337 /* IssueHistoryViewController.h */,
+				CEBE9EAC1C4E89CB00C6C337 /* IssueHistoryViewController.m */,
 			);
 			path = net;
 			sourceTree = "<group>";
@@ -357,6 +362,7 @@
 				84E334821C4436B200BEE6BA /* SingUpViewController.m in Sources */,
 				8460F9951C3C537900ECB3A4 /* User.m in Sources */,
 				84E3347F1C4435E800BEE6BA /* MapViewController.m in Sources */,
+				CEBE9EAD1C4E89CB00C6C337 /* IssueHistoryViewController.m in Sources */,
 				8460F9701C3C531E00ECB3A4 /* main.m in Sources */,
 				8460F9991C3C5C3B00ECB3A4 /* Issue.m in Sources */,
 			);
