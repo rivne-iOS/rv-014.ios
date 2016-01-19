@@ -24,7 +24,7 @@
     {
         if (data.length > 0 && error == nil)
         {
-            NSArray *arrOfPers = [Parser parseDataToArrayOfPersons:data];
+            NSArray *arrOfPers = [Parser parseDataToArrayOfUsers:data];
             NSMutableArray *arrOfStringPers = [[NSMutableArray alloc] init];
             for (User *p in arrOfPers)
             {
@@ -51,13 +51,35 @@
             andErrorHandler:(void(^)(NSError *error)) errorHandler;
 {
     HTTPConnector *wizard = [[HTTPConnector alloc] init];
-    [wizard requestLogInWithUser:user andPass:pass andDataSorceHandler:^(NSData *data, NSError *error) {
+    
+    [wizard requestLogInWithData:[Parser parseToDataWithLogIn:user andPassword:pass]
+             andDataSorceHandler:^(NSData *data, NSError *error) {
         if(data.length >0 && error == nil)
         {
-            viewControllerHandler([Parser parseDataToPerson:data]);
+            viewControllerHandler([Parser parseDataToUser:data]);
         }
-}];
+             }];
+    
 }
 
+
+-(void)requestSingUpWithUser:(User*)user
+    andViewControllerHandler:(void (^)(User *resPerson))viewControllerHandler
+             andErrorHandler:(void(^)(NSError *error)) errorHandler
+{
+    HTTPConnector *connector = [[HTTPConnector alloc] init];
+    [connector requestSingUpWithData:[Parser parseUserToData:user]
+                 andDataSorceHandler:^(NSData *data, NSError *error) {
+                     if(data.length >0 && error == nil)
+                     {
+                         viewControllerHandler([Parser parseDataToUser:data]);
+                     }
+                     else if (error!=nil)
+                     {
+                         errorHandler(error);
+                     }
+                 }];
+
+}
 
 @end

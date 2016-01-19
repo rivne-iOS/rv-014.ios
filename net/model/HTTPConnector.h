@@ -15,11 +15,17 @@
 @property(readonly, nonatomic)NSString* allPersURL;
 @property(readonly, nonatomic)NSString* allPointsURL;
 @property(readonly, nonatomic)NSString* userLogIn;
+@property(readonly, nonatomic)NSString* userSingUp;
 
 -(void)requestUsers:(void(^)(NSData *data, NSError *error))dataSorceHandler;
--(void)requestLogInWithUser:(NSString*)user
-                    andPass:(NSString*)pass
+
+-(void)requestLogInWithData:(NSData*)data
         andDataSorceHandler:(void(^)(NSData *data, NSError *error))dataSorceHandler;
+
+-(void)requestSingUpWithData:(NSData*)data
+        andDataSorceHandler:(void(^)(NSData *data, NSError *error))dataSorceHandler;
+
+
 
 
 @end
