@@ -62,9 +62,9 @@
     
     [self.dataSorce requestLogInWithUser:self.userTextFild.text
                                  andPass:self.passTextField.text
-                andViewControllerHandler:^(User *resPerson)
+                andViewControllerHandler:^(User *resUser)
     {
-        if (resPerson == nil)
+        if (resUser == nil)
         {
             NSLog(@"fail!!!!");
             dispatch_async(dispatch_get_main_queue(), ^
@@ -85,7 +85,7 @@
             __weak LogInViewController *weakSelf = self;
             dispatch_async(dispatch_get_main_queue(), ^
                        {
-                           weakSelf.mapDelegate.currentPerson = resPerson;
+                           weakSelf.mapDelegate.currentUser = resUser;
                            [weakSelf.navigationController popViewControllerAnimated:YES];
                        });
         }

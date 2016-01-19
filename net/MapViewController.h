@@ -12,7 +12,7 @@
 
 @interface MapViewController : UIViewController
 
-@property(strong,nonatomic) User *currentPerson;
+@property(strong,nonatomic) User *currentUser;
 @property (weak, nonatomic) IBOutlet UIButton *locationButton;
 @property (weak, nonatomic) IBOutlet UIButton *descriptionButton;
 @property (weak, nonatomic) IBOutlet UIButton *historyButton;

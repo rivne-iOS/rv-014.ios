@@ -27,6 +27,7 @@
 +(Issue*)parseDataToPoint:(NSData*)data;
 +(Issue*)parseDictionaryToPoint:(NSDictionary*)dic;
 
++(NSString*)parseSignOutAnswer:(NSData*)data;
 
 
 @end

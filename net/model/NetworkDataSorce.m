@@ -44,6 +44,21 @@
     }];
 }
 
+-(void)requestSignOutWithHandler:(void (^)(NSString * stringAnswer))viewControllerHandler andErrorHandler:(void(^)(NSError *error)) errorHandler
+{
+    HTTPConnector *wizard = [[HTTPConnector alloc] init];
+    [wizard requestSignOutWithHandler:^(NSData *data, NSError *error) {
+        if (data.length > 0 && error==nil)
+        {
+            viewControllerHandler([Parser parseSignOutAnswer:data]);
+        }
+        else if(error != nil)
+        {
+            errorHandler(error);
+        }
+    }];
+}
+
 
 -(void)requestLogInWithUser:(NSString*)user
                     andPass:(NSString*)pass

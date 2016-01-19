@@ -23,6 +23,8 @@
    andViewControllerHandler:(void (^)(User *resPerson))viewControllerHandler
             andErrorHandler:(void(^)(NSError *error)) errorHandler;
 
+-(void)requestSignOutWithHandler:(void (^)(NSString * stringAnswer))viewControllerHandler andErrorHandler:(void(^)(NSError *error)) errorHandler;
+
 
 @end
 

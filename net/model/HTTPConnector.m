@@ -12,6 +12,9 @@
 -(void)postRequest:(NSData*) postData
              toURL:(NSString*) textUrl
         andHandler:(void(^)(NSData *data, NSError *error))handler;
+
+-(void)getRequestBlankToUrl:(NSString*)textUrl
+                 andHandler:(void(^)(NSData* data, NSError *error))dataSorceHandler;
 @end
 
 
@@ -26,6 +29,7 @@
         _allPointsURL = @"issue/all";
         _userLogIn = @"users/auth/login";
         _userSingUp = @"users";
+        _userSignOut = @"users/auth/logout";
         
     }
     return self;
@@ -34,21 +38,12 @@
 
 -(void)requestUsers:(void(^)(NSData* data, NSError *error))dataSorceHandler
 {
-    NSURL *url = [NSURL URLWithString: [self.globalURL stringByAppendingString:self.allPersURL]];
-    NSURLRequest *request = [NSURLRequest requestWithURL:url];
-    
-    NSURLSessionDataTask *dataTask = [[NSURLSession sharedSession] dataTaskWithRequest:request
-                                                                     completionHandler:
-                                      ^(NSData *data, NSURLResponse *response, NSError *error)
-    {
-        // result with error (for testing)
-        //        dataSorceHandler(data, [[NSError alloc] init]);
-        dataSorceHandler(data, error);
-    }
-    ];
+    [self getRequestBlankToUrl:[self.globalURL stringByAppendingString:self.allPersURL] andHandler:dataSorceHandler];
+}
 
-    [dataTask resume];
-    
+-(void)requestSignOutWithHandler:(void (^)(NSData *data, NSError *error))dataSorceHandler
+{
+    [self getRequestBlankToUrl:[self.globalURL stringByAppendingString:self.userSignOut] andHandler:dataSorceHandler];
 }
 
 -(void)requestLogInWithData:(NSData*)data
@@ -62,6 +57,8 @@
 {
     [self postRequest:data toURL:[self.globalURL stringByAppendingString:self.userSingUp] andHandler:dataSorceHandler];
 }
+
+
 
 -(void)postRequest:(NSData*) postData
              toURL:(NSString*) textUrl
@@ -89,7 +86,24 @@
     
 }
 
-
+-(void)getRequestBlankToUrl:(NSString*)textUrl andHandler:(void(^)(NSData* data, NSError *error))dataSorceHandler
+{
+    NSURL *url = [NSURL URLWithString:textUrl];
+    NSURLRequest *request = [NSURLRequest requestWithURL:url];
+    
+    NSURLSessionDataTask *dataTask = [[NSURLSession sharedSession] dataTaskWithRequest:request
+                                                                     completionHandler:
+                                      ^(NSData *data, NSURLResponse *response, NSError *error)
+                                      {
+                                          // result with error (for testing)
+                                          //        dataSorceHandler(data, [[NSError alloc] init]);
+                                          dataSorceHandler(data, error);
+                                      }
+                                      ];
+    
+    [dataTask resume];
+    
+}
 
     
 

@@ -28,6 +28,14 @@
     return [Parser parseDictionaryToUser:PersonDic];
 }
 
++(NSString*)parseSignOutAnswer:(NSData*)data
+{
+    NSDictionary *answerDic = [NSJSONSerialization JSONObjectWithData:data
+                                                              options:0
+                                                                error:NULL];
+    return [answerDic objectForKey:@"message"];
+}
+
 +(NSArray*)parseDataToArrayOfUsers:(NSData *)data
 {
     NSError *err; //we might have problems here, so let's check

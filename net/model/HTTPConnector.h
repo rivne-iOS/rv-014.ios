@@ -16,6 +16,7 @@
 @property(readonly, nonatomic)NSString* allPointsURL;
 @property(readonly, nonatomic)NSString* userLogIn;
 @property(readonly, nonatomic)NSString* userSingUp;
+@property(readonly, nonatomic)NSString* userSignOut;
 
 -(void)requestUsers:(void(^)(NSData *data, NSError *error))dataSorceHandler;
 
@@ -25,7 +26,7 @@
 -(void)requestSingUpWithData:(NSData*)data
         andDataSorceHandler:(void(^)(NSData *data, NSError *error))dataSorceHandler;
 
-
+-(void)requestSignOutWithHandler:(void (^)(NSData *data, NSError *error))dataSorceHandler;
 
 
 @end

@@ -19,7 +19,6 @@
 @property (weak, nonatomic) IBOutlet UITextField *confirmPassword;
 
 @property (strong,nonatomic) id <DataSorceProtocol> dataSorce;
-// @property (strong, nonatomic) User *tempUser;
 @property (strong, nonatomic) TextFieldValidation *textFieldValidator;
 
 @end
@@ -29,7 +28,6 @@
 -(void)viewDidLoad
 {
     self.dataSorce = [[NetworkDataSorce alloc] init];
-//    self.tempUser = [[User alloc] init];
     _textFieldValidator = [[TextFieldValidation alloc] init];
 
 }
@@ -90,9 +88,9 @@
     
 
     [self.dataSorce requestSingUpWithUser:tempUser
-                 andViewControllerHandler:^(User *resPerson)
+                 andViewControllerHandler:^(User *resUser)
     {
-        if (resPerson == nil)
+        if (resUser == nil)
         {
             NSLog(@"fail!!!!");
             dispatch_async(dispatch_get_main_queue(), ^
@@ -113,7 +111,7 @@
             __weak SingUpViewController *weakSelf = self;
             dispatch_async(dispatch_get_main_queue(), ^
                            {
-                               weakSelf.mapDelegate.currentPerson = resPerson;
+                               weakSelf.mapDelegate.currentUser = resUser;
                                [weakSelf.navigationController popToViewController:weakSelf.mapDelegate animated:YES];
                            });
         }
