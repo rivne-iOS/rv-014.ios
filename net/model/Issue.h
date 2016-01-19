@@ -38,15 +38,26 @@ typedef enum : NSUInteger {
 //    "STATUS": "TO_RESOLVE"
 //},
 
-@property (strong, nonatomic) NSString *ATTACHMENTS;
-@property (strong, nonatomic) NSString *CATEGORY_ID;
-@property (strong, nonatomic) NSString *DESCRIPTION;
-@property (strong, nonatomic) NSArray *HISTORY;
-@property (strong, nonatomic) NSNumber *ID;
-@property (strong, nonatomic) NSString *MAP_POINTER;
-@property (strong, nonatomic) NSString *NAME;
-@property (strong, nonatomic) NSNumber *PRIORITY_ID;
-@property (strong, nonatomic) NSString *STATUS;
+//@property (strong, nonatomic) NSString *ATTACHMENTS;
+//@property (strong, nonatomic) NSString *CATEGORY_ID;
+//@property (strong, nonatomic) NSString *DESCRIPTION;
+//@property (strong, nonatomic) NSArray *HISTORY;
+//@property (strong, nonatomic) NSNumber *ID;
+//@property (strong, nonatomic) NSString *MAP_POINTER;
+//@property (strong, nonatomic) NSString *NAME;
+//@property (strong, nonatomic) NSNumber *PRIORITY_ID;
+//@property (strong, nonatomic) NSString *STATUS;
+
+@property (strong, nonatomic) NSString *attachments;
+@property (strong, nonatomic) NSString *categoryId;
+@property (strong, nonatomic) NSString *issueDescription;
+@property (strong, nonatomic) NSArray *history;
+@property (strong, nonatomic) NSNumber *issueId;
+@property (strong, nonatomic) NSString *mapPointer;
+//@property (strong, nonatomic) NSString *name;
+@property (strong, nonatomic) NSNumber *priorityId;
+@property (strong, nonatomic) NSString *status;
+
 
 +(NSArray*)BPPointStringStatuses;
 -(instancetype)initWithDictionary:(NSDictionary *)issueDictionary;
