@@ -9,6 +9,7 @@
 #import "IssueHistoryViewController.h"
 
 @interface IssueHistoryViewController ()
+@property (weak, nonatomic) IBOutlet UITableView *issueTable;
 
 @end
 
@@ -19,8 +20,9 @@
     
     NSURL *url = [NSURL URLWithString:requestString];
     NSURLRequest *request = [NSURLRequest requestWithURL:url];
+    __weak  IssueHistoryViewController *_weakSelf = self;
     
-    [[[NSURLSession sharedSession]dataTaskWithRequest:request
+    [[[NSURLSession sharedSession] dataTaskWithRequest:request
                                     completionHandler:^(NSData * _Nullable data, NSURLResponse * _Nullable response, NSError * _Nullable connectionError) {
                                         if (data.length > 0 && connectionError == nil)
                                         {
@@ -29,9 +31,11 @@
                                                                                                                error:NULL];
                                             
                                             for (NSDictionary *issue in issuesDictionaryArray) {
-                                                [self.issueHistory addObject:[NSString stringWithFormat:@"%@: %@",issue[@"data"],issue[@"action"]]];
+                                                [_weakSelf.issueHistory addObject:[NSString stringWithFormat:@"%@: %@",issue[@"DATE"],issue[@"ACTION"]]];
                                             }
-                                            
+                                            dispatch_async(dispatch_get_main_queue(), ^{
+                                                [_weakSelf.issueTable reloadData];
+                                            });
                                         }
                                     }] resume];
     

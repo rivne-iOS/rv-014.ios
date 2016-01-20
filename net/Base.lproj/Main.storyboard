@@ -428,6 +428,7 @@
                     </view>
                     <navigationItem key="navigationItem" title="Issue History" id="3y2-cQ-MWc"/>
                     <connections>
+                        <outlet property="issueTable" destination="L4p-s2-WJp" id="TL1-6p-XAb"/>
                         <outlet property="issueTitle" destination="0pH-l5-3bc" id="YOO-hN-ZBw"/>
                     </connections>
                 </viewController>

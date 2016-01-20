@@ -11,8 +11,8 @@
 
 @interface IssueHistoryViewController : UIViewController <UITableViewDataSource, UITableViewDelegate>
 
-@property (retain, nonatomic) Issue *issue;
-@property (retain, nonatomic) NSMutableArray *issueHistory;
+@property (strong, nonatomic) Issue *issue;
+@property (strong, nonatomic) NSMutableArray *issueHistory;
 
 @property (strong, nonatomic) IBOutlet UILabel *issueTitle;
 
