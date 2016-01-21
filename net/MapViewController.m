@@ -7,9 +7,7 @@
 //
 
 #import "MapViewController.h"
-#import "Issue.h"
-#import "LogInViewController.h"
-#import "NetworkDataSorce.h"
+
 
 #import "DescriptionViewController.h"
 @import GoogleMaps;
@@ -69,6 +67,13 @@
             DescriptionViewController *DescriptionVC = (DescriptionViewController *)segue.destinationViewController;
             DescriptionVC.currentIssue = self.currentMarker.userData;
 //            DescriptionVC.mapDelegate = self;
+        }
+    }
+    
+    if ([segue.identifier isEqualToString:@"showIssueHistory"]) {
+        if ([segue.destinationViewController isKindOfClass:[IssueHistoryViewController class]]) {
+            IssueHistoryViewController *issueViewController = (IssueHistoryViewController*) segue.destinationViewController;
+            issueViewController.issue = (Issue*)self.currentMarker.userData;
         }
     }
 }
@@ -159,6 +164,7 @@
                                                         marker.position = CLLocationCoordinate2DMake(issue.getLatitude, issue.getLongitude);
                                                         marker.userData = issue;
                                                         marker.map = self.mapView;
+                                                        marker.userData = issue;
                                                     }
                                                 });
                                             }

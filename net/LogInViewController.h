@@ -9,7 +9,6 @@
 #import <UIKit/UIKit.h>
 #import "MapViewController.h"
 
-
 @interface LogInViewController : UIViewController
 @property (weak, nonatomic) MapViewController *mapDelegate;
 
