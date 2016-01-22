@@ -10,6 +10,8 @@
 #import "SingUpViewController.h"
 #import "User.h"
 #import "TextFieldValidation.h"
+#define kOFFSET_FOR_KEYBOARD 280.0
+
 
 @interface SingUpViewController () <UITextFieldDelegate>
 @property (weak, nonatomic) IBOutlet UITextField *fullNameText;
@@ -17,6 +19,13 @@
 @property (weak, nonatomic) IBOutlet UITextField *emailText;
 @property (weak, nonatomic) IBOutlet UITextField *passwordText;
 @property (weak, nonatomic) IBOutlet UITextField *confirmPassword;
+
+@property (strong, nonatomic) UITextField *currentEditField;
+@property (weak, nonatomic) IBOutlet UIView *viewSize;
+@property (weak, nonatomic) IBOutlet UIScrollView *scrollView;
+@property (weak, nonatomic) IBOutlet UIView *contentView;
+@property (weak, nonatomic) IBOutlet NSLayoutConstraint *scrollViewBottonConstraint;
+
 
 @property (strong,nonatomic) id <DataSorceProtocol> dataSorce;
 @property (strong, nonatomic) TextFieldValidation *textFieldValidator;
@@ -32,10 +41,70 @@
 
 }
 
+- (void)viewWillAppear:(BOOL)animated
+{
+    [super viewWillAppear:animated];
+    // register for keyboard notifications
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(keyboardWillShow)
+                                                 name:UIKeyboardWillShowNotification
+                                               object:nil];
+    
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(keyboardWillHide)
+                                                 name:UIKeyboardWillHideNotification
+                                               object:nil];
+}
+
+- (void)viewWillDisappear:(BOOL)animated
+{
+    [super viewWillDisappear:animated];
+    // unregister for keyboard notifications while not visible.
+    [[NSNotificationCenter defaultCenter] removeObserver:self
+                                                    name:UIKeyboardWillShowNotification
+                                                  object:nil];
+    
+    [[NSNotificationCenter defaultCenter] removeObserver:self
+                                                    name:UIKeyboardWillHideNotification
+                                                  object:nil];
+}
+
+#define TEXTFIELD_OFFSET 4
+
+-(void)keyboardWillShow {
+//    if (self.currentEditField == nil)
+//        return;
+//    
+//    CGFloat bottomCurrentField = self.currentEditField.frame.origin.y+self.currentEditField.bounds.size.height + TEXTFIELD_OFFSET;
+//    CGFloat topKeyboard = self.viewSize.bounds.size.height - kOFFSET_FOR_KEYBOARD;
+//    
+//    if(bottomCurrentField > topKeyboard)
+//    {
+//        CGRect visibleRect = [self.scrollView convertRect:self.scrollView.bounds toView:self.contentView];
+//        CGFloat yMove = bottomCurrentField - topKeyboard;
+//        CGRect newVisibleRect = CGRectMake(visibleRect.origin.x, visibleRect.origin.y + yMove, visibleRect.size.width, visibleRect.size.height);
+//        [self.scrollView scrollRectToVisible:newVisibleRect animated:YES];
+//        
+//    }
+    
+}
+
+-(void)keyboardWillHide {
+
+
+}
+
+
 - (void)textFieldDidBeginEditing:(UITextField *)textField
 {
     textField.backgroundColor = [UIColor whiteColor];
     textField.placeholder = nil;
+    self.currentEditField = textField;
+    
+    CGRect oldBounds =  self.scrollView.bounds;
+    CGRect newBounds = CGRectMake(oldBounds.origin.x, oldBounds.origin.y, oldBounds.size.width, oldBounds.size.height - kOFFSET_FOR_KEYBOARD);
+    self.scrollView.bounds = newBounds;
+
 }
 
 - (BOOL)textField:(UITextField *)textField shouldChangeCharactersInRange:(NSRange)range replacementString:(NSString *)string
@@ -47,6 +116,7 @@
 - (void)textFieldDidEndEditing:(UITextField *)textField
 {
     textField.placeholder = textField.restorationIdentifier;
+    self.currentEditField = nil;
     if([textField.restorationIdentifier isEqualToString:@"Confirm password"])
     {
         if(![self.passwordText.text isEqualToString:self.confirmPassword.text])
