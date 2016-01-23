@@ -10,7 +10,7 @@
 #import "SingUpViewController.h"
 #import "User.h"
 #import "TextFieldValidation.h"
-#define kOFFSET_FOR_KEYBOARD 280.0
+#define kOFFSET_FOR_KEYBOARD 215.0
 
 
 @interface SingUpViewController () <UITextFieldDelegate>
@@ -49,6 +49,11 @@
                                              selector:@selector(keyboardWillShow)
                                                  name:UIKeyboardWillShowNotification
                                                object:nil];
+
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(keyboardDidShow)
+                                                 name:UIKeyboardDidShowNotification
+                                               object:nil];
     
     [[NSNotificationCenter defaultCenter] addObserver:self
                                              selector:@selector(keyboardWillHide)
@@ -61,6 +66,10 @@
     [super viewWillDisappear:animated];
     // unregister for keyboard notifications while not visible.
     [[NSNotificationCenter defaultCenter] removeObserver:self
+                                                    name:UIKeyboardDidShowNotification
+                                                  object:nil];
+
+    [[NSNotificationCenter defaultCenter] removeObserver:self
                                                     name:UIKeyboardWillShowNotification
                                                   object:nil];
     
@@ -69,27 +78,39 @@
                                                   object:nil];
 }
 
-#define TEXTFIELD_OFFSET 4
+#define TEXTFIELD_OFFSET 3
 
--(void)keyboardWillShow {
-//    if (self.currentEditField == nil)
-//        return;
-//    
-//    CGFloat bottomCurrentField = self.currentEditField.frame.origin.y+self.currentEditField.bounds.size.height + TEXTFIELD_OFFSET;
-//    CGFloat topKeyboard = self.viewSize.bounds.size.height - kOFFSET_FOR_KEYBOARD;
-//    
-//    if(bottomCurrentField > topKeyboard)
-//    {
-//        CGRect visibleRect = [self.scrollView convertRect:self.scrollView.bounds toView:self.contentView];
-//        CGFloat yMove = bottomCurrentField - topKeyboard;
-//        CGRect newVisibleRect = CGRectMake(visibleRect.origin.x, visibleRect.origin.y + yMove, visibleRect.size.width, visibleRect.size.height);
-//        [self.scrollView scrollRectToVisible:newVisibleRect animated:YES];
-//        
-//    }
+-(void)keyboardWillShow
+{
     
+    self.scrollViewBottonConstraint.constant = kOFFSET_FOR_KEYBOARD;
+    [self.view layoutIfNeeded];
 }
 
--(void)keyboardWillHide {
+-(void)keyboardDidShow
+{
+    if (self.currentEditField == nil)
+        return;
+    
+    CGRect visibleRect = [self.scrollView convertRect:self.scrollView.bounds toView:self.contentView];
+
+    CGFloat bottomCurrentField = self.currentEditField.frame.origin.y - visibleRect.origin.y + self.currentEditField.bounds.size.height + TEXTFIELD_OFFSET;
+    CGFloat bottomScrollView = self.scrollView.bounds.size.height;
+    
+    if(bottomCurrentField > bottomScrollView)
+    {
+        CGFloat yMove = bottomCurrentField - bottomScrollView;
+        CGRect newVisibleRect = CGRectMake(visibleRect.origin.x, visibleRect.origin.y + yMove, visibleRect.size.width, visibleRect.size.height);
+        [self.scrollView scrollRectToVisible:newVisibleRect animated:YES];
+        
+    }
+
+}
+
+-(void)keyboardWillHide
+{
+    self.scrollViewBottonConstraint.constant = 0;
+    [self.view layoutIfNeeded];
 
 
 }
@@ -101,9 +122,10 @@
     textField.placeholder = nil;
     self.currentEditField = textField;
     
-    CGRect oldBounds =  self.scrollView.bounds;
-    CGRect newBounds = CGRectMake(oldBounds.origin.x, oldBounds.origin.y, oldBounds.size.width, oldBounds.size.height - kOFFSET_FOR_KEYBOARD);
-    self.scrollView.bounds = newBounds;
+    
+//    CGRect oldBounds =  self.scrollView.bounds;
+//    CGRect newBounds = CGRectMake(oldBounds.origin.x, oldBounds.origin.y, oldBounds.size.width, oldBounds.size.height - kOFFSET_FOR_KEYBOARD);
+//    self.scrollView.bounds = newBounds;
 
 }
 
