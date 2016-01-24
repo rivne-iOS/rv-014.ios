@@ -5,12 +5,18 @@
 //  Created by Admin on 11.01.16.
 //  Copyright (c) 2016 Admin. All rights reserved.
 //
+#import <Quartzcore/QuartzCore.h>
+
 #import "DataSorceProtocol.h"
 #import "NetworkDataSorce.h"
 #import "SingUpViewController.h"
 #import "User.h"
 #import "TextFieldValidation.h"
-#define kOFFSET_FOR_KEYBOARD 215.0
+
+#define R_COLOR 0.88235294117647056
+#define G_COLOR 0.21176470588235294
+#define B_COLOR 0.33333333333333331
+#define COLOR_MULT 1.5
 
 
 @interface SingUpViewController () <UITextFieldDelegate>
@@ -19,13 +25,12 @@
 @property (weak, nonatomic) IBOutlet UITextField *emailText;
 @property (weak, nonatomic) IBOutlet UITextField *passwordText;
 @property (weak, nonatomic) IBOutlet UITextField *confirmPassword;
+// actually I want an array of weak reference objacts...
+@property (strong, nonatomic) NSArray <UITextField*> *textFields;
 
 @property (strong, nonatomic) UITextField *currentEditField;
-@property (weak, nonatomic) IBOutlet UIView *viewSize;
 @property (weak, nonatomic) IBOutlet UIScrollView *scrollView;
 @property (weak, nonatomic) IBOutlet UIView *contentView;
-@property (weak, nonatomic) IBOutlet NSLayoutConstraint *scrollViewBottonConstraint;
-
 
 @property (strong,nonatomic) id <DataSorceProtocol> dataSorce;
 @property (strong, nonatomic) TextFieldValidation *textFieldValidator;
@@ -38,20 +43,22 @@
 {
     self.dataSorce = [[NetworkDataSorce alloc] init];
     _textFieldValidator = [[TextFieldValidation alloc] init];
+    self.textFields = [NSArray arrayWithObjects:self.fullNameText, self.userNameText, self.emailText, self.passwordText, self.confirmPassword, nil];
+    // frame color
+    for (__weak UITextField *textField in self.textFields)
+    {
+        textField.layer.borderColor = [[UIColor colorWithRed:R_COLOR green:G_COLOR blue:B_COLOR alpha:0.3] CGColor];
+        textField.layer.borderWidth = 1;
+        textField.layer.cornerRadius = 6;
 
+    }
 }
 
 - (void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
-    // register for keyboard notifications
     [[NSNotificationCenter defaultCenter] addObserver:self
-                                             selector:@selector(keyboardWillShow)
-                                                 name:UIKeyboardWillShowNotification
-                                               object:nil];
-
-    [[NSNotificationCenter defaultCenter] addObserver:self
-                                             selector:@selector(keyboardDidShow)
+                                             selector:@selector(keyboardDidShow:)
                                                  name:UIKeyboardDidShowNotification
                                                object:nil];
     
@@ -64,31 +71,46 @@
 - (void)viewWillDisappear:(BOOL)animated
 {
     [super viewWillDisappear:animated];
-    // unregister for keyboard notifications while not visible.
     [[NSNotificationCenter defaultCenter] removeObserver:self
                                                     name:UIKeyboardDidShowNotification
                                                   object:nil];
 
     [[NSNotificationCenter defaultCenter] removeObserver:self
-                                                    name:UIKeyboardWillShowNotification
-                                                  object:nil];
-    
-    [[NSNotificationCenter defaultCenter] removeObserver:self
                                                     name:UIKeyboardWillHideNotification
                                                   object:nil];
 }
 
-#define TEXTFIELD_OFFSET 3
+#define TEXTFIELD_OFFSET 30
 
--(void)keyboardWillShow
+-(NSLayoutConstraint*)scrollBottomConstraint
 {
-    
-    self.scrollViewBottonConstraint.constant = kOFFSET_FOR_KEYBOARD;
-    [self.view layoutIfNeeded];
+    for(NSLayoutConstraint *constraint in self.view.constraints)
+    {
+        if ([constraint.identifier isEqualToString:@"BottomConstraint"])
+        {
+            return constraint;
+            
+        }
+    }
+    return nil;
+
 }
 
--(void)keyboardDidShow
+-(void)keyboardDidShow:(NSNotification*)notification
 {
+    NSDictionary *dic = notification.userInfo;
+    NSValue *keyboardFrame = dic[UIKeyboardFrameEndUserInfoKey];
+    CGRect frame = [keyboardFrame CGRectValue];
+    CGRect viewFrame = [self.view convertRect:frame fromView:nil];
+    CGFloat keyboardHeight = viewFrame.size.height;
+    NSLog(@"keyboard height = %f", keyboardHeight);
+    
+    [self scrollBottomConstraint].constant = keyboardHeight;
+    [self.view layoutIfNeeded];
+    NSLog(@"-(void)keyboardDidShow, and self.currentTextField = %@", self.currentEditField.restorationIdentifier);
+
+    
+    // code belowe don't work :( and it's important to understand why!
     if (self.currentEditField == nil)
         return;
     
@@ -109,10 +131,9 @@
 
 -(void)keyboardWillHide
 {
-    self.scrollViewBottonConstraint.constant = 0;
+    NSLog(@"-(void)keyboardWillHide");
+    [self scrollBottomConstraint].constant = 0;
     [self.view layoutIfNeeded];
-
-
 }
 
 
@@ -121,12 +142,6 @@
     textField.backgroundColor = [UIColor whiteColor];
     textField.placeholder = nil;
     self.currentEditField = textField;
-    
-    
-//    CGRect oldBounds =  self.scrollView.bounds;
-//    CGRect newBounds = CGRectMake(oldBounds.origin.x, oldBounds.origin.y, oldBounds.size.width, oldBounds.size.height - kOFFSET_FOR_KEYBOARD);
-//    self.scrollView.bounds = newBounds;
-
 }
 
 - (BOOL)textField:(UITextField *)textField shouldChangeCharactersInRange:(NSRange)range replacementString:(NSString *)string

@@ -422,7 +422,7 @@
                         <subviews>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="ZaN-Qo-3fm">
                                 <rect key="frame" x="0.0" y="64" width="600" height="536"/>
-                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                <color key="backgroundColor" red="0.0" green="0.50196081400000003" blue="0.25098040700000002" alpha="1" colorSpace="calibratedRGB"/>
                             </view>
                             <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="tgU-J4-p1r">
                                 <rect key="frame" x="0.0" y="64" width="600" height="536"/>
@@ -458,14 +458,6 @@
                                                 <textInputTraits key="textInputTraits"/>
                                                 <connections>
                                                     <outlet property="delegate" destination="xSJ-uf-0GR" id="dqu-vf-lCc"/>
-                                                </connections>
-                                            </textField>
-                                            <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" restorationIdentifier="User name" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="User name" textAlignment="center" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="6te-sW-hmC">
-                                                <rect key="frame" x="28" y="203" width="544" height="35"/>
-                                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
-                                                <textInputTraits key="textInputTraits"/>
-                                                <connections>
-                                                    <outlet property="delegate" destination="xSJ-uf-0GR" id="ALr-gS-Nje"/>
                                                 </connections>
                                             </textField>
                                             <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" restorationIdentifier="Password" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Password" textAlignment="center" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="vtk-pR-S7o">
@@ -512,6 +504,14 @@
                                                     <action selector="singUpButton:" destination="xSJ-uf-0GR" eventType="touchUpInside" id="Pck-wT-yfN"/>
                                                 </connections>
                                             </button>
+                                            <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" restorationIdentifier="User name" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="User name" textAlignment="center" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="6te-sW-hmC">
+                                                <rect key="frame" x="28" y="203" width="544" height="35"/>
+                                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                                <textInputTraits key="textInputTraits"/>
+                                                <connections>
+                                                    <outlet property="delegate" destination="xSJ-uf-0GR" id="ALr-gS-Nje"/>
+                                                </connections>
+                                            </textField>
                                         </subviews>
                                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                         <constraints>
@@ -598,7 +598,7 @@
                             <constraint firstAttribute="trailing" secondItem="tgU-J4-p1r" secondAttribute="trailing" id="5CQ-OE-UAZ"/>
                             <constraint firstItem="ZaN-Qo-3fm" firstAttribute="leading" secondItem="XPY-OW-WFN" secondAttribute="leading" id="BeA-tU-WJg"/>
                             <constraint firstItem="oJh-kA-UTn" firstAttribute="width" secondItem="XPY-OW-WFN" secondAttribute="width" id="ILz-Nv-cTZ"/>
-                            <constraint firstItem="r8Y-cK-eEu" firstAttribute="top" secondItem="tgU-J4-p1r" secondAttribute="bottom" id="V1o-t6-4Vd"/>
+                            <constraint firstItem="r8Y-cK-eEu" firstAttribute="top" secondItem="tgU-J4-p1r" secondAttribute="bottom" identifier="BottomConstraint" id="V1o-t6-4Vd"/>
                             <constraint firstItem="oJh-kA-UTn" firstAttribute="height" secondItem="XPY-OW-WFN" secondAttribute="height" id="kuh-LD-YSe"/>
                             <constraint firstItem="ZaN-Qo-3fm" firstAttribute="top" secondItem="N5X-0g-k0B" secondAttribute="bottom" id="l8c-9M-nlP"/>
                             <constraint firstItem="tgU-J4-p1r" firstAttribute="top" secondItem="N5X-0g-k0B" secondAttribute="bottom" id="oZZ-R6-oNG"/>
@@ -622,14 +622,12 @@
                         <outlet property="fullNameText" destination="1NE-BY-eTD" id="6lK-Ao-Hri"/>
                         <outlet property="passwordText" destination="vtk-pR-S7o" id="Ttd-SQ-5rM"/>
                         <outlet property="scrollView" destination="tgU-J4-p1r" id="Fci-0G-BKw"/>
-                        <outlet property="scrollViewBottonConstraint" destination="V1o-t6-4Vd" id="5p3-sE-JBU"/>
                         <outlet property="userNameText" destination="6te-sW-hmC" id="ehS-nI-Q9a"/>
-                        <outlet property="viewSize" destination="ZaN-Qo-3fm" id="7pc-Vk-bHS"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="noz-iG-6Js" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1280" y="270"/>
+            <point key="canvasLocation" x="1048" y="276"/>
         </scene>
         <!--Map-->
         <scene sceneID="Ue2-xT-0yB">
