@@ -27,6 +27,7 @@
 		84E334821C4436B200BEE6BA /* SingUpViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 84E334811C4436B200BEE6BA /* SingUpViewController.m */; };
 		84E7BF461C430AA600E66585 /* NetworkDataSorce.m in Sources */ = {isa = PBXBuildFile; fileRef = 84E7BF451C430AA600E66585 /* NetworkDataSorce.m */; };
 		CE6A2E811C50DAA70059A132 /* IssueHistoryViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = CE6A2E801C50DAA70059A132 /* IssueHistoryViewController.m */; };
+		CEA4EED11C5243EE0096670D /* CustomTableCell.m in Sources */ = {isa = PBXBuildFile; fileRef = CEA4EED01C5243EE0096670D /* CustomTableCell.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -79,6 +80,8 @@
 		84E7BF451C430AA600E66585 /* NetworkDataSorce.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = NetworkDataSorce.m; path = model/NetworkDataSorce.m; sourceTree = "<group>"; };
 		CE6A2E7F1C50DAA70059A132 /* IssueHistoryViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = IssueHistoryViewController.h; sourceTree = "<group>"; };
 		CE6A2E801C50DAA70059A132 /* IssueHistoryViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = IssueHistoryViewController.m; sourceTree = "<group>"; };
+		CEA4EECF1C5243EE0096670D /* CustomTableCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CustomTableCell.h; sourceTree = "<group>"; };
+		CEA4EED01C5243EE0096670D /* CustomTableCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CustomTableCell.m; sourceTree = "<group>"; };
 		F4AC75DBD87C887E9CEC39A4 /* Pods.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.release.xcconfig; path = "Pods/Target Support Files/Pods/Pods.release.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -149,6 +152,8 @@
 				8460F97A1C3C531E00ECB3A4 /* Images.xcassets */,
 				8460F97C1C3C531E00ECB3A4 /* LaunchScreen.xib */,
 				8460F96D1C3C531E00ECB3A4 /* Supporting Files */,
+				CEA4EECF1C5243EE0096670D /* CustomTableCell.h */,
+				CEA4EED01C5243EE0096670D /* CustomTableCell.m */,
 			);
 			path = net;
 			sourceTree = "<group>";
@@ -368,6 +373,7 @@
 				84E7BF461C430AA600E66585 /* NetworkDataSorce.m in Sources */,
 				8460F99F1C3C651500ECB3A4 /* HTTPConnector.m in Sources */,
 				8460F9731C3C531E00ECB3A4 /* AppDelegate.m in Sources */,
+				CEA4EED11C5243EE0096670D /* CustomTableCell.m in Sources */,
 				845245A71C4E5923000755AC /* DescriptionViewController.m in Sources */,
 				8460F9A21C3C666100ECB3A4 /* Parser.m in Sources */,
 				84E334821C4436B200BEE6BA /* SingUpViewController.m in Sources */,

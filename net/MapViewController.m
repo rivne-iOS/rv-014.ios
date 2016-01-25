@@ -7,6 +7,10 @@
 //
 
 #import "MapViewController.h"
+#import "Issue.h"
+#import "LogInViewController.h"
+#import "NetworkDataSorce.h"
+#import "IssueHistoryViewController.h"
 
 
 #import "DescriptionViewController.h"

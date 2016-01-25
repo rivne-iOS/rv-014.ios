@@ -8,8 +8,11 @@
 
 #import "IssueHistoryViewController.h"
 
+static NSString * const kSimpleTableIdentifier = @"Cell_1";
+
 @interface IssueHistoryViewController ()
 @property (weak, nonatomic) IBOutlet UITableView *issueTable;
+//@property (strong, nonatomic) UIRefreshControl *refreshControl;
 
 @end
 
@@ -30,7 +33,8 @@
                                                                                                              options:0
                                                                                                                error:NULL];
                                             
-                                            UIColor *color = [UIColor colorWithRed:(255/225.0f) green:(0/255.0f) blue:(137/255.0f) alpha:1];
+                                            //UIColor *color = [UIColor colorWithRed:(255/225.0f) green:(0/255.0f) blue:(137/255.0f) alpha:1];
+                                            UIColor *color = [[UIColor alloc] initWithRed: (255/225.0f) green:(0/255.0f) blue:(137/255.0f) alpha:1];
                                             NSDictionary *attrs = @{ NSForegroundColorAttributeName : color };
                                             
                                             UIActivityIndicatorView *ac = [[UIActivityIndicatorView alloc]
@@ -42,26 +46,61 @@
                                             
                                             _weakSelf.issueTable.tableHeaderView = view;
                                             
+                                            
+                                            
                                             for (NSDictionary *issue in issuesDictionaryArray) {
-                                                NSAttributedString *date = [[NSAttributedString alloc] initWithString:issue[@"DATE"] attributes:attrs];
                                                 
-                                                [_weakSelf.issueHistory addObject:[NSString stringWithFormat:@"%@: %@ %@",date, issue[@"USER"], issue[@"ACTION"]]];
+                                                NSAttributedString *date = [[NSAttributedString alloc] initWithString:[NSString stringWithFormat:@"%@: ",issue[@"DATE"]] attributes:attrs];
+                                                NSAttributedString *user = [[NSAttributedString alloc] initWithString:[NSString stringWithFormat:@"%@ ", issue[@"USER"]]];
+                                                NSAttributedString *action =[[NSAttributedString alloc] initWithString:issue[@"ACTION"]];
+                                                
+                                                NSMutableDictionary *oneCell = [[NSMutableDictionary alloc] init];
+                                                [oneCell setValue:date forKey:@"date"];
+                                                [oneCell setValue:user forKey:@"user"];
+                                                [oneCell setValue:action forKey:@"action"];
+                                                
+                                                [_weakSelf.issueHistory addObject:oneCell];
                                             }
-                                            dispatch_async(dispatch_get_main_queue(), ^{
-                                                [_weakSelf.issueTable reloadData];
-                                                
-                                                [ac stopAnimating];
-                                            });
+                                            
+                                            [self performSelectorOnMainThread:@selector(reloadData) withObject:nil waitUntilDone:NO];
                                         }
                                     }] resume];
     
 }
 
+-(void) reloadData {
+    [self.issueTable reloadData];
+    
+    if (self.refreshControl) {
+        
+        NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
+        [formatter setDateFormat:@"MMM d, h:mm a"];
+        NSString *title = [NSString stringWithFormat:@"Last update: %@", [formatter stringFromDate:[NSDate date]]];
+        NSDictionary *attrsDictionary = [NSDictionary dictionaryWithObject:[UIColor whiteColor]
+                                                                    forKey:NSForegroundColorAttributeName];
+        NSAttributedString *attributedTitle = [[NSAttributedString alloc] initWithString:title attributes:attrsDictionary];
+        self.refreshControl.attributedTitle = attributedTitle;
+        
+        [self.refreshControl endRefreshing];
+    }
+}
+
 - (void)viewDidLoad {
     [super viewDidLoad];
     // Do any additional setup after loading the view.
-    [self.issueTitle setText:self.issue.description];
+    [self.issueTitle setText:self.issue.issueDescription];
+    self.issueHistory = [[NSMutableArray alloc] init];
     self.issueTitle.textColor = [UIColor colorWithRed:(255/225.0f) green:(0/255.0f) blue:(137/255.0f) alpha:1];
+    
+    self.refreshControl = [[UIRefreshControl alloc] init];
+    self.refreshControl.backgroundColor = [UIColor purpleColor];
+    self.refreshControl.tintColor = [UIColor whiteColor];
+    [self.refreshControl addTarget:self
+                            action:@selector(requestIssueHistory)
+                  forControlEvents:UIControlEventValueChanged];
+    
+    [self.issueTable registerClass:[CustomTableCell class] forCellReuseIdentifier:kSimpleTableIdentifier];
+    
     [self requestIssueHistory];
 }
 
@@ -75,20 +114,49 @@
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
-    static NSString *cellIdentifier = @"Cell Identifier";
     
+    CustomTableCell *cell = [self.issueTable dequeueReusableCellWithIdentifier:kSimpleTableIdentifier forIndexPath:indexPath];
     
-    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:cellIdentifier forIndexPath:indexPath];
+    // Configure the cell...
+    NSMutableDictionary *singleAction = [self.issueHistory objectAtIndex:indexPath.row];
     
-    if (cell == nil) {
-        cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:cellIdentifier];
-    }
-
-    NSString *issueHistoryCell = [self.issueHistory objectAtIndex:[indexPath row]];
+    NSMutableAttributedString *userAction = [[NSMutableAttributedString alloc] init];
     
-    [cell.textLabel setText:issueHistoryCell];
+    [userAction appendAttributedString:singleAction[@"user"]];
+    [userAction appendAttributedString:singleAction[@"action"]];
+    
+    cell.date.attributedText = singleAction[@"date"];
+    cell.action.attributedText = userAction;
     
     return cell;
+}
+
+- (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
+{
+    // Return the number of sections.
+    if (self.issueHistory) {
+        
+        self.issueTable.separatorStyle = UITableViewCellSeparatorStyleSingleLine;
+        return 1;
+        
+    } else {
+        
+        // Display a message when the table is empty
+        UILabel *messageLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, self.view.bounds.size.width, self.view.bounds.size.height)];
+        
+        messageLabel.text = @"No data is currently available. Please pull down to refresh.";
+        messageLabel.textColor = [UIColor blackColor];
+        messageLabel.numberOfLines = 0;
+        messageLabel.textAlignment = NSTextAlignmentCenter;
+        messageLabel.font = [UIFont fontWithName:@"Palatino-Italic" size:20];
+        [messageLabel sizeToFit];
+        
+        self.issueTable.backgroundView = messageLabel;
+        self.issueTable.separatorStyle = UITableViewCellSeparatorStyleNone;
+        
+    }
+    
+    return 0;
 }
 
 

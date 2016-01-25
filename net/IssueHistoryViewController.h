@@ -8,11 +8,11 @@
 
 #import <UIKit/UIKit.h>
 #import "Issue.h"
+#import "CustomTableCell.h"
 
-@interface IssueHistoryViewController : UIViewController <UITableViewDataSource, UITableViewDelegate>
-
+@interface IssueHistoryViewController : UITableViewController
 @property (strong, nonatomic) Issue *issue;
-@property (weak, nonatomic) NSMutableArray *issueHistory;
+@property (strong, nonatomic) NSMutableArray *issueHistory;
 
 @property (weak, nonatomic) IBOutlet UILabel *issueTitle;
 

@@ -8,10 +8,6 @@
 
 #import <UIKit/UIKit.h>
 #import "User.h"
-#import "Issue.h"
-#import "LogInViewController.h"
-#import "NetworkDataSorce.h"
-#import "IssueHistoryViewController.h"
 
 
 @interface MapViewController : UIViewController
