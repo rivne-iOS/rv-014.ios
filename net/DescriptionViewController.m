@@ -14,10 +14,16 @@
 
 @implementation DescriptionViewController
 
-- (void)viewDidLoad {
+- (void)viewDidLoad
+{
     [self setDataToView];
     [super viewDidLoad];
     // Do any additional setup after loading the view.
+}
+
+-(void)viewWillAppear:(BOOL)animated
+{
+    [self setDataToView];
 }
 
 - (void)didReceiveMemoryWarning {

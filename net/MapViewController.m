@@ -14,7 +14,7 @@
 #import "DescriptionViewController.h"
 @import GoogleMaps;
 
-@interface MapViewController () <GMSMapViewDelegate>
+@interface MapViewController () <GMSMapViewDelegate, UITabBarControllerDelegate>
 
 @property(strong,nonatomic) NSArray *arrayOfPoints;
 @property (strong, nonatomic) id <DataSorceProtocol> dataSorce;
@@ -30,6 +30,10 @@
     self.title = @"Bowl";
     self.dataSorce = [[NetworkDataSorce alloc] init];
     self.navigationItem.rightBarButtonItem.title = @"Log In";
+    
+    self.tabBarController.delegate = self;
+    [self hideTabBar];
+    [self customizeTabBar];
     [self createAndShowMap];
 }
 
@@ -132,6 +136,7 @@
     self.mapView.myLocationEnabled = YES;
     self.mapView.delegate = self;
     
+    [self.tabBarController.tabBar setHidden:YES];
     [self requestIssues];
 }
 
@@ -158,6 +163,7 @@
                                                         GMSMarker *marker = [[GMSMarker alloc] init];
                                                         marker.position = CLLocationCoordinate2DMake(issue.getLatitude, issue.getLongitude);
                                                         marker.userData = issue;
+                                                        marker.title = issue.name;
                                                         marker.map = self.mapView;
                                                     }
                                                 });
@@ -167,9 +173,11 @@
 
 -(BOOL)mapView:(GMSMapView *)mapView didTapMarker:(GMSMarker *)marker
 {
+    [self.tabBarController.tabBar setHidden:NO];
     [UIView animateWithDuration:0.5 animations:^(void){
-        self.bottomBarConstraint.constant = 0;
+        [self showTabBar];
         [self.view layoutIfNeeded];
+        
     }];
     self.currentMarker = marker;
     return NO;
@@ -178,9 +186,96 @@
 -(void)mapView:(GMSMapView *)mapView didTapAtCoordinate:(CLLocationCoordinate2D)coordinate
 {
     [UIView animateWithDuration:0.5 animations:^(void){
-        self.bottomBarConstraint.constant = -60;
+        [self hideTabBar];
         [self.view layoutIfNeeded];
+    } completion:^(BOOL finished){
+        if (finished == YES){
+            [self.tabBarController.tabBar setHidden:YES];
+        }
     }];
 }
 
+-(BOOL)tabBarController:(UITabBarController *)tabBarController shouldSelectViewController:(UIViewController *)viewController
+{
+    if ([viewController isKindOfClass:[DescriptionViewController class]]){
+        DescriptionViewController *DescriptionVC = (DescriptionViewController *)viewController;
+        DescriptionVC.currentIssue = self.currentMarker.userData;
+    }
+    [self animateTabsSwitching:viewController];
+    return NO;
+}
+
+-(void)showTabBar
+{
+    CGRect tabFrame = self.tabBarController.tabBar.frame;
+    tabFrame.origin.y = self.view.frame.size.height - 48;
+    self.tabBarController.tabBar.frame = tabFrame;
+}
+
+-(void)hideTabBar
+{
+    CGRect tabFrame = self.tabBarController.tabBar.frame;
+    tabFrame.origin.y = self.view.frame.size.height;
+    self.tabBarController.tabBar.frame = tabFrame;
+}
+
+-(void)customizeTabBar
+{
+    UITabBar *tabBar = self.tabBarController.tabBar;
+    UITabBarItem *tabBarItemLocation = [tabBar.items objectAtIndex:0];
+    UITabBarItem *tabBarItemDescription = [tabBar.items objectAtIndex:1];
+    UITabBarItem *tabBarItemHistory = [tabBar.items objectAtIndex:2];
+    
+    UIImage *locationInactiveImg = [UIImage imageNamed:@"location_inactive"];
+    UIImage *scaledLocationInactiveImg = [[UIImage imageWithCGImage:[locationInactiveImg CGImage] scale:locationInactiveImg.scale * 3.5 orientation:locationInactiveImg.imageOrientation] imageWithRenderingMode:UIImageRenderingModeAlwaysOriginal];
+    
+    UIImage *locationActiveImg = [UIImage imageNamed:@"location_active"];
+    UIImage *scaledLocationActiveImg = [[UIImage imageWithCGImage:[locationActiveImg CGImage] scale:locationActiveImg.scale * 3.5 orientation:locationActiveImg.imageOrientation] imageWithRenderingMode:UIImageRenderingModeAlwaysOriginal];
+    
+    UIImage *descInactiveImg = [UIImage imageNamed:@"desc_inactive"];
+    UIImage *scaledDescInactiveImg = [[UIImage imageWithCGImage:[descInactiveImg CGImage] scale:descInactiveImg.scale * 3.5 orientation:descInactiveImg.imageOrientation] imageWithRenderingMode:UIImageRenderingModeAlwaysOriginal];
+    
+    UIImage *descActiveImg = [UIImage imageNamed:@"desc_active"];
+    UIImage *scaledDescActiveImg = [[UIImage imageWithCGImage:[descActiveImg CGImage] scale:descActiveImg.scale * 3.5 orientation:descActiveImg.imageOrientation] imageWithRenderingMode:UIImageRenderingModeAlwaysOriginal];
+    
+    UIImage *historyInactiveImg = [UIImage imageNamed:@"history_inactive"];
+    UIImage *scaledHistoryInactiveImg = [[UIImage imageWithCGImage:[historyInactiveImg CGImage] scale:historyInactiveImg.scale * 3.5 orientation:historyInactiveImg.imageOrientation] imageWithRenderingMode:UIImageRenderingModeAlwaysOriginal];
+    
+    UIImage *historyActiveImg = [UIImage imageNamed:@"history_active"];
+    UIImage *scaledHistoryActiveImg = [[UIImage imageWithCGImage:[historyActiveImg CGImage] scale:historyActiveImg.scale * 3.5 orientation:historyActiveImg.imageOrientation] imageWithRenderingMode:UIImageRenderingModeAlwaysOriginal];
+    
+    tabBarItemLocation = [tabBarItemLocation initWithTitle:@"Location" image:scaledLocationInactiveImg selectedImage:scaledLocationActiveImg];
+    tabBarItemDescription = [tabBarItemDescription initWithTitle:@"Description" image:scaledDescInactiveImg selectedImage:scaledDescActiveImg];
+    tabBarItemHistory = [tabBarItemHistory initWithTitle:@"History" image:scaledHistoryInactiveImg selectedImage:scaledHistoryActiveImg];
+    
+    [tabBarItemLocation setTitleTextAttributes:@{ NSForegroundColorAttributeName : [UIColor colorWithRed:0.78 green:0.784 blue:0.784 alpha:1] /*#c7c8c8*/}
+                                             forState:UIControlStateNormal];
+    [tabBarItemLocation setTitleTextAttributes:@{ NSForegroundColorAttributeName : [UIColor colorWithRed:0.914 green:0.31 blue:0.408 alpha:1] /*#e94f68*/ }
+                                             forState:UIControlStateSelected];
+    [tabBarItemDescription setTitleTextAttributes:@{ NSForegroundColorAttributeName : [UIColor colorWithRed:0.78 green:0.784 blue:0.784 alpha:1] /*#c7c8c8*/}
+                               forState:UIControlStateNormal];
+    [tabBarItemDescription setTitleTextAttributes:@{ NSForegroundColorAttributeName : [UIColor colorWithRed:0.914 green:0.31 blue:0.408 alpha:1] /*#e94f68*/}
+                               forState:UIControlStateSelected];
+    [tabBarItemHistory setTitleTextAttributes:@{ NSForegroundColorAttributeName : [UIColor colorWithRed:0.78 green:0.784 blue:0.784 alpha:1] /*#c7c8c8*/}
+                               forState:UIControlStateNormal];
+    [tabBarItemHistory setTitleTextAttributes:@{ NSForegroundColorAttributeName : [UIColor colorWithRed:0.914 green:0.31 blue:0.408 alpha:1] /*#e94f68*/ }
+                               forState:UIControlStateSelected];
+}
+
+-(void)animateTabsSwitching:(UIViewController *)viewController
+{
+    NSUInteger controllerIndex = [self.tabBarController.viewControllers indexOfObject:viewController];
+
+    UIView *fromView = self.tabBarController.selectedViewController.view;
+    UIView *toView = [self.tabBarController.viewControllers[controllerIndex] view];
+        [UIView transitionFromView:fromView
+                            toView:toView
+                          duration:0.5
+                           options:(controllerIndex > self.tabBarController.selectedIndex ? UIViewAnimationOptionTransitionFlipFromLeft : UIViewAnimationOptionTransitionFlipFromRight)
+                        completion:^(BOOL finished) {
+                            if (finished) {
+                                self.tabBarController.selectedIndex = controllerIndex;
+                            }
+                        }];
+}
 @end
