@@ -47,9 +47,13 @@
     // frame color
     for (__weak UITextField *textField in self.textFields)
     {
-        textField.layer.borderColor = [[UIColor colorWithRed:R_COLOR green:G_COLOR blue:B_COLOR alpha:0.3] CGColor];
+        textField.layer.borderColor = [[UIColor colorWithRed:R_COLOR green:G_COLOR blue:B_COLOR alpha:0.5] CGColor];
         textField.layer.borderWidth = 1;
         textField.layer.cornerRadius = 6;
+        
+        NSMutableAttributedString *attr = [textField.attributedPlaceholder mutableCopy];
+        [attr setAttributes:@{NSForegroundColorAttributeName : [UIColor colorWithRed:R_COLOR green:G_COLOR blue:B_COLOR alpha:0.3]} range:NSMakeRange(0, [[attr string] length])];
+        textField.attributedPlaceholder = attr;
 
     }
 }
