@@ -195,6 +195,11 @@
     }];
 }
 
+-(void)mapView:(GMSMapView *)mapView didLongPressAtCoordinate:(CLLocationCoordinate2D)coordinate
+{
+    
+}
+
 -(BOOL)tabBarController:(UITabBarController *)tabBarController shouldSelectViewController:(UIViewController *)viewController
 {
     if ([viewController isKindOfClass:[DescriptionViewController class]]){
