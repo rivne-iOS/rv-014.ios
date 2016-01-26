@@ -166,7 +166,7 @@
 - (void)textFieldDidBeginEditing:(UITextField *)textField
 {
     textField.backgroundColor = [UIColor whiteColor];
-    textField.placeholder = @"";
+    textField.placeholder = nil;
     self.currentEditField = textField;
 }
 
