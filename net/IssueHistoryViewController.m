@@ -87,7 +87,7 @@ static NSString * const kSimpleTableIdentifier = @"SampleTableCell";
     self.refreshControl.tintColor = [UIColor whiteColor];
     [self.refreshControl addTarget:self action:@selector(requestIssueHistory) forControlEvents:UIControlEventValueChanged];
     
-    [self.issueTable registerNib:[UINib nibWithNibName:@"SampleTableCell" bundle:nil] forCellReuseIdentifier:kSimpleTableIdentifier];
+    [self.issueTable registerNib:[UINib nibWithNibName:@"CustomTableCell" bundle:nil] forCellReuseIdentifier:kSimpleTableIdentifier];
     
     [self requestIssueHistory];
 }
