@@ -25,7 +25,6 @@
 @property (weak, nonatomic) IBOutlet UITextField *emailText;
 @property (weak, nonatomic) IBOutlet UITextField *passwordText;
 @property (weak, nonatomic) IBOutlet UITextField *confirmPassword;
-// actually I want an array of weak reference objacts...
 @property (strong, nonatomic) NSArray <UITextField*> *textFields;
 
 @property (strong, nonatomic) UITextField *currentEditField;
@@ -91,7 +90,7 @@
 {
     for(NSLayoutConstraint *constraint in self.view.constraints)
     {
-        if ([constraint.identifier isEqualToString:@"BottomConstraint"])
+        if ([constraint.identifier isEqualToString:@"BottomScrollViewConstraint"])
         {
             return constraint;
             
