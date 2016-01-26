@@ -31,6 +31,7 @@
     self.dataSorce = [[NetworkDataSorce alloc] init];
     self.navigationItem.rightBarButtonItem.title = @"Log In";
     
+    self.addingIssueViewLeadingConstraint.constant = CGRectGetWidth(self.mapView.bounds);
     self.tabBarController.delegate = self;
     [self hideTabBar];
     [self customizeTabBar];
@@ -197,7 +198,11 @@
 
 -(void)mapView:(GMSMapView *)mapView didLongPressAtCoordinate:(CLLocationCoordinate2D)coordinate
 {
-    
+    [[self navigationController] setNavigationBarHidden:YES animated:YES];
+    [UIView animateWithDuration:0.5 animations:^(void){
+        self.addingIssueViewLeadingConstraint.constant = 0;
+        [self.view layoutIfNeeded];
+    }];
 }
 
 -(BOOL)tabBarController:(UITabBarController *)tabBarController shouldSelectViewController:(UIViewController *)viewController
