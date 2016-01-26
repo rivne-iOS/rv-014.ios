@@ -145,11 +145,10 @@
     if(bottomCurrentFieldByScrollView != bottomScrollView)
     {
         CGFloat yMove = bottomCurrentFieldByScrollView - bottomScrollView;
-        CGRect newVisibleRect = CGRectMake(visibleRect.origin.x, visibleRect.origin.y + yMove, visibleRect.size.width, visibleRect.size.height);
-        NSLog(@"newVisibleRect : %@\n\n", [self pringRectforDebug:newVisibleRect]);
+        CGFloat newY = (visibleRect.origin.y + yMove < 0) ? 0 : visibleRect.origin.y + yMove;
         
         [UIView animateWithDuration:0.3 animations:^{
-          self.scrollView.contentOffset = CGPointMake(newVisibleRect.origin.x, newVisibleRect.origin.y);
+          self.scrollView.contentOffset = CGPointMake(visibleRect.origin.x, newY);
         }];
         
         NSLog(@"--------------------------------------\n\n\n\n");
