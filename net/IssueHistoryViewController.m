@@ -8,7 +8,7 @@
 
 #import "IssueHistoryViewController.h"
 
-static NSString * const kSimpleTableIdentifier = @"Cell_1";
+static NSString * const kSimpleTableIdentifier = @"SampleTableCell";
 
 @interface IssueHistoryViewController ()
 @property (weak, nonatomic) IBOutlet UITableView *issueTable;
@@ -33,20 +33,10 @@ static NSString * const kSimpleTableIdentifier = @"Cell_1";
                                                                                                              options:0
                                                                                                                error:NULL];
                                             
-                                            //UIColor *color = [UIColor colorWithRed:(255/225.0f) green:(0/255.0f) blue:(137/255.0f) alpha:1];
                                             UIColor *color = [[UIColor alloc] initWithRed: (255/225.0f) green:(0/255.0f) blue:(137/255.0f) alpha:1];
                                             NSDictionary *attrs = @{ NSForegroundColorAttributeName : color };
                                             
-                                            UIActivityIndicatorView *ac = [[UIActivityIndicatorView alloc]
-                                                                           initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleGray];
-                                            [ac startAnimating];
-                                            
-                                            UIView *view = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 320, 50)];
-                                            [view addSubview:ac];
-                                            
-                                            _weakSelf.issueTable.tableHeaderView = view;
-                                            
-                                            
+                                            [_weakSelf.issueHistory removeAllObjects];
                                             
                                             for (NSDictionary *issue in issuesDictionaryArray) {
                                                 
@@ -95,11 +85,9 @@ static NSString * const kSimpleTableIdentifier = @"Cell_1";
     self.refreshControl = [[UIRefreshControl alloc] init];
     self.refreshControl.backgroundColor = [UIColor purpleColor];
     self.refreshControl.tintColor = [UIColor whiteColor];
-    [self.refreshControl addTarget:self
-                            action:@selector(requestIssueHistory)
-                  forControlEvents:UIControlEventValueChanged];
+    [self.refreshControl addTarget:self action:@selector(requestIssueHistory) forControlEvents:UIControlEventValueChanged];
     
-    [self.issueTable registerClass:[CustomTableCell class] forCellReuseIdentifier:kSimpleTableIdentifier];
+    [self.issueTable registerNib:[UINib nibWithNibName:@"SampleTableCell" bundle:nil] forCellReuseIdentifier:kSimpleTableIdentifier];
     
     [self requestIssueHistory];
 }
@@ -115,7 +103,7 @@ static NSString * const kSimpleTableIdentifier = @"Cell_1";
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
     
-    CustomTableCell *cell = [self.issueTable dequeueReusableCellWithIdentifier:kSimpleTableIdentifier forIndexPath:indexPath];
+    CustomTableCell *cell = [tableView dequeueReusableCellWithIdentifier:kSimpleTableIdentifier forIndexPath:indexPath];
     
     // Configure the cell...
     NSMutableDictionary *singleAction = [self.issueHistory objectAtIndex:indexPath.row];
