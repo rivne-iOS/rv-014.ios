@@ -51,9 +51,10 @@
         textField.layer.borderWidth = 1;
         textField.layer.cornerRadius = 6;
         
-        NSMutableAttributedString *attr = [textField.attributedPlaceholder mutableCopy];
-        [attr setAttributes:@{NSForegroundColorAttributeName : [UIColor colorWithRed:R_COLOR green:G_COLOR blue:B_COLOR alpha:0.3]} range:NSMakeRange(0, [[attr string] length])];
-        textField.attributedPlaceholder = attr;
+        
+        NSMutableAttributedString *attrStr = [[NSMutableAttributedString alloc] initWithString:textField.restorationIdentifier
+                                                                                    attributes:@{NSForegroundColorAttributeName : [UIColor colorWithRed:R_COLOR green:G_COLOR blue:B_COLOR alpha:0.3]}];
+       textField.attributedPlaceholder = attrStr;
 
     }
 }
@@ -84,7 +85,7 @@
                                                   object:nil];
 }
 
-#define TEXTFIELD_OFFSET 30
+#define TEXTFIELD_OFFSET 5
 
 -(NSLayoutConstraint*)scrollBottomConstraint
 {
@@ -100,8 +101,14 @@
 
 }
 
+-(NSString*)pringRectforDebug:(CGRect) rect
+{
+    return [NSString stringWithFormat:@"rect: (origin: %f,%f) (size: %f, %f)", rect.origin.x, rect.origin.y, rect.size.width, rect.size.height];
+}
+
 -(void)keyboardDidShow:(NSNotification*)notification
 {
+    NSLog(@"ScrollView before: %@\n\n", self.scrollView);
     NSDictionary *dic = notification.userInfo;
     NSValue *keyboardFrame = dic[UIKeyboardFrameEndUserInfoKey];
     CGRect frame = [keyboardFrame CGRectValue];
@@ -114,21 +121,38 @@
     NSLog(@"-(void)keyboardDidShow, and self.currentTextField = %@", self.currentEditField.restorationIdentifier);
 
     
+    NSLog(@"View : %@\n\n", self.view);
+    NSLog(@"ScrollView after: %@\n\n", self.scrollView);
+    NSLog(@"ContentView : %@\n\n", self.contentView);
+    NSLog(@"KeyboardHeight : %f\n\n", keyboardHeight);
+    
+    
+    
     // code belowe don't work :( and it's important to understand why!
     if (self.currentEditField == nil)
         return;
     
     CGRect visibleRect = [self.scrollView convertRect:self.scrollView.bounds toView:self.contentView];
+    NSLog(@"VisibleRect : %@\n\n", [self pringRectforDebug:visibleRect]);
 
-    CGFloat bottomCurrentField = self.currentEditField.frame.origin.y - visibleRect.origin.y + self.currentEditField.bounds.size.height + TEXTFIELD_OFFSET;
+    
+    NSLog(@"TextField frame : %@\n\n", [self pringRectforDebug:self.currentEditField.frame]);
+    NSLog(@"TextField bounds : %@\n\n", [self pringRectforDebug:self.currentEditField.bounds]);
+    
+    CGFloat bottomCurrentFieldByScrollView = self.currentEditField.frame.origin.y - visibleRect.origin.y + self.currentEditField.bounds.size.height + TEXTFIELD_OFFSET;
     CGFloat bottomScrollView = self.scrollView.bounds.size.height;
     
-    if(bottomCurrentField > bottomScrollView)
+    if(bottomCurrentFieldByScrollView != bottomScrollView)
     {
-        CGFloat yMove = bottomCurrentField - bottomScrollView;
+        CGFloat yMove = bottomCurrentFieldByScrollView - bottomScrollView;
         CGRect newVisibleRect = CGRectMake(visibleRect.origin.x, visibleRect.origin.y + yMove, visibleRect.size.width, visibleRect.size.height);
-        [self.scrollView scrollRectToVisible:newVisibleRect animated:YES];
+        NSLog(@"newVisibleRect : %@\n\n", [self pringRectforDebug:newVisibleRect]);
         
+        [UIView animateWithDuration:0.3 animations:^{
+          self.scrollView.contentOffset = CGPointMake(newVisibleRect.origin.x, newVisibleRect.origin.y);
+        }];
+        
+        NSLog(@"--------------------------------------\n\n\n\n");
     }
 
 }
@@ -144,7 +168,7 @@
 - (void)textFieldDidBeginEditing:(UITextField *)textField
 {
     textField.backgroundColor = [UIColor whiteColor];
-    textField.placeholder = nil;
+    textField.placeholder = @"";
     self.currentEditField = textField;
 }
 
@@ -157,6 +181,12 @@
 - (void)textFieldDidEndEditing:(UITextField *)textField
 {
     textField.placeholder = textField.restorationIdentifier;
+    
+    NSMutableAttributedString *attrStr = [[NSMutableAttributedString alloc] initWithString:textField.restorationIdentifier
+                                                                                attributes:@{NSForegroundColorAttributeName : [UIColor colorWithRed:R_COLOR green:G_COLOR blue:B_COLOR alpha:0.3]}];
+    textField.attributedPlaceholder = attrStr;
+
+    
     self.currentEditField = nil;
     if([textField.restorationIdentifier isEqualToString:@"Confirm password"])
     {
