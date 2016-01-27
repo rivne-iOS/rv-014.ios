@@ -25,6 +25,10 @@
 
 -(void)requestSignOutWithHandler:(void (^)(NSString * stringAnswer))viewControllerHandler andErrorHandler:(void(^)(NSError *error)) errorHandler;
 
+-(void)requestChangeStatusWithID:(NSNumber*)issueIdNumber
+    andViewControllerHandler:(void (^)(NSString *stringAnswer))viewControllerHandler // e.g. user is not logined
+             andErrorHandler:(void(^)(NSError *error)) errorHandler;
+
 
 @end
 

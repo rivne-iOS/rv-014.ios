@@ -76,6 +76,8 @@
         }
     }
 }
+
+
 - (IBAction)sequeToLogInButton:(UIBarButtonItem *)sender {
     
     
@@ -127,6 +129,7 @@
     }
 }
 
+#pragma mark Map
 -(void)createAndShowMap
 {
     GMSCameraPosition *camera = [GMSCameraPosition cameraWithLatitude:50.6283612
@@ -195,6 +198,7 @@
     }];
 }
 
+#pragma mark Tab Bar
 -(BOOL)tabBarController:(UITabBarController *)tabBarController shouldSelectViewController:(UIViewController *)viewController
 {
     if ([viewController isKindOfClass:[DescriptionViewController class]]){

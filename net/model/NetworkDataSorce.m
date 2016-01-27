@@ -50,7 +50,7 @@
     [wizard requestSignOutWithHandler:^(NSData *data, NSError *error) {
         if (data.length > 0 && error==nil)
         {
-            viewControllerHandler([Parser parseSignOutAnswer:data]);
+            viewControllerHandler([Parser parseAnswer:data andReturnObjectForKey:@"message"]);
         }
         else if(error != nil)
         {
@@ -94,6 +94,25 @@
                          errorHandler(error);
                      }
                  }];
+
+}
+
+
+-(void)requestChangeStatusWithID:(NSNumber*)issueIdNumber
+        andViewControllerHandler:(void (^)(NSString *stringAnswer))viewControllerHandler // e.g. user is not logined
+                 andErrorHandler:(void(^)(NSError *error)) errorHandler
+{
+    HTTPConnector *wizard = [[HTTPConnector alloc] init];
+    [wizard requestChangeStatusWithStringIssueID:[NSString stringWithFormat:@"%@", issueIdNumber] andDataSorceHandler:^(NSData *data, NSError *error) {
+        if (data.length > 0 && error==nil)
+        {
+            viewControllerHandler([Parser parseAnswer:data andReturnObjectForKey:@"message"]);
+        }
+        else if(error != nil)
+        {
+            errorHandler(error);
+        }
+    }];
 
 }
 

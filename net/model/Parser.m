@@ -28,12 +28,12 @@
     return [Parser parseDictionaryToUser:PersonDic];
 }
 
-+(NSString*)parseSignOutAnswer:(NSData*)data
++(NSString*)parseAnswer:(NSData*)data andReturnObjectForKey:(NSString*)stringKey
 {
     NSDictionary *answerDic = [NSJSONSerialization JSONObjectWithData:data
                                                               options:0
                                                                 error:NULL];
-    return [answerDic objectForKey:@"message"];
+    return [answerDic objectForKey:stringKey];
 }
 
 +(NSArray*)parseDataToArrayOfUsers:(NSData *)data

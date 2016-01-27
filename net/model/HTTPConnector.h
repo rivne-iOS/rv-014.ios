@@ -11,12 +11,6 @@
 
 @interface HTTPConnector : NSObject
 
-@property(readonly, nonatomic)NSString* globalURL;
-@property(readonly, nonatomic)NSString* allPersURL;
-@property(readonly, nonatomic)NSString* allPointsURL;
-@property(readonly, nonatomic)NSString* userLogIn;
-@property(readonly, nonatomic)NSString* userSingUp;
-@property(readonly, nonatomic)NSString* userSignOut;
 
 -(void)requestUsers:(void(^)(NSData *data, NSError *error))dataSorceHandler;
 
@@ -28,5 +22,7 @@
 
 -(void)requestSignOutWithHandler:(void (^)(NSData *data, NSError *error))dataSorceHandler;
 
+-(void)requestChangeStatusWithStringIssueID:(NSString*)strindIssueID
+         andDataSorceHandler:(void(^)(NSData *data, NSError *error))dataSorceHandler;
 
 @end
