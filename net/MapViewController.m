@@ -10,9 +10,12 @@
 #import "Issue.h"
 #import "LogInViewController.h"
 #import "NetworkDataSorce.h"
+#import "IssueCategory.h"
 
 #import "DescriptionViewController.h"
 @import GoogleMaps;
+
+static NSString * const GOOGLE_WEB_API_KEY = @"AIzaSyB7InJ3J2AoxlHjsYtde9BNawMINCaHykg";
 
 @interface MapViewController () <GMSMapViewDelegate, UITabBarControllerDelegate>
 
@@ -31,7 +34,7 @@
     self.dataSorce = [[NetworkDataSorce alloc] init];
     self.navigationItem.rightBarButtonItem.title = @"Log In";
     
-    self.addingIssueViewLeadingConstraint.constant = CGRectGetWidth(self.mapView.bounds);
+    self.scrollViewLeadingConstraint.constant = CGRectGetWidth(self.mapView.bounds);
     self.tabBarController.delegate = self;
     [self hideTabBar];
     [self customizeTabBar];
@@ -199,10 +202,63 @@
 -(void)mapView:(GMSMapView *)mapView didLongPressAtCoordinate:(CLLocationCoordinate2D)coordinate
 {
     [[self navigationController] setNavigationBarHidden:YES animated:YES];
+    [self requestGoogleApiPlace:coordinate];
+    [self requestCategories];
     [UIView animateWithDuration:0.5 animations:^(void){
-        self.addingIssueViewLeadingConstraint.constant = 0;
+        self.scrollViewLeadingConstraint.constant = 0;
         [self.view layoutIfNeeded];
     }];
+}
+
+-(void)requestGoogleApiPlace:(CLLocationCoordinate2D)coordinate
+{
+    NSString *urlString = [[NSString alloc] initWithFormat:@"https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=%f,%f&radius=%d&key=%@",
+                           coordinate.latitude,
+                           coordinate.longitude,
+                           1,
+                           GOOGLE_WEB_API_KEY];
+    NSURL *url = [NSURL URLWithString:urlString];
+    NSURLRequest *request = [NSURLRequest requestWithURL:url];
+    [[[NSURLSession sharedSession]dataTaskWithRequest:request
+                                    completionHandler:^(NSData * _Nullable data, NSURLResponse * _Nullable response, NSError * _Nullable connectionError) {
+                                        if (data.length > 0 && connectionError == nil)
+                                        {
+//                                            NSArray *issuesDictionaryArray = [NSJSONSerialization JSONObjectWithData:data options:0                                                                                                    error:NULL];
+//                                            
+//                                            NSMutableArray *issuesClassArray = [[NSMutableArray alloc] init];
+//                                            for (NSDictionary *issue in issuesDictionaryArray) {
+//                                                [issuesClassArray addObject:[[Issue alloc] initWithDictionary:issue]];
+//                                            }
+                                            
+                                            dispatch_async(dispatch_get_main_queue(), ^{
+                                                self.tapLocationLabel.numberOfLines = 2;
+                                                self.tapLocationLabel.lineBreakMode = NSLineBreakByCharWrapping;
+                                                self.tapLocationLabel.text = [self.tapLocationLabel.text stringByAppendingFormat:@"\n%@, %@",
+                                                                              [self takeVicinityFromGoogleApiPlace:data],
+                                                                              [self takeStreetFromGoogleApiPlace:data]];
+                                            });
+                                        }
+                                    }] resume];
+
+}
+
+-(NSString *)takeStreetFromGoogleApiPlace:(NSData *)data
+{
+    NSDictionary *placeDictionary = [NSJSONSerialization JSONObjectWithData:data options:0 error:NULL];
+    NSArray *resultsArray = [placeDictionary valueForKey:@"results"];
+    NSDictionary *locationDictionary = [resultsArray objectAtIndex:0];
+    NSString *street = [locationDictionary valueForKey:@"name"];
+    return street;
+    
+}
+
+-(NSString *)takeVicinityFromGoogleApiPlace:(NSData *)data
+{
+    NSDictionary *placeDictionary = [NSJSONSerialization JSONObjectWithData:data options:0 error:NULL];
+    NSArray *resultsArray = [placeDictionary valueForKey:@"results"];
+    NSDictionary *locationDictionary = [resultsArray objectAtIndex:0];
+    NSString *vicinity = [locationDictionary valueForKey:@"vicinity"];
+    return vicinity;
 }
 
 -(BOOL)tabBarController:(UITabBarController *)tabBarController shouldSelectViewController:(UIViewController *)viewController
@@ -287,5 +343,40 @@
                                 self.tabBarController.selectedIndex = controllerIndex;
                             }
                         }];
+}
+
+// returns the number of 'columns' to display.
+- (NSInteger)numberOfComponentsInPickerView:(UIPickerView *)pickerView
+{
+    return 1;
+}
+
+// returns the # of rows in each component..
+- (NSInteger)pickerView:(UIPickerView *)pickerView numberOfRowsInComponent:(NSInteger)component
+{
+    return self.categoryClassArray.count;
+}
+
+-(void)requestCategories
+{
+    NSURL *url = [NSURL URLWithString:@"https://bawl-rivne.rhcloud.com/categories/all"];
+    NSURLRequest *request = [NSURLRequest requestWithURL:url];
+    [[[NSURLSession sharedSession]dataTaskWithRequest:request
+                                    completionHandler:^(NSData * _Nullable data, NSURLResponse * _Nullable response, NSError * _Nullable connectionError) {
+                                        if (data.length > 0 && connectionError == nil)
+                                        {
+                                            NSArray *categoryDictionaryArray = [NSJSONSerialization JSONObjectWithData:data options:0                                                                                                   error:NULL];
+                                            
+                                            self.categoryClassArray = [[NSMutableArray alloc] init];
+                                            
+                                            for (NSDictionary *category in categoryDictionaryArray) {
+                                                [self.categoryClassArray addObject:[[IssueCategory alloc] initWithDictionary:category]];
+                                            }
+                                            
+                                            dispatch_async(dispatch_get_main_queue(), ^{
+                                                [self.categoryPicker reloadAllComponents];
+                                            }
+                                                           );}
+                                    }] resume];
 }
 @end
