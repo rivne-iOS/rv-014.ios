@@ -113,7 +113,7 @@
 
 +(NSUInteger)stringPersonRoleToUInteger:(NSString*) str
 {
-    NSArray *tempArr = [User UserStringRoles];
+    NSArray *tempArr = [User userStringRoles];
     for (NSUInteger a=0; a<[tempArr count]; ++a)
     {
         if([str isEqualToString:tempArr[a]])

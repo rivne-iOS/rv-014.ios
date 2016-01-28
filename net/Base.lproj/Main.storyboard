@@ -59,25 +59,6 @@
                                                     <outlet property="delegate" destination="Wyx-PR-bqC" id="fEK-dM-1Ug"/>
                                                 </connections>
                                             </textField>
-                                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="eb0-in-yE6">
-                                                <rect key="frame" x="301" y="324" width="271" height="88"/>
-                                                <color key="backgroundColor" red="0.88235294119999996" green="0.21176470589999999" blue="0.33333333329999998" alpha="1" colorSpace="calibratedRGB"/>
-                                                <constraints>
-                                                    <constraint firstAttribute="width" secondItem="eb0-in-yE6" secondAttribute="height" multiplier="123:40" id="qVZ-oQ-7Ji"/>
-                                                </constraints>
-                                                <state key="normal" title="Sing up">
-                                                    <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                                                    <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
-                                                </state>
-                                                <variation key="default">
-                                                    <mask key="constraints">
-                                                        <exclude reference="qVZ-oQ-7Ji"/>
-                                                    </mask>
-                                                </variation>
-                                                <connections>
-                                                    <segue destination="xSJ-uf-0GR" kind="show" id="LDG-yb-uhV"/>
-                                                </connections>
-                                            </button>
                                             <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="tittle" translatesAutoresizingMaskIntoConstraints="NO" id="Tk6-my-YFz">
                                                 <rect key="frame" x="158" y="66" width="284" height="152"/>
                                                 <constraints>
@@ -114,6 +95,25 @@
                                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="ZDV-rH-9Fe">
                                                 <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
                                             </view>
+                                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="eb0-in-yE6">
+                                                <rect key="frame" x="301" y="324" width="271" height="88"/>
+                                                <color key="backgroundColor" red="0.88235294119999996" green="0.21176470589999999" blue="0.33333333329999998" alpha="1" colorSpace="calibratedRGB"/>
+                                                <constraints>
+                                                    <constraint firstAttribute="width" secondItem="eb0-in-yE6" secondAttribute="height" multiplier="123:40" id="qVZ-oQ-7Ji"/>
+                                                </constraints>
+                                                <state key="normal" title="Sing up">
+                                                    <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                                    <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                                </state>
+                                                <variation key="default">
+                                                    <mask key="constraints">
+                                                        <exclude reference="qVZ-oQ-7Ji"/>
+                                                    </mask>
+                                                </variation>
+                                                <connections>
+                                                    <segue destination="xSJ-uf-0GR" kind="show" id="LDG-yb-uhV"/>
+                                                </connections>
+                                            </button>
                                         </subviews>
                                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                         <constraints>
@@ -692,7 +692,7 @@
         <!--Tab Bar Controller-->
         <scene sceneID="vcv-Tb-evb">
             <objects>
-                <tabBarController id="U7z-LT-7dR" sceneMemberID="viewController">
+                <tabBarController modalTransitionStyle="flipHorizontal" id="U7z-LT-7dR" sceneMemberID="viewController">
                     <tabBar key="tabBar" contentMode="scaleToFill" id="WRR-xW-eyE">
                         <rect key="frame" x="0.0" y="0.0" width="320" height="49"/>
                         <autoresizingMask key="autoresizingMask"/>
@@ -720,23 +720,8 @@
                         <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Mh4-4S-tDv">
-                                <rect key="frame" x="20" y="0.0" width="257" height="0.0"/>
-                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                            </view>
-                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="lO2-8A-x9o">
-                                <rect key="frame" x="324" y="0.0" width="256" height="0.0"/>
-                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                            </view>
-                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="traffic_light_issue" translatesAutoresizingMaskIntoConstraints="NO" id="dTS-p8-QRy">
-                                <rect key="frame" x="30" y="135" width="206" height="148"/>
-                                <constraints>
-                                    <constraint firstAttribute="width" constant="206" id="6R5-fe-36z"/>
-                                    <constraint firstAttribute="height" constant="148" id="9GX-Eh-0Bt"/>
-                                </constraints>
-                            </imageView>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="I5n-4q-giF">
-                                <rect key="frame" x="30" y="110" width="31" height="15"/>
+                                <rect key="frame" x="20" y="110" width="568" height="15"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="12"/>
                                 <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                                 <nil key="highlightedColor"/>
@@ -747,36 +732,34 @@
                                 <color key="textColor" red="1" green="0.14103584960695525" blue="0.29870945022728679" alpha="1" colorSpace="calibratedRGB"/>
                                 <nil key="highlightedColor"/>
                             </label>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Current issue status is somestatus." textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="718-Ei-h0f">
+                                <rect key="frame" x="20" y="133" width="199" height="15"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="12"/>
+                                <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                                <nil key="highlightedColor"/>
+                            </label>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <constraints>
-                            <constraint firstItem="Mh4-4S-tDv" firstAttribute="leading" secondItem="sig-UO-uJx" secondAttribute="leadingMargin" id="1Lb-OH-TS1"/>
-                            <constraint firstItem="lO2-8A-x9o" firstAttribute="width" secondItem="Mh4-4S-tDv" secondAttribute="width" id="2vn-gK-Vxo"/>
-                            <constraint firstItem="lO2-8A-x9o" firstAttribute="top" secondItem="Mh4-4S-tDv" secondAttribute="top" id="3fG-rb-6sT"/>
-                            <constraint firstItem="qJt-r0-2GN" firstAttribute="leading" secondItem="Mh4-4S-tDv" secondAttribute="trailing" id="DEW-52-IzA"/>
-                            <constraint firstItem="I5n-4q-giF" firstAttribute="leading" secondItem="sig-UO-uJx" secondAttribute="leading" constant="30" id="F1e-9X-0ji"/>
-                            <constraint firstItem="lO2-8A-x9o" firstAttribute="leading" secondItem="qJt-r0-2GN" secondAttribute="trailing" id="FdY-fW-ds2"/>
-                            <constraint firstItem="qJt-r0-2GN" firstAttribute="leading" secondItem="Mh4-4S-tDv" secondAttribute="trailing" id="Pfm-pD-jUH"/>
-                            <constraint firstItem="lO2-8A-x9o" firstAttribute="bottom" secondItem="Mh4-4S-tDv" secondAttribute="bottom" id="Q2H-J0-j2U"/>
-                            <constraint firstItem="lO2-8A-x9o" firstAttribute="top" secondItem="sig-UO-uJx" secondAttribute="top" id="VmF-01-lbd"/>
-                            <constraint firstItem="dTS-p8-QRy" firstAttribute="top" secondItem="I5n-4q-giF" secondAttribute="bottom" constant="10" id="gbQ-iF-enf"/>
-                            <constraint firstAttribute="trailingMargin" secondItem="lO2-8A-x9o" secondAttribute="trailing" id="iik-3p-ecz"/>
-                            <constraint firstAttribute="bottom" secondItem="lO2-8A-x9o" secondAttribute="bottom" constant="600" id="kNs-uG-0EU"/>
+                            <constraint firstItem="718-Ei-h0f" firstAttribute="leadingMargin" secondItem="sig-UO-uJx" secondAttribute="leadingMargin" constant="8" id="DvI-7Y-iIC"/>
+                            <constraint firstItem="qJt-r0-2GN" firstAttribute="centerX" secondItem="sig-UO-uJx" secondAttribute="centerX" id="JRl-Yr-CIt"/>
+                            <constraint firstItem="I5n-4q-giF" firstAttribute="leadingMargin" secondItem="sig-UO-uJx" secondAttribute="leadingMargin" constant="8" id="TTS-y3-l0b"/>
+                            <constraint firstItem="718-Ei-h0f" firstAttribute="top" secondItem="I5n-4q-giF" secondAttribute="bottom" constant="8" id="eJF-Wc-l8l"/>
                             <constraint firstItem="qJt-r0-2GN" firstAttribute="top" secondItem="7rX-L3-WUm" secondAttribute="bottom" constant="27" id="nxu-aK-dbG"/>
-                            <constraint firstItem="lO2-8A-x9o" firstAttribute="leading" secondItem="qJt-r0-2GN" secondAttribute="trailing" id="qUK-3X-Btt"/>
-                            <constraint firstItem="dTS-p8-QRy" firstAttribute="leading" secondItem="sig-UO-uJx" secondAttribute="leadingMargin" constant="10" id="srg-IF-9eF"/>
                             <constraint firstItem="I5n-4q-giF" firstAttribute="top" secondItem="qJt-r0-2GN" secondAttribute="bottom" constant="40" id="z0e-Bt-261"/>
+                            <constraint firstAttribute="trailingMargin" secondItem="I5n-4q-giF" secondAttribute="trailingMargin" id="zRs-aS-R9w"/>
                         </constraints>
                     </view>
                     <tabBarItem key="tabBarItem" title="description" image="button_background.png" id="Qx9-nQ-Zkg"/>
                     <connections>
+                        <outlet property="currentStatusLabel" destination="718-Ei-h0f" id="HKI-NJ-i4g"/>
                         <outlet property="descriptionLabel" destination="I5n-4q-giF" id="XWx-mk-Che"/>
                         <outlet property="titleLabel" destination="qJt-r0-2GN" id="ydJ-Cz-WDc"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="fzt-he-aEq" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="325" y="405"/>
+            <point key="canvasLocation" x="-134" y="426"/>
         </scene>
         <!--history-->
         <scene sceneID="DEH-iQ-jrq">
@@ -805,6 +788,5 @@
         <image name="location_enabled" width="48" height="45"/>
         <image name="more" width="43" height="34"/>
         <image name="tittle" width="284" height="152"/>
-        <image name="traffic_light_issue" width="164" height="92"/>
     </resources>
 </document>

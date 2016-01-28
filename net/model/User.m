@@ -28,7 +28,7 @@
     return self;
 }
 
-+(NSArray*)UserStringRoles
++(NSArray*)userStringRoles
 {
     return @[@"ADMIN", @"MANAGER", @"USER", @"SUBSCRIBER"];
 }
@@ -36,7 +36,7 @@
 
 -(NSString*)description
 {
-    return [NSString stringWithFormat:@"I am %@, my name is %@, email - %@, role - %@", self.login, self.name, self.email, [[User UserStringRoles] objectAtIndex:self.role]];
+    return [NSString stringWithFormat:@"I am %@, my name is %@, email - %@, role - %@", self.login, self.name, self.email, [[User userStringRoles] objectAtIndex:self.role]];
 }
 
 @end

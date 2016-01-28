@@ -19,4 +19,9 @@
 @property (weak, nonatomic) IBOutlet UILabel *descriptionLabel;
 
 
+
+-(void)setDataToView;
+-(void)prepareUIChangeStatusElements;
+-(void)clearOldDynamicElements;
+
 @end
