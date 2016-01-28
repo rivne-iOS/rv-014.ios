@@ -72,7 +72,6 @@
         {
             DescriptionViewController *DescriptionVC = (DescriptionViewController *)segue.destinationViewController;
             DescriptionVC.currentIssue = self.currentMarker.userData;
-//            DescriptionVC.mapDelegate = self;
         }
     }
 }
@@ -202,8 +201,9 @@
 -(BOOL)tabBarController:(UITabBarController *)tabBarController shouldSelectViewController:(UIViewController *)viewController
 {
     if ([viewController isKindOfClass:[DescriptionViewController class]]){
-        DescriptionViewController *DescriptionVC = (DescriptionViewController *)viewController;
-        DescriptionVC.currentIssue = self.currentMarker.userData;
+        DescriptionViewController *descriptionVC = (DescriptionViewController *)viewController;
+        descriptionVC.currentIssue = self.currentMarker.userData;
+        descriptionVC.currentUser = self.currentUser;
     }
     [self animateTabsSwitching:viewController];
     return NO;

@@ -670,11 +670,11 @@
             </objects>
             <point key="canvasLocation" x="333" y="-361"/>
         </scene>
-        <!--Item-->
+        <!--map-->
         <scene sceneID="rz9-tR-WYZ">
             <objects>
                 <navigationController automaticallyAdjustsScrollViewInsets="NO" id="B95-7g-rFr" sceneMemberID="viewController">
-                    <tabBarItem key="tabBarItem" title="Item" id="7jq-8v-FzN"/>
+                    <tabBarItem key="tabBarItem" title="map" image="button_background.png" id="7jq-8v-FzN"/>
                     <toolbarItems/>
                     <navigationBar key="navigationBar" contentMode="scaleToFill" id="IFm-K2-3kq">
                         <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
@@ -700,15 +700,15 @@
                     </tabBar>
                     <connections>
                         <segue destination="B95-7g-rFr" kind="relationship" relationship="viewControllers" id="sJQ-zP-1ow"/>
-                        <segue destination="gui-5W-CBg" kind="relationship" relationship="viewControllers" id="ea4-P7-30T"/>
                         <segue destination="PW6-qZ-q9d" kind="relationship" relationship="viewControllers" id="vp4-wc-dvg"/>
+                        <segue destination="gui-5W-CBg" kind="relationship" relationship="viewControllers" id="ea4-P7-30T"/>
                     </connections>
                 </tabBarController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="wyP-TB-hUY" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="-1078" y="500"/>
         </scene>
-        <!--Item-->
+        <!--description-->
         <scene sceneID="4nc-Rp-TR5">
             <objects>
                 <viewController id="PW6-qZ-q9d" customClass="DescriptionViewController" sceneMemberID="viewController">
@@ -768,7 +768,7 @@
                             <constraint firstItem="I5n-4q-giF" firstAttribute="top" secondItem="qJt-r0-2GN" secondAttribute="bottom" constant="40" id="z0e-Bt-261"/>
                         </constraints>
                     </view>
-                    <tabBarItem key="tabBarItem" title="Item" id="Qx9-nQ-Zkg"/>
+                    <tabBarItem key="tabBarItem" title="description" image="button_background.png" id="Qx9-nQ-Zkg"/>
                     <connections>
                         <outlet property="descriptionLabel" destination="I5n-4q-giF" id="XWx-mk-Che"/>
                         <outlet property="titleLabel" destination="qJt-r0-2GN" id="ydJ-Cz-WDc"/>
@@ -778,7 +778,7 @@
             </objects>
             <point key="canvasLocation" x="325" y="405"/>
         </scene>
-        <!--Item-->
+        <!--history-->
         <scene sceneID="DEH-iQ-jrq">
             <objects>
                 <viewController id="gui-5W-CBg" sceneMemberID="viewController">
@@ -791,7 +791,7 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                     </view>
-                    <tabBarItem key="tabBarItem" title="Item" id="OrB-Bf-jH3"/>
+                    <tabBarItem key="tabBarItem" title="history" image="button_background.png" id="OrB-Bf-jH3"/>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Au4-c4-f24" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
@@ -799,6 +799,7 @@
         </scene>
     </scenes>
     <resources>
+        <image name="button_background.png" width="13" height="13"/>
         <image name="description_disabled" width="57" height="42"/>
         <image name="history_disabled" width="50" height="43"/>
         <image name="location_enabled" width="48" height="45"/>
