@@ -89,8 +89,6 @@ static NSString * const kSimpleTableIdentifier = @"SampleTableCell";
     
     [self.issueTable registerNib:[UINib nibWithNibName:@"CustomTableCell" bundle:nil] forCellReuseIdentifier:kSimpleTableIdentifier];
     
-    [self.navigationController setToolbarHidden:NO];
-    
     [self requestIssueHistory];
 }
 

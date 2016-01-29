@@ -218,9 +218,9 @@
 		CEC6F62D1C5B6F46002321AA /* Issue History */ = {
 			isa = PBXGroup;
 			children = (
-				CEC6F6311C5B6FA6002321AA /* Custom Cell */,
 				CEC6F62E1C5B6FA2002321AA /* IssueHistoryViewController.h */,
 				CEC6F62F1C5B6FA2002321AA /* IssueHistoryViewController.m */,
+				CEC6F6311C5B6FA6002321AA /* Custom Cell */,
 			);
 			name = "Issue History";
 			sourceTree = "<group>";
