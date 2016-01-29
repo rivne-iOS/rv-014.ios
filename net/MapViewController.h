@@ -24,5 +24,6 @@
 @property (weak, nonatomic) IBOutlet UILabel *tapLocationLabel;
 @property (strong, nonatomic) NSMutableArray *categoryClassArray;
 @property (weak, nonatomic) IBOutlet UIPickerView *categoryPicker;
+@property (weak, nonatomic) IBOutlet UIScrollView *scrollView;
 
 @end

@@ -357,6 +357,12 @@ static NSString * const GOOGLE_WEB_API_KEY = @"AIzaSyB7InJ3J2AoxlHjsYtde9BNawMIN
     return self.categoryClassArray.count;
 }
 
+// The data to return for the row and component (column) that's being passed in
+- (NSString*)pickerView:(UIPickerView *)pickerView titleForRow:(NSInteger)row forComponent:(NSInteger)component
+{
+    return [self.categoryClassArray[row] name];
+}
+
 -(void)requestCategories
 {
     NSURL *url = [NSURL URLWithString:@"https://bawl-rivne.rhcloud.com/categories/all"];
@@ -378,5 +384,20 @@ static NSString * const GOOGLE_WEB_API_KEY = @"AIzaSyB7InJ3J2AoxlHjsYtde9BNawMIN
                                             }
                                                            );}
                                     }] resume];
+}
+
+-(void)addScrollView{
+//    self.scrollView = [[UIScrollView alloc]initWithFrame:
+//                    CGRectMake(20, 20, 280, 420)];
+//    self.scrollView.accessibilityActivationPoint = CGPointMake(100, 100);
+//    imgView = [[UIImageView alloc]initWithImage:
+//               [UIImage imageNamed:@"AppleUSA.jpg"]];
+//    [self.scrollView addSubview:imgView];
+//    self.scrollView.minimumZoomScale = 0.5;
+//    self.scrollView.maximumZoomScale = 3;
+//    self.scrollView.contentSize = CGSizeMake(self.addingIssueView.frame.size.width,
+//                                          self.addingIssueView.frame.size.height);
+//    self.scrollView.delegate = self;
+//    [self.view addSubview:myScrollView];
 }
 @end
