@@ -10,6 +10,7 @@
 #import "Issue.h"
 #import "LogInViewController.h"
 #import "NetworkDataSorce.h"
+#import "IssueHistoryViewController.h"
 
 #import "DescriptionViewController.h"
 @import GoogleMaps;
@@ -200,6 +201,10 @@
     if ([viewController isKindOfClass:[DescriptionViewController class]]){
         DescriptionViewController *DescriptionVC = (DescriptionViewController *)viewController;
         DescriptionVC.currentIssue = self.currentMarker.userData;
+    }
+    if ([viewController isKindOfClass:[IssueHistoryViewController class]]){
+        IssueHistoryViewController *issueHistoryViewController = (IssueHistoryViewController *)viewController;
+        issueHistoryViewController.issue = (Issue *)self.currentMarker.userData;
     }
     [self animateTabsSwitching:viewController];
     return NO;

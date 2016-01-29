@@ -26,6 +26,9 @@
 		84E3347F1C4435E800BEE6BA /* MapViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 84E3347E1C4435E800BEE6BA /* MapViewController.m */; };
 		84E334821C4436B200BEE6BA /* SingUpViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 84E334811C4436B200BEE6BA /* SingUpViewController.m */; };
 		84E7BF461C430AA600E66585 /* NetworkDataSorce.m in Sources */ = {isa = PBXBuildFile; fileRef = 84E7BF451C430AA600E66585 /* NetworkDataSorce.m */; };
+		CEC6F6301C5B6FA2002321AA /* IssueHistoryViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = CEC6F62F1C5B6FA2002321AA /* IssueHistoryViewController.m */; };
+		CEC6F6351C5B6FB6002321AA /* CustomTableCell.m in Sources */ = {isa = PBXBuildFile; fileRef = CEC6F6331C5B6FB6002321AA /* CustomTableCell.m */; };
+		CEC6F6361C5B6FB6002321AA /* CustomTableCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = CEC6F6341C5B6FB6002321AA /* CustomTableCell.xib */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -76,6 +79,11 @@
 		84E7BF431C430A3700E66585 /* DataSorceProtocol.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = DataSorceProtocol.h; path = model/DataSorceProtocol.h; sourceTree = "<group>"; };
 		84E7BF441C430AA600E66585 /* NetworkDataSorce.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = NetworkDataSorce.h; path = model/NetworkDataSorce.h; sourceTree = "<group>"; };
 		84E7BF451C430AA600E66585 /* NetworkDataSorce.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = NetworkDataSorce.m; path = model/NetworkDataSorce.m; sourceTree = "<group>"; };
+		CEC6F62E1C5B6FA2002321AA /* IssueHistoryViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = IssueHistoryViewController.h; sourceTree = "<group>"; };
+		CEC6F62F1C5B6FA2002321AA /* IssueHistoryViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = IssueHistoryViewController.m; sourceTree = "<group>"; };
+		CEC6F6321C5B6FB6002321AA /* CustomTableCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CustomTableCell.h; sourceTree = "<group>"; };
+		CEC6F6331C5B6FB6002321AA /* CustomTableCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CustomTableCell.m; sourceTree = "<group>"; };
+		CEC6F6341C5B6FB6002321AA /* CustomTableCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = CustomTableCell.xib; sourceTree = "<group>"; };
 		F4AC75DBD87C887E9CEC39A4 /* Pods.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.release.xcconfig; path = "Pods/Target Support Files/Pods/Pods.release.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -131,6 +139,7 @@
 		8460F96C1C3C531E00ECB3A4 /* net */ = {
 			isa = PBXGroup;
 			children = (
+				CEC6F62D1C5B6F46002321AA /* Issue History */,
 				8460F9961C3C5C0000ECB3A4 /* model */,
 				8460F9741C3C531E00ECB3A4 /* LogInViewController.h */,
 				8460F9751C3C531E00ECB3A4 /* LogInViewController.m */,
@@ -204,6 +213,26 @@
 				3F322957FCEB450D078EB0DF /* libPods.a */,
 			);
 			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		CEC6F62D1C5B6F46002321AA /* Issue History */ = {
+			isa = PBXGroup;
+			children = (
+				CEC6F6311C5B6FA6002321AA /* Custom Cell */,
+				CEC6F62E1C5B6FA2002321AA /* IssueHistoryViewController.h */,
+				CEC6F62F1C5B6FA2002321AA /* IssueHistoryViewController.m */,
+			);
+			name = "Issue History";
+			sourceTree = "<group>";
+		};
+		CEC6F6311C5B6FA6002321AA /* Custom Cell */ = {
+			isa = PBXGroup;
+			children = (
+				CEC6F6321C5B6FB6002321AA /* CustomTableCell.h */,
+				CEC6F6331C5B6FB6002321AA /* CustomTableCell.m */,
+				CEC6F6341C5B6FB6002321AA /* CustomTableCell.xib */,
+			);
+			name = "Custom Cell";
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -291,6 +320,7 @@
 			files = (
 				8460F9791C3C531E00ECB3A4 /* Main.storyboard in Resources */,
 				8460F97E1C3C531E00ECB3A4 /* LaunchScreen.xib in Resources */,
+				CEC6F6361C5B6FB6002321AA /* CustomTableCell.xib in Resources */,
 				847595461C455C0F00E1BF87 /* Podfile in Resources */,
 				8460F97B1C3C531E00ECB3A4 /* Images.xcassets in Resources */,
 			);
@@ -363,6 +393,7 @@
 				84E7BF461C430AA600E66585 /* NetworkDataSorce.m in Sources */,
 				8460F99F1C3C651500ECB3A4 /* HTTPConnector.m in Sources */,
 				8460F9731C3C531E00ECB3A4 /* AppDelegate.m in Sources */,
+				CEC6F6351C5B6FB6002321AA /* CustomTableCell.m in Sources */,
 				845245A71C4E5923000755AC /* DescriptionViewController.m in Sources */,
 				8460F9A21C3C666100ECB3A4 /* Parser.m in Sources */,
 				84E334821C4436B200BEE6BA /* SingUpViewController.m in Sources */,
@@ -371,6 +402,7 @@
 				84E3347F1C4435E800BEE6BA /* MapViewController.m in Sources */,
 				8460F9701C3C531E00ECB3A4 /* main.m in Sources */,
 				8460F9991C3C5C3B00ECB3A4 /* Issue.m in Sources */,
+				CEC6F6301C5B6FA2002321AA /* IssueHistoryViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
