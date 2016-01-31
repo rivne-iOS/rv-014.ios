@@ -216,8 +216,8 @@
         IssueHistoryViewController *issueHistoryViewController = (IssueHistoryViewController *)viewController;
         issueHistoryViewController.issue = (Issue *)self.currentMarker.userData;
     }
-    [self animateTabsSwitching:viewController];
-    return NO;
+//    [self animateTabsSwitching:viewController];
+    return YES;
 }
 
 -(void)showTabBar

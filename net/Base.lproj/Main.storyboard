@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="9531" systemVersion="14F1509" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="U7z-LT-7dR">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="9531" systemVersion="14F27" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="U7z-LT-7dR">
     <dependencies>
         <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="9529"/>
@@ -706,7 +706,7 @@
                 </tabBarController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="wyP-TB-hUY" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-1078" y="500"/>
+            <point key="canvasLocation" x="-1078" y="308"/>
         </scene>
         <!--description-->
         <scene sceneID="4nc-Rp-TR5">
@@ -759,9 +759,9 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="fzt-he-aEq" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-126" y="462"/>
+            <point key="canvasLocation" x="-350" y="394"/>
         </scene>
-        <!--Item-->
+        <!--History-->
         <scene sceneID="deE-fx-zmW">
             <objects>
                 <tableViewController id="7ci-XQ-gFQ" customClass="IssueHistoryViewController" sceneMemberID="viewController">
@@ -791,7 +791,7 @@
                             <outlet property="delegate" destination="7ci-XQ-gFQ" id="WdO-TD-JKj"/>
                         </connections>
                     </tableView>
-                    <tabBarItem key="tabBarItem" title="Item" id="793-0Z-KMA"/>
+                    <tabBarItem key="tabBarItem" title="History" image="button_background.png" id="793-0Z-KMA"/>
                     <connections>
                         <outlet property="issueTable" destination="MXw-ZY-6pf" id="qRY-Lf-9Yr"/>
                         <outlet property="issueTitle" destination="O1M-dI-1Ze" id="f0w-lf-7EM"/>
@@ -799,26 +799,7 @@
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="wkA-eu-Srp" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="977" y="405"/>
-        </scene>
-        <!--Item-->
-        <scene sceneID="DEH-iQ-jrq">
-            <objects>
-                <viewController id="gui-5W-CBg" sceneMemberID="viewController">
-                    <layoutGuides>
-                        <viewControllerLayoutGuide type="top" id="mlI-jq-YpX"/>
-                        <viewControllerLayoutGuide type="bottom" id="LDH-cs-ac1"/>
-                    </layoutGuides>
-                    <view key="view" contentMode="scaleToFill" id="BvL-I5-pOs">
-                        <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
-                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                    </view>
-                    <tabBarItem key="tabBarItem" title="history" image="button_background.png" id="OrB-Bf-jH3"/>
-                </viewController>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="Au4-c4-f24" userLabel="First Responder" sceneMemberID="firstResponder"/>
-            </objects>
-            <point key="canvasLocation" x="-66" y="1216"/>
+            <point key="canvasLocation" x="-363" y="1209"/>
         </scene>
     </scenes>
     <resources>
