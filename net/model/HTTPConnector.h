@@ -23,6 +23,8 @@
 -(void)requestSignOutWithHandler:(void (^)(NSData *data, NSError *error))dataSorceHandler;
 
 -(void)requestChangeStatusWithStringIssueID:(NSString*)strindIssueID
+                                   toStatus:(NSString*)stringStatus
+                                   withData:(NSData*)data
          andDataSorceHandler:(void(^)(NSData *data, NSError *error))dataSorceHandler;
 
 @end

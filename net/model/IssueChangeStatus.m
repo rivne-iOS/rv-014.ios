@@ -24,12 +24,12 @@
 {
     if(_changingDic == nil)
     {
-        NSArray *newForManager = @[@"APPROVE", @"CANCEL"];
+        NSArray *newForManager = @[@"APPROVED", @"CANCEL"];
         NSArray *toResolveForManager = @[@"RESOLVED"];
         NSDictionary *dicForManager = @{@"NEW" : newForManager, @"TO_RESOLVE" : toResolveForManager};
 
         NSArray *approvedForUser = @[@"TO_RESOLVE"];
-        NSDictionary *dicForUser = @{@"APPROVE" : approvedForUser};
+        NSDictionary *dicForUser = @{@"APPROVED" : approvedForUser};
        
         _changingDic = @{@"USER" : dicForUser,  @"MANAGER": dicForManager};
     }

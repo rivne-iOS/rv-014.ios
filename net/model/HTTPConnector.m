@@ -15,7 +15,8 @@
 @property(strong, nonatomic)NSString *userLogIn;
 @property(strong, nonatomic)NSString *userSingUp;
 @property(strong, nonatomic)NSString *userSignOut;
-@property(strong, nonatomic)NSString *changeIssueStatus;
+@property(strong, nonatomic)NSString *changeIssueStatusToResolve;
+@property(strong, nonatomic)NSString *changeIssueStatusToApproveCancel;
 
 -(void)postRequest:(NSData*) postData
              toURL:(NSString*) textUrl
@@ -25,6 +26,7 @@
                  andHandler:(void(^)(NSData* data, NSError *error))dataSorceHandler;
 
 -(void)putRequestToUrl:(NSString*)textUrl
+              withData:(NSData *) data
                  andHandler:(void(^)(NSData* data, NSError *error))dataSorceHandler;
 
 
@@ -43,7 +45,8 @@
         _userLogIn = @"users/auth/login";
         _userSingUp = @"users";
         _userSignOut = @"users/auth/logout";
-        _changeIssueStatus = @"issue/issueIDNumber/resolve";
+        _changeIssueStatusToResolve = @"issue/issueIDNumber/resolve";
+        _changeIssueStatusToApproveCancel = @"issue";
         
     }
     return self;
@@ -73,9 +76,22 @@
 }
 
 -(void)requestChangeStatusWithStringIssueID:(NSString*)strindIssueID
+                                   toStatus:(NSString*)stringStatus
+                                   withData:(NSData*)data
                         andDataSorceHandler:(void(^)(NSData *data, NSError *error))dataSorceHandler
 {
-    [self putRequestToUrl:[[self.globalURL stringByAppendingString:self.changeIssueStatus] stringByReplacingOccurrencesOfString:@"issueIDNumber" withString:strindIssueID] andHandler:dataSorceHandler];
+    if ([stringStatus isEqualToString:@"APPROVED"] || [stringStatus isEqualToString:@"CANCELED"])
+    {
+        [self putRequestToUrl:[NSString stringWithFormat:@"%@%@/%@", self.globalURL, self.changeIssueStatusToApproveCancel, strindIssueID]
+                     withData:data
+                   andHandler:dataSorceHandler];
+    }
+    else
+    {
+        [self putRequestToUrl:[[self.globalURL stringByAppendingString:self.changeIssueStatusToResolve] stringByReplacingOccurrencesOfString:@"issueIDNumber" withString:strindIssueID]
+                     withData:nil
+                   andHandler:dataSorceHandler];
+    }
 }
 
 
@@ -126,6 +142,7 @@
 
     
 -(void)putRequestToUrl:(NSString*)textUrl
+              withData:(NSData *) data
             andHandler:(void(^)(NSData* data, NSError *error))handler
 {
     NSURL *url = [NSURL URLWithString: textUrl];
@@ -133,6 +150,10 @@
     
     [request setHTTPMethod:@"PUT"];
     [request setValue:@"application/json" forHTTPHeaderField:@"Content-Type"];
+    if(data != nil)
+    {
+        [request setHTTPBody:data];
+    }
     
     NSURLSessionDataTask *dataTask = [[NSURLSession sharedSession] dataTaskWithRequest:request
                                                                      completionHandler:

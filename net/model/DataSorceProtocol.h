@@ -9,6 +9,7 @@
 #ifndef net_DataSorceProtocol_h
 #define net_DataSorceProtocol_h
 #import "User.h"
+#import "Issue.h"
 
 @protocol DataSorceProtocol <NSObject>
 
@@ -26,7 +27,8 @@
 -(void)requestSignOutWithHandler:(void (^)(NSString * stringAnswer))viewControllerHandler andErrorHandler:(void(^)(NSError *error)) errorHandler;
 
 -(void)requestChangeStatusWithID:(NSNumber*)issueIdNumber
-    andViewControllerHandler:(void (^)(NSString *stringAnswer))viewControllerHandler // e.g. user is not logined
+                        toStatus:(NSString*)stringStatus
+        andViewControllerHandler:(void (^)(NSString *stringAnswer, Issue *issue))viewControllerHandler // e.g. user is not logined
              andErrorHandler:(void(^)(NSError *error)) errorHandler;
 
 

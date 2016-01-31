@@ -203,14 +203,16 @@
     if ([viewController isKindOfClass:[DescriptionViewController class]]){
         DescriptionViewController *descriptionVC = (DescriptionViewController *)viewController;
         descriptionVC.currentIssue = self.currentMarker.userData;
+        descriptionVC.currentMarker = self.currentMarker;
         descriptionVC.currentUser = self.currentUser;
-        //[descriptionVC setDataToView];
-        [descriptionVC clearOldDynamicElements];
-        [descriptionVC prepareUIChangeStatusElements];
+        //descriptionVC.view.frame;
+//        [descriptionVC setDataToView];
+//        [descriptionVC clearOldDynamicElements];
+//        [descriptionVC prepareUIChangeStatusElements];
 
     }
-    [self animateTabsSwitching:viewController];
-    return NO;
+    //[self animateTabsSwitching:viewController];
+    return YES;
 }
 
 -(void)showTabBar
@@ -277,11 +279,11 @@
     UIView *fromView = self.tabBarController.selectedViewController.view;
     UIView *toView = [viewController view];
     //UIView *toView = [self.tabBarController.viewControllers[controllerIndex] view];
-    if([viewController isKindOfClass:[DescriptionViewController class]])
-    {
-        DescriptionViewController *dVC = (DescriptionViewController*)viewController;
-        [dVC setDataToView];
-    }
+//    if([viewController isKindOfClass:[DescriptionViewController class]])
+//    {
+//        DescriptionViewController *dVC = (DescriptionViewController*)viewController;
+//        [dVC setDataToView];
+//    }
 
     [UIView transitionFromView:fromView
                             toView:toView
