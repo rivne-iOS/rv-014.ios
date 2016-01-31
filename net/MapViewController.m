@@ -16,6 +16,7 @@
 @import GoogleMaps;
 
 static NSString * const GOOGLE_WEB_API_KEY = @"AIzaSyB7InJ3J2AoxlHjsYtde9BNawMINCaHykg";
+static NSInteger const HTTP_RESPONSE_CODE_OK = 200;
 
 @interface MapViewController () <GMSMapViewDelegate, UITabBarControllerDelegate>
 
@@ -23,6 +24,7 @@ static NSString * const GOOGLE_WEB_API_KEY = @"AIzaSyB7InJ3J2AoxlHjsYtde9BNawMIN
 @property (strong, nonatomic) id <DataSorceProtocol> dataSorce;
 @property (weak, nonatomic) IBOutlet GMSMapView *mapView;
 @property (strong, nonatomic) GMSMarker *currentMarker;
+@property (assign, nonatomic) CLLocationCoordinate2D currentLocation;
 
 @end
 
@@ -201,11 +203,14 @@ static NSString * const GOOGLE_WEB_API_KEY = @"AIzaSyB7InJ3J2AoxlHjsYtde9BNawMIN
 
 -(void)mapView:(GMSMapView *)mapView didLongPressAtCoordinate:(CLLocationCoordinate2D)coordinate
 {
-    [[self navigationController] setNavigationBarHidden:YES animated:YES];
+    self.mapView.selectedMarker = nil;
+    [[self navigationController] setNavigationBarHidden:YES animated:NO];
     [self requestGoogleApiPlace:coordinate];
     [self requestCategories];
+    [self addBorderColor];
     [UIView animateWithDuration:0.5 animations:^(void){
         self.scrollViewLeadingConstraint.constant = 0;
+        [self hideTabBar];
         [self.view layoutIfNeeded];
     }];
 }
@@ -217,23 +222,18 @@ static NSString * const GOOGLE_WEB_API_KEY = @"AIzaSyB7InJ3J2AoxlHjsYtde9BNawMIN
                            coordinate.longitude,
                            1,
                            GOOGLE_WEB_API_KEY];
+    self.currentLocation = coordinate;
     NSURL *url = [NSURL URLWithString:urlString];
     NSURLRequest *request = [NSURLRequest requestWithURL:url];
     [[[NSURLSession sharedSession]dataTaskWithRequest:request
                                     completionHandler:^(NSData * _Nullable data, NSURLResponse * _Nullable response, NSError * _Nullable connectionError) {
                                         if (data.length > 0 && connectionError == nil)
                                         {
-//                                            NSArray *issuesDictionaryArray = [NSJSONSerialization JSONObjectWithData:data options:0                                                                                                    error:NULL];
-//                                            
-//                                            NSMutableArray *issuesClassArray = [[NSMutableArray alloc] init];
-//                                            for (NSDictionary *issue in issuesDictionaryArray) {
-//                                                [issuesClassArray addObject:[[Issue alloc] initWithDictionary:issue]];
-//                                            }
-                                            
-                                            dispatch_async(dispatch_get_main_queue(), ^{
+                                                dispatch_async(dispatch_get_main_queue(), ^{
                                                 self.tapLocationLabel.numberOfLines = 2;
                                                 self.tapLocationLabel.lineBreakMode = NSLineBreakByCharWrapping;
-                                                self.tapLocationLabel.text = [self.tapLocationLabel.text stringByAppendingFormat:@"\n%@, %@",
+                                                self.tapLocationLabel.text = @"";
+                                                self.tapLocationLabel.text = [self.tapLocationLabel.text stringByAppendingFormat:@"Location of issue:\n%@, %@",
                                                                               [self takeVicinityFromGoogleApiPlace:data],
                                                                               [self takeStreetFromGoogleApiPlace:data]];
                                             });
@@ -386,18 +386,108 @@ static NSString * const GOOGLE_WEB_API_KEY = @"AIzaSyB7InJ3J2AoxlHjsYtde9BNawMIN
                                     }] resume];
 }
 
--(void)addScrollView{
-//    self.scrollView = [[UIScrollView alloc]initWithFrame:
-//                    CGRectMake(20, 20, 280, 420)];
-//    self.scrollView.accessibilityActivationPoint = CGPointMake(100, 100);
-//    imgView = [[UIImageView alloc]initWithImage:
-//               [UIImage imageNamed:@"AppleUSA.jpg"]];
-//    [self.scrollView addSubview:imgView];
-//    self.scrollView.minimumZoomScale = 0.5;
-//    self.scrollView.maximumZoomScale = 3;
-//    self.scrollView.contentSize = CGSizeMake(self.addingIssueView.frame.size.width,
-//                                          self.addingIssueView.frame.size.height);
-//    self.scrollView.delegate = self;
-//    [self.view addSubview:myScrollView];
+-(void)addBorderColor
+{
+    [self.descriptionTextView.layer setBorderColor:[[[UIColor redColor] colorWithAlphaComponent:0.5] CGColor]];
+    [self.descriptionTextView.layer setBorderWidth:1.0];
+    [self.nameTextField.layer setBorderColor:[[[UIColor redColor] colorWithAlphaComponent:0.5] CGColor]];
+    [self.nameTextField.layer setBorderWidth:1.0];
+    [self.categoryPicker.layer setBorderColor:[[[UIColor redColor] colorWithAlphaComponent:0.5] CGColor]];
+    [self.categoryPicker.layer setBorderWidth:1.0];
+    [self.attachmentTextField.layer setBorderColor:[[[UIColor redColor] colorWithAlphaComponent:0.5] CGColor]];
+    [self.attachmentTextField.layer setBorderWidth:1.0];
 }
+
+- (IBAction)buttonBackPressed:(id)sender
+{
+    [[self navigationController] setNavigationBarHidden:NO animated:NO];
+    [UIView animateWithDuration:0.5 animations:^(void){
+        self.scrollViewLeadingConstraint.constant = CGRectGetWidth(self.mapView.bounds);
+        [self.view layoutIfNeeded];
+    }];
+}
+
+- (IBAction)buttonAddPressed:(id)sender
+{
+    [self requestAddingNewIssue:[self getJsonFromAddingNewIssueView]];
+    [[self navigationController] setNavigationBarHidden:NO animated:NO];
+    [UIView animateWithDuration:0.5 animations:^(void){
+        self.scrollViewLeadingConstraint.constant = CGRectGetWidth(self.mapView.bounds);
+        [self.view layoutIfNeeded];
+    }];
+}
+
+-(NSDictionary *)getJsonFromAddingNewIssueView
+{
+    //    JSON example
+    //    {
+    //        "name": "Huge traffic jam",
+    //        "desc": "Many cars stucked in the long row.",
+    //        "point": "LatLng(50.55845, 26.3072)",
+    //        "status": "NEW",
+    //        "category": 3,
+    //    }
+    NSArray *addIssueValues = [[NSArray alloc] initWithObjects:
+                               self.nameTextField.text,
+                               self.descriptionTextView.text,
+                               [[NSString alloc] initWithFormat:@"LatLng(%f, %f)", self.currentLocation.latitude, self.currentLocation.longitude],
+                               @"NEW",
+                               [NSNumber numberWithInt:[self.categoryPicker selectedRowInComponent:0]],
+                               nil];
+    NSArray *addIssueKeys = [[NSArray alloc] initWithObjects:
+                             @"name",
+                             @"desc",
+                             @"point",
+                             @"status",
+                             @"category",
+                             nil];
+    return [[NSDictionary alloc] initWithObjects:addIssueValues forKeys:addIssueKeys];
+}
+
+-(void)requestAddingNewIssue:(NSDictionary *)jsonDictionary
+{
+    // 1
+    NSURL *url = [NSURL URLWithString:@"https://bawl-rivne.rhcloud.com/issue"];
+    NSURLSessionConfiguration *config = [NSURLSessionConfiguration defaultSessionConfiguration];
+    NSURLSession *session = [NSURLSession sessionWithConfiguration:config];
+    
+    // 2
+    NSMutableURLRequest *request = [[NSMutableURLRequest alloc] initWithURL:url];
+    request.HTTPMethod = @"POST";
+    
+    // 3
+    NSError *error = nil;
+    NSData *data = [NSJSONSerialization dataWithJSONObject:jsonDictionary
+                                                   options:kNilOptions error:&error];
+    
+    if (!error) {
+        // 4
+        NSURLSessionUploadTask *uploadTask = [session uploadTaskWithRequest:request
+                                                                   fromData:data completionHandler:^(NSData *data,NSURLResponse *response,NSError *error) {
+                                                                       NSHTTPURLResponse *httpResponse = (NSHTTPURLResponse *) response;
+                                                                       if ([httpResponse statusCode] != HTTP_RESPONSE_CODE_OK){
+                                                                           UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Attention!"
+                                                                                                                           message:@"Something has gone wrong! (we have ansswer from server, but it's incorrect)"
+                                                                                                                          delegate:nil
+                                                                                                                 cancelButtonTitle:@"I understood"
+                                                                                                                 otherButtonTitles:nil];
+                                                                           [alert show];
+                                                                       } else {
+                                                                           dispatch_async(dispatch_get_main_queue(), ^{
+                                                                               [self renewMap];
+                                                                           });
+                                                                       }
+                                                                   }];
+        
+        // 5
+        [uploadTask resume];
+    }
+}
+
+-(void)renewMap
+{
+    [self.mapView clear];
+    [self requestIssues];
+}
+
 @end

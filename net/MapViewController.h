@@ -25,5 +25,11 @@
 @property (strong, nonatomic) NSMutableArray *categoryClassArray;
 @property (weak, nonatomic) IBOutlet UIPickerView *categoryPicker;
 @property (weak, nonatomic) IBOutlet UIScrollView *scrollView;
+@property (weak, nonatomic) IBOutlet UITextView *descriptionTextView;
+@property (weak, nonatomic) IBOutlet UITextField *nameTextField;
+@property (weak, nonatomic) IBOutlet UITextField *attachmentTextField;
+
+- (IBAction)buttonBackPressed:(id)sender;
+- (IBAction)buttonAddPressed:(id)sender;
 
 @end
