@@ -9,12 +9,27 @@
 #import "HTTPConnector.h"
 @interface HTTPConnector()
 
+@property(strong, nonatomic)NSString *globalURL;
+@property(strong, nonatomic)NSString *allPersURL;
+@property(strong, nonatomic)NSString *allPointsURL;
+@property(strong, nonatomic)NSString *userLogIn;
+@property(strong, nonatomic)NSString *userSingUp;
+@property(strong, nonatomic)NSString *userSignOut;
+@property(strong, nonatomic)NSString *changeIssueStatusToResolve;
+@property(strong, nonatomic)NSString *changeIssueStatusToApproveCancel;
+
 -(void)postRequest:(NSData*) postData
              toURL:(NSString*) textUrl
         andHandler:(void(^)(NSData *data, NSError *error))handler;
 
 -(void)getRequestBlankToUrl:(NSString*)textUrl
                  andHandler:(void(^)(NSData* data, NSError *error))dataSorceHandler;
+
+-(void)putRequestToUrl:(NSString*)textUrl
+              withData:(NSData *) data
+                 andHandler:(void(^)(NSData* data, NSError *error))dataSorceHandler;
+
+
 @end
 
 
@@ -30,6 +45,8 @@
         _userLogIn = @"users/auth/login";
         _userSingUp = @"users";
         _userSignOut = @"users/auth/logout";
+        _changeIssueStatusToResolve = @"issue/issueIDNumber/resolve";
+        _changeIssueStatusToApproveCancel = @"issue";
         
     }
     return self;
@@ -58,6 +75,24 @@
     [self postRequest:data toURL:[self.globalURL stringByAppendingString:self.userSingUp] andHandler:dataSorceHandler];
 }
 
+-(void)requestChangeStatusWithStringIssueID:(NSString*)strindIssueID
+                                   toStatus:(NSString*)stringStatus
+                                   withData:(NSData*)data
+                        andDataSorceHandler:(void(^)(NSData *data, NSError *error))dataSorceHandler
+{
+    if ([stringStatus isEqualToString:@"APPROVED"] || [stringStatus isEqualToString:@"CANCELED"])
+    {
+        [self putRequestToUrl:[NSString stringWithFormat:@"%@%@/%@", self.globalURL, self.changeIssueStatusToApproveCancel, strindIssueID]
+                     withData:data
+                   andHandler:dataSorceHandler];
+    }
+    else
+    {
+        [self putRequestToUrl:[[self.globalURL stringByAppendingString:self.changeIssueStatusToResolve] stringByReplacingOccurrencesOfString:@"issueIDNumber" withString:strindIssueID]
+                     withData:nil
+                   andHandler:dataSorceHandler];
+    }
+}
 
 
 -(void)postRequest:(NSData*) postData
@@ -86,7 +121,7 @@
     
 }
 
--(void)getRequestBlankToUrl:(NSString*)textUrl andHandler:(void(^)(NSData* data, NSError *error))dataSorceHandler
+-(void)getRequestBlankToUrl:(NSString*)textUrl andHandler:(void(^)(NSData* data, NSError *error))handler
 {
     NSURL *url = [NSURL URLWithString:textUrl];
     NSURLRequest *request = [NSURLRequest requestWithURL:url];
@@ -97,7 +132,7 @@
                                       {
                                           // result with error (for testing)
                                           //        dataSorceHandler(data, [[NSError alloc] init]);
-                                          dataSorceHandler(data, error);
+                                          handler(data, error);
                                       }
                                       ];
     
@@ -106,7 +141,33 @@
 }
 
     
-
+-(void)putRequestToUrl:(NSString*)textUrl
+              withData:(NSData *) data
+            andHandler:(void(^)(NSData* data, NSError *error))handler
+{
+    NSURL *url = [NSURL URLWithString: textUrl];
+    NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:url];
+    
+    [request setHTTPMethod:@"PUT"];
+    [request setValue:@"application/json" forHTTPHeaderField:@"Content-Type"];
+    if(data != nil)
+    {
+        [request setHTTPBody:data];
+    }
+    
+    NSURLSessionDataTask *dataTask = [[NSURLSession sharedSession] dataTaskWithRequest:request
+                                                                     completionHandler:
+                                      ^(NSData *data, NSURLResponse *response, NSError *error)
+                                      {
+                                          // result with error (for testing)
+                                          //        dataSorceHandler(data, [[NSError alloc] init]);
+                                          handler(data, error);
+                                      }
+                                      ];
+    
+    [dataTask resume];
+    
+}
     
     
     

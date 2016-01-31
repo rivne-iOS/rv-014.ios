@@ -25,10 +25,11 @@ typedef enum : NSUInteger {
 @property(strong, nonatomic)NSString *name;
 @property(strong, nonatomic)NSString *email;
 @property(strong, nonatomic)NSString *password;
+
 @property(nonatomic) Role role;
 
 
-+(NSArray*)UserStringRoles;
++(NSArray*)userStringRoles;
 -(instancetype)initWithName:(NSString*)name
                    andLogin:(NSString*)login
                     andPass:(NSString*)pass

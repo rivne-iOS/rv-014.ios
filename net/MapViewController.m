@@ -73,10 +73,11 @@
         {
             DescriptionViewController *DescriptionVC = (DescriptionViewController *)segue.destinationViewController;
             DescriptionVC.currentIssue = self.currentMarker.userData;
-//            DescriptionVC.mapDelegate = self;
         }
     }
 }
+
+
 - (IBAction)sequeToLogInButton:(UIBarButtonItem *)sender {
     
     
@@ -89,7 +90,7 @@
         [self.dataSorce requestSignOutWithHandler:^(NSString *stringAnswer) {
             dispatch_async(dispatch_get_main_queue(), ^{
             
-            if([stringAnswer isEqualToString:@"Your is log out"])
+            if([stringAnswer isEqualToString:[@"Bye " stringByAppendingString:self.currentUser.name]])
             {
                 // alert - good
                 self.title = [NSString stringWithFormat:@"Bowl"];
@@ -106,7 +107,7 @@
             {
                 // alert - bad
                 UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Attention!"
-                                                                message:@"Something has gone wrong! (we have ansswer from server, but it's incorrect)"
+                                                                message:[@"Something has gone wrong! (server answer: )" stringByAppendingString:stringAnswer]
                                                                delegate:nil
                                                       cancelButtonTitle:@"I understood"
                                                       otherButtonTitles:nil];
@@ -128,6 +129,7 @@
     }
 }
 
+#pragma mark Map
 -(void)createAndShowMap
 {
     GMSCameraPosition *camera = [GMSCameraPosition cameraWithLatitude:50.6283612
@@ -196,11 +198,19 @@
     }];
 }
 
+#pragma mark Tab Bar
 -(BOOL)tabBarController:(UITabBarController *)tabBarController shouldSelectViewController:(UIViewController *)viewController
 {
     if ([viewController isKindOfClass:[DescriptionViewController class]]){
-        DescriptionViewController *DescriptionVC = (DescriptionViewController *)viewController;
-        DescriptionVC.currentIssue = self.currentMarker.userData;
+        DescriptionViewController *descriptionVC = (DescriptionViewController *)viewController;
+        descriptionVC.currentIssue = self.currentMarker.userData;
+        descriptionVC.currentMarker = self.currentMarker;
+        descriptionVC.currentUser = self.currentUser;
+        //descriptionVC.view.frame;
+//        [descriptionVC setDataToView];
+//        [descriptionVC clearOldDynamicElements];
+//        [descriptionVC prepareUIChangeStatusElements];
+
     }
     if ([viewController isKindOfClass:[IssueHistoryViewController class]]){
         IssueHistoryViewController *issueHistoryViewController = (IssueHistoryViewController *)viewController;
@@ -270,10 +280,17 @@
 -(void)animateTabsSwitching:(UIViewController *)viewController
 {
     NSUInteger controllerIndex = [self.tabBarController.viewControllers indexOfObject:viewController];
-
+    
     UIView *fromView = self.tabBarController.selectedViewController.view;
-    UIView *toView = [self.tabBarController.viewControllers[controllerIndex] view];
-        [UIView transitionFromView:fromView
+    UIView *toView = [viewController view];
+    //UIView *toView = [self.tabBarController.viewControllers[controllerIndex] view];
+//    if([viewController isKindOfClass:[DescriptionViewController class]])
+//    {
+//        DescriptionViewController *dVC = (DescriptionViewController*)viewController;
+//        [dVC setDataToView];
+//    }
+
+    [UIView transitionFromView:fromView
                             toView:toView
                           duration:0.5
                            options:(controllerIndex > self.tabBarController.selectedIndex ? UIViewAnimationOptionTransitionFlipFromLeft : UIViewAnimationOptionTransitionFlipFromRight)

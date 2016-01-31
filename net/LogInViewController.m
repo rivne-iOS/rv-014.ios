@@ -120,9 +120,6 @@
     NSLog(@"ContentView : %@\n\n", self.contentView);
     NSLog(@"KeyboardHeight : %f\n\n", keyboardHeight);
     
-    
-    
-    // code belowe don't work :( and it's important to understand why!
     if (self.currentEditField == nil)
         return;
     

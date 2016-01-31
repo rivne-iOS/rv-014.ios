@@ -50,7 +50,7 @@
     [wizard requestSignOutWithHandler:^(NSData *data, NSError *error) {
         if (data.length > 0 && error==nil)
         {
-            viewControllerHandler([Parser parseSignOutAnswer:data]);
+            viewControllerHandler([Parser parseAnswer:data andReturnObjectForKey:@"message"]);
         }
         else if(error != nil)
         {
@@ -94,6 +94,48 @@
                          errorHandler(error);
                      }
                  }];
+
+}
+
+
+
+-(void)requestChangeStatusWithID:(NSNumber*)issueIdNumber
+                        toStatus:(NSString*)stringStatus
+        andViewControllerHandler:(void (^)(NSString *stringAnswer, Issue *issue))viewControllerHandler // e.g. user is not logined
+                 andErrorHandler:(void(^)(NSError *error)) errorHandler;
+{
+    HTTPConnector *wizard = [[HTTPConnector alloc] init];
+    NSData *postData = nil;
+    
+    if ([stringStatus isEqualToString:@"APPROVED"] || [stringStatus isEqualToString:@"CANCELED"])
+    {
+        NSDictionary *dictionary = [NSDictionary dictionaryWithObjectsAndKeys:stringStatus, @"status", nil];
+        postData = [NSJSONSerialization dataWithJSONObject:dictionary
+                                                           options:0
+                                                             error:NULL];
+    }
+    
+    [wizard requestChangeStatusWithStringIssueID:[NSString stringWithFormat:@"%@", issueIdNumber]
+                                        toStatus:stringStatus
+                                        withData:postData
+                             andDataSorceHandler:^(NSData *data, NSError *error) {
+        if (data.length > 0 && error==nil)
+        {
+            NSString *stringAnswer = [Parser parseAnswer:data andReturnObjectForKey:@"message"];
+            Issue *issue = nil;
+            
+            if(stringAnswer == nil)
+            {
+                NSDictionary *issueDictionary = [NSJSONSerialization JSONObjectWithData:data options:0 error:NULL];
+                issue = [[Issue alloc] initWithDictionary:issueDictionary];
+            }
+            viewControllerHandler(stringAnswer, issue);
+        }
+        else if(error != nil)
+        {
+            errorHandler(error);
+        }
+    }];
 
 }
 

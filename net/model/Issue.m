@@ -17,9 +17,14 @@
 
 @implementation Issue
 
-+(NSArray*)BPPointStringStatuses
++(NSArray*)stringStatusesArray
 {
-    return @[@"APPREVED", @"TO_RESOLVE", @"RESOLVED"];
+    return @[@"NEW", @"APPROVED", @"CANCEL", @"TO_RESOLVE", @"RESOLVED"];
+}
+
+-(NSString*)stringStatus
+{
+    return [[Issue stringStatusesArray] objectAtIndex:self.statusEnum];
 }
 
 -(instancetype)initWithDictionary:(NSDictionary *)issueDictionary
