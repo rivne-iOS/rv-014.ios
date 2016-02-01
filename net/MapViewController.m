@@ -454,6 +454,7 @@ static NSInteger const HTTP_RESPONSE_CODE_OK = 200;
     // 2
     NSMutableURLRequest *request = [[NSMutableURLRequest alloc] initWithURL:url];
     request.HTTPMethod = @"POST";
+    [request setValue:@"application/json" forHTTPHeaderField:@"Content-Type"];
     
     // 3
     NSError *error = nil;
