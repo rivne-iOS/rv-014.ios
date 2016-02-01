@@ -16,6 +16,11 @@
 @import GoogleMaps;
 
 static NSString * const GOOGLE_WEB_API_KEY = @"AIzaSyB7InJ3J2AoxlHjsYtde9BNawMINCaHykg";
+static NSString * const DOMAIN_NAME_ALL_ISSUES = @"https://bawl-rivne.rhcloud.com/issue/all";
+static NSString * const DOMAIN_NAME_GOOGLE_PLACE_INFO = @"https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=%f,%f&radius=%d&key=%@";
+static NSString * const DOMAIN_NAME_ALL_CATEGORIES = @"https://bawl-rivne.rhcloud.com/categories/all";
+static NSString * const DOMAIN_NAME_ADD_ISSUE = @"https://bawl-rivne.rhcloud.com/issue";
+
 static NSInteger const HTTP_RESPONSE_CODE_OK = 200;
 
 @interface MapViewController () <GMSMapViewDelegate, UITabBarControllerDelegate>
@@ -41,6 +46,27 @@ static NSInteger const HTTP_RESPONSE_CODE_OK = 200;
     [self hideTabBar];
     [self customizeTabBar];
     [self createAndShowMap];
+}
+
+-(void)viewWillAppear:(BOOL)animated
+{
+    [self renewMap];
+    
+    [self.timerForMapRenew invalidate];
+
+    self.timerForMapRenew = [NSTimer scheduledTimerWithTimeInterval:10.0
+                                     target:self
+                                   selector:@selector(renewMapWithNSTimer:)
+                                   userInfo:nil
+                                    repeats:YES];
+    
+    NSRunLoop *runner = [NSRunLoop currentRunLoop];
+    [runner addTimer:self.timerForMapRenew forMode: NSDefaultRunLoopMode];
+}
+
+-(void)viewWillDisappear:(BOOL)animated
+{
+    [self.timerForMapRenew invalidate];
 }
 
 -(void)setCurrentUser:(User *) user
@@ -143,19 +169,19 @@ static NSInteger const HTTP_RESPONSE_CODE_OK = 200;
     self.mapView.delegate = self;
     
     [self.tabBarController.tabBar setHidden:YES];
-    [self requestIssues];
+//    [self requestIssues];
 }
 
 
 -(void)requestIssues
 {
-        NSURL *url = [NSURL URLWithString:@"https://bawl-rivne.rhcloud.com/issue/all"];
+        [self testInternetConnection:DOMAIN_NAME_ALL_ISSUES];
+        NSURL *url = [NSURL URLWithString:DOMAIN_NAME_ALL_ISSUES];
         NSURLRequest *request = [NSURLRequest requestWithURL:url];
     
         [[[NSURLSession sharedSession]dataTaskWithRequest:request
                                         completionHandler:^(NSData * _Nullable data, NSURLResponse * _Nullable response, NSError * _Nullable connectionError) {
-                                            if (data.length > 0 && connectionError == nil)
-                                            {
+                                            if (data.length > 0 && connectionError == nil){
                                         
                                                 NSArray *issuesDictionaryArray = [NSJSONSerialization JSONObjectWithData:data options:0                                                                                                    error:NULL];
                                                 
@@ -165,6 +191,9 @@ static NSInteger const HTTP_RESPONSE_CODE_OK = 200;
                                                 }
                                                 
                                                 dispatch_async(dispatch_get_main_queue(), ^{
+                                                    
+                                                    [self.mapView clear];
+                                                    
                                                     for (Issue *issue in issuesClassArray) {
                                                         GMSMarker *marker = [[GMSMarker alloc] init];
                                                         marker.position = CLLocationCoordinate2DMake(issue.getLatitude, issue.getLongitude);
@@ -173,6 +202,13 @@ static NSInteger const HTTP_RESPONSE_CODE_OK = 200;
                                                         marker.map = self.mapView;
                                                     }
                                                 });
+                                            } else {
+                                                UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Attention!"
+                                                                                                message:@"Troubles with connection!"
+                                                                                               delegate:nil
+                                                                                      cancelButtonTitle:@"I understood"
+                                                                                      otherButtonTitles:nil];
+                                                [alert show];
                                             }
                                         }] resume];
 }
@@ -217,7 +253,7 @@ static NSInteger const HTTP_RESPONSE_CODE_OK = 200;
 
 -(void)requestGoogleApiPlace:(CLLocationCoordinate2D)coordinate
 {
-    NSString *urlString = [[NSString alloc] initWithFormat:@"https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=%f,%f&radius=%d&key=%@",
+    NSString *urlString = [[NSString alloc] initWithFormat:DOMAIN_NAME_GOOGLE_PLACE_INFO,
                            coordinate.latitude,
                            coordinate.longitude,
                            1,
@@ -365,7 +401,7 @@ static NSInteger const HTTP_RESPONSE_CODE_OK = 200;
 
 -(void)requestCategories
 {
-    NSURL *url = [NSURL URLWithString:@"https://bawl-rivne.rhcloud.com/categories/all"];
+    NSURL *url = [NSURL URLWithString:DOMAIN_NAME_ALL_CATEGORIES];
     NSURLRequest *request = [NSURLRequest requestWithURL:url];
     [[[NSURLSession sharedSession]dataTaskWithRequest:request
                                     completionHandler:^(NSData * _Nullable data, NSURLResponse * _Nullable response, NSError * _Nullable connectionError) {
@@ -447,7 +483,7 @@ static NSInteger const HTTP_RESPONSE_CODE_OK = 200;
 -(void)requestAddingNewIssue:(NSDictionary *)jsonDictionary
 {
     // 1
-    NSURL *url = [NSURL URLWithString:@"https://bawl-rivne.rhcloud.com/issue"];
+    NSURL *url = [NSURL URLWithString:DOMAIN_NAME_ADD_ISSUE];
     NSURLSessionConfiguration *config = [NSURLSessionConfiguration defaultSessionConfiguration];
     NSURLSession *session = [NSURLSession sessionWithConfiguration:config];
     
@@ -487,8 +523,39 @@ static NSInteger const HTTP_RESPONSE_CODE_OK = 200;
 
 -(void)renewMap
 {
-    [self.mapView clear];
     [self requestIssues];
+}
+
+-(void)renewMapWithNSTimer:(NSTimer *)timer
+{
+    [self requestIssues];
+}
+
+// Checks if we have an internet connection or not
+- (void)testInternetConnection:(NSString *)hostName
+{
+    Reachability *internetReachableFoo = [Reachability reachabilityWithHostname:hostName];
+    
+    // Internet is reachable
+//    internetReachableFoo.reachableBlock = ^(Reachability*reach)
+//    {
+//        // Update the UI on the main thread
+//        dispatch_async(dispatch_get_main_queue(), ^{
+//            NSLog(@"Yayyy, we have the interwebs!");
+//        });
+//        reachInternet = YES;
+//    };
+    
+    // Internet is not reachable
+    internetReachableFoo.unreachableBlock = ^(Reachability*reach)
+    {
+        // Update the UI on the main thread
+        dispatch_async(dispatch_get_main_queue(), ^{
+            NSLog(@"Someone broke the internet :(");
+        });
+    };
+    
+    [internetReachableFoo startNotifier];
 }
 
 @end

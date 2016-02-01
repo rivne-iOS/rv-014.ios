@@ -8,6 +8,7 @@
 
 #import <UIKit/UIKit.h>
 #import "User.h"
+#import "Reachability.h"
 
 @interface MapViewController : UIViewController <UIPickerViewDataSource, UIPickerViewDelegate>
 
@@ -29,7 +30,11 @@
 @property (weak, nonatomic) IBOutlet UITextField *nameTextField;
 @property (weak, nonatomic) IBOutlet UITextField *attachmentTextField;
 
+@property (strong, nonatomic) NSTimer *timerForMapRenew;
+
 - (IBAction)buttonBackPressed:(id)sender;
 - (IBAction)buttonAddPressed:(id)sender;
+- (void)renewMapWithNSTimer:(NSTimer *)timer;
+
 
 @end
