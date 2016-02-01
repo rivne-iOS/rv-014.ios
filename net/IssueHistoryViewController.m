@@ -92,6 +92,14 @@ static NSString * const kSimpleTableIdentifier = @"SampleTableCell";
     [self requestIssueHistory];
 }
 
+- (void) viewWillAppear:(BOOL)animated {
+    [super viewWillAppear:YES];
+    
+    [self.issueTitle setText:self.issue.issueDescription];
+    [self requestIssueHistory];
+    
+}
+
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
