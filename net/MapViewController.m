@@ -22,6 +22,7 @@ static NSString * const DOMAIN_NAME_ALL_CATEGORIES = @"https://bawl-rivne.rhclou
 static NSString * const DOMAIN_NAME_ADD_ISSUE = @"https://bawl-rivne.rhcloud.com/issue";
 
 static NSInteger const HTTP_RESPONSE_CODE_OK = 200;
+static double const MAP_REFRESHING_INTERVAL = 120.0;
 
 @interface MapViewController () <GMSMapViewDelegate, UITabBarControllerDelegate>
 
@@ -54,7 +55,7 @@ static NSInteger const HTTP_RESPONSE_CODE_OK = 200;
     
     [self.timerForMapRenew invalidate];
 
-    self.timerForMapRenew = [NSTimer scheduledTimerWithTimeInterval:10.0
+    self.timerForMapRenew = [NSTimer scheduledTimerWithTimeInterval:MAP_REFRESHING_INTERVAL
                                      target:self
                                    selector:@selector(renewMapWithNSTimer:)
                                    userInfo:nil
@@ -108,6 +109,7 @@ static NSInteger const HTTP_RESPONSE_CODE_OK = 200;
         }
     }
 }
+
 - (IBAction)sequeToLogInButton:(UIBarButtonItem *)sender {
     
     
@@ -199,6 +201,7 @@ static NSInteger const HTTP_RESPONSE_CODE_OK = 200;
                                                         marker.position = CLLocationCoordinate2DMake(issue.getLatitude, issue.getLongitude);
                                                         marker.userData = issue;
                                                         marker.title = issue.name;
+                                                        marker.icon = [self changeIconColor:issue];
                                                         marker.map = self.mapView;
                                                     }
                                                 });
@@ -556,6 +559,17 @@ static NSInteger const HTTP_RESPONSE_CODE_OK = 200;
     };
     
     [internetReachableFoo startNotifier];
+}
+
+-(UIImage *)changeIconColor:(Issue *)issue
+{
+    if ([issue.status isEqualToString:@"APPROVED"]){
+        return [GMSMarker markerImageWithColor:[UIColor greenColor]];
+    } else if ([issue.status isEqualToString:@"TO_RESOLVE"]){
+        return [GMSMarker markerImageWithColor:[UIColor orangeColor]];
+    }
+    
+    return [GMSMarker markerImageWithColor:[UIColor redColor]];
 }
 
 @end
