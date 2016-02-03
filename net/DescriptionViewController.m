@@ -6,6 +6,7 @@
 //  Copyright © 2016 Admin. All rights reserved.
 //
 
+#import "UIColor+Bawl.h"
 #import "DescriptionViewController.h"
 #import "IssueChangeStatus.h"
 #import "NetworkDataSorce.h"
@@ -42,7 +43,11 @@
 {
     self.titleLabel.text = self.currentIssue.name;
     self.descriptionLabel.text = self.currentIssue.issueDescription;
-    self.currentStatusLabel.text = [@"Current issue status is " stringByAppendingString:self.currentIssue.status];
+    
+    NSString *firstPart = @"Issue status: ";
+    NSMutableAttributedString *aStr = [[NSMutableAttributedString alloc] initWithString:[firstPart stringByAppendingString:self.currentIssue.status]];
+    [aStr addAttribute:NSForegroundColorAttributeName value:[UIColor blueColor] range:NSMakeRange(firstPart.length, [aStr string].length - firstPart.length)];
+    self.currentStatusLabel.attributedText = aStr;
 }
 
 #define SOME_OFFSET 8
@@ -57,42 +62,24 @@
         return;
     
     
-    UILabel *inviteLable1 = [[UILabel alloc] init];
-    inviteLable1.text = @"You can ";
-    inviteLable1.numberOfLines = 1;
-    inviteLable1.textAlignment = NSTextAlignmentLeft;
-    inviteLable1.backgroundColor = [UIColor whiteColor];
-    [inviteLable1 sizeToFit];
-    inviteLable1.restorationIdentifier = @"dynamicItem";
-    inviteLable1.font = self.currentStatusLabel.font;
-    inviteLable1.translatesAutoresizingMaskIntoConstraints=NO;
-    [self.view addSubview:inviteLable1];
     
-    [inviteLable1.leftAnchor constraintEqualToAnchor:self.currentStatusLabel.leftAnchor].active = YES;
-    [inviteLable1.topAnchor constraintEqualToAnchor:self.currentStatusLabel.bottomAnchor constant:10].active=YES;
     
-    self.viewToConnectChangeButtons = inviteLable1;
+    
+//     self.viewToConnectChangeButtons = inviteLable1;
 
     UIButton *changeButton = [[UIButton alloc] init];
-    [changeButton setTitle:@"change" forState:UIControlStateNormal];
+    [changeButton setTitle:@"Change status" forState:UIControlStateNormal];
     [changeButton addTarget:self action:@selector(showNewStatuses) forControlEvents:UIControlEventTouchUpInside];
-    [changeButton setBackgroundColor:[UIColor whiteColor]];
-    [changeButton setTitleColor:self.view.tintColor forState:UIControlStateNormal];
+    [changeButton setBackgroundColor:[UIColor bawlRedColor]];
+    [changeButton setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
     changeButton.restorationIdentifier = @"dynamicItem";
     [changeButton sizeToFit];
     changeButton.translatesAutoresizingMaskIntoConstraints = NO;
     [self.view addSubview:changeButton];
-    [changeButton.centerYAnchor constraintEqualToAnchor:inviteLable1.centerYAnchor].active = YES;
-    [changeButton.leadingAnchor constraintEqualToAnchor:inviteLable1.trailingAnchor].active = YES;
+    [changeButton.centerXAnchor constraintEqualToAnchor:self.view.centerXAnchor].active = YES;
+    [changeButton.topAnchor constraintEqualToAnchor:self.currentStatusLabel.bottomAnchor].active = YES;
+    self.viewToConnectChangeButtons = changeButton;
     
-    UILabel *inviteLable2 = [[UILabel alloc] init];
-    inviteLable2.text = @" status.";
-    inviteLable2.restorationIdentifier = @"dynamicItem";
-    inviteLable2.backgroundColor = [UIColor whiteColor];
-    inviteLable2.translatesAutoresizingMaskIntoConstraints = NO;
-    [self.view addSubview:inviteLable2];
-    [inviteLable2.centerYAnchor constraintEqualToAnchor:changeButton.centerYAnchor].active = YES;
-    [inviteLable2.leadingAnchor constraintEqualToAnchor:changeButton.trailingAnchor].active = YES;
 
 }
 
