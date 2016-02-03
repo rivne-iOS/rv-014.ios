@@ -12,7 +12,9 @@
 #import "NetworkDataSorce.h"
 
 @interface DescriptionViewController ()
+@property (weak, nonatomic) IBOutlet UILabel *currentCategoryLabel;
 @property (weak, nonatomic) IBOutlet UILabel *currentStatusLabel;
+
 @property (strong, nonatomic) IssueChangeStatus *statusChanger;
 @property (strong, nonatomic) id <DataSorceProtocol> dataSorce;
 
@@ -48,7 +50,37 @@
     NSMutableAttributedString *aStr = [[NSMutableAttributedString alloc] initWithString:[firstPart stringByAppendingString:self.currentIssue.status]];
     [aStr addAttribute:NSForegroundColorAttributeName value:[UIColor blueColor] range:NSMakeRange(firstPart.length, [aStr string].length - firstPart.length)];
     self.currentStatusLabel.attributedText = aStr;
+    
+    self.currentCategoryLabel.text = @"Loading category...";
+    [self.dataSorce requestCategories:^(NSArray<IssueCategory *> *issueCategories) {
+        for (IssueCategory *issueCategory in issueCategories)
+        {
+            
+            if (self.currentIssue.categoryId.intValue ==  issueCategory.categoryId.intValue)
+            {
+                [self makeCategoryLabelWithStringCategory:issueCategory.name];
+            }
+        }
+        
+    } withErrorHandler:^(NSError *error) {
+        // TODO: handle error
+    }];
+    
+    
 }
+
+
+-(void)makeCategoryLabelWithStringCategory:(NSString*)stringCategory
+{
+    NSString *firstPart = @"Category: ";
+    NSMutableAttributedString *aStr = [[NSMutableAttributedString alloc] initWithString:[firstPart stringByAppendingString:stringCategory]];
+    [aStr addAttribute:NSForegroundColorAttributeName value:[UIColor blueColor] range:NSMakeRange(firstPart.length, [aStr string].length - firstPart.length)];
+    dispatch_async(dispatch_get_main_queue(), ^{
+        self.currentCategoryLabel.attributedText = aStr;
+    });
+
+}
+
 
 #define SOME_OFFSET 8
 
@@ -56,7 +88,7 @@
 {
     self.stringNewStatuses = [self.statusChanger newIssueStatusesForUser:[[User userStringRoles] objectAtIndex:self.currentUser.role] andCurretIssueStatus:self.currentIssue.status];
     
-//    self.stringNewStatuses = @[@"111", @"222", @"333"];
+    self.stringNewStatuses = @[@"111", @"222", @"333"];
     
     if (self.stringNewStatuses == nil)
         return;
@@ -68,7 +100,7 @@
 //     self.viewToConnectChangeButtons = inviteLable1;
 
     UIButton *changeButton = [[UIButton alloc] init];
-    [changeButton setTitle:@"Change status" forState:UIControlStateNormal];
+    [changeButton setTitle:@"Change Status" forState:UIControlStateNormal];
     [changeButton addTarget:self action:@selector(showNewStatuses) forControlEvents:UIControlEventTouchUpInside];
     [changeButton setBackgroundColor:[UIColor bawlRedColor]];
     [changeButton setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
@@ -77,7 +109,9 @@
     changeButton.translatesAutoresizingMaskIntoConstraints = NO;
     [self.view addSubview:changeButton];
     [changeButton.centerXAnchor constraintEqualToAnchor:self.view.centerXAnchor].active = YES;
-    [changeButton.topAnchor constraintEqualToAnchor:self.currentStatusLabel.bottomAnchor].active = YES;
+    [changeButton.topAnchor constraintEqualToAnchor:self.currentStatusLabel.bottomAnchor constant:10.0].active = YES;
+    [changeButton.heightAnchor constraintEqualToConstant:changeButton.frame.size.height].active = YES;
+    [changeButton.widthAnchor constraintEqualToConstant:changeButton.frame.size.width+40].active = YES;
     self.viewToConnectChangeButtons = changeButton;
     
 

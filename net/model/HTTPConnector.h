@@ -13,6 +13,7 @@
 
 
 -(void)requestUsers:(void(^)(NSData *data, NSError *error))dataSorceHandler;
+-(void)requestCategories:(void(^)(NSData *data, NSError *error))dataSorceHandler;
 
 -(void)requestLogInWithData:(NSData*)data
         andDataSorceHandler:(void(^)(NSData *data, NSError *error))dataSorceHandler;

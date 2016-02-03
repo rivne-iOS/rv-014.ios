@@ -19,15 +19,6 @@
 @implementation Parser
 
 
-+(User*)parseDataToUser:(NSData*)data
-{
-    NSDictionary *PersonDic = [NSJSONSerialization JSONObjectWithData:data
-                                                             options:0
-                                                               error:NULL];
-    NSLog(@"%@", PersonDic);
-    return [Parser parseDictionaryToUser:PersonDic];
-}
-
 +(NSString*)parseAnswer:(NSData*)data andReturnObjectForKey:(NSString*)stringKey
 {
     NSDictionary *answerDic = [NSJSONSerialization JSONObjectWithData:data
@@ -36,7 +27,7 @@
     return [answerDic objectForKey:stringKey];
 }
 
-+(NSArray*)parseDataToArrayOfUsers:(NSData *)data
++(NSArray<User*> *)parseDataToArrayOfUsers:(NSData *)data
 {
     NSError *err; //we might have problems here, so let's check
 
@@ -60,8 +51,17 @@
        [arr addObject:[Parser parseDictionaryToUser:oneUser]];
     }
     return arr;
-    
 }
+
++(User*)parseDataToUser:(NSData*)data
+{
+    NSDictionary *PersonDic = [NSJSONSerialization JSONObjectWithData:data
+                                                              options:0
+                                                                error:NULL];
+    NSLog(@"%@", PersonDic);
+    return [Parser parseDictionaryToUser:PersonDic];
+}
+
 
 +(User*)parseDictionaryToUser:(NSDictionary*)dic
 {

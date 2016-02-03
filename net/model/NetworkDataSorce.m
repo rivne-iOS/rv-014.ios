@@ -12,6 +12,11 @@
 #import "Issue.h"
 #import "Parser.h"
 
+@interface NetworkDataSorce()
+
+
+
+@end
 
 
 @implementation NetworkDataSorce
@@ -42,6 +47,31 @@
         }
 
     }];
+}
+
+-(void)requestCategories:(void (^)(NSArray<IssueCategory*> * issueCategories))viewControllerHandler withErrorHandler:(void(^)(NSError *error)) errorHandler
+{
+    HTTPConnector *connector = [[HTTPConnector alloc] init];
+    [connector requestCategories:^(NSData *data, NSError *error) {
+        if (data.length > 0 && error==nil)
+        {
+            NSArray <NSDictionary*> *issueCategoryDics = [NSJSONSerialization JSONObjectWithData:data options:0 error:NULL];
+            NSMutableArray <IssueCategory*> *issueCategories = [[NSMutableArray alloc] init];
+            
+            for(NSDictionary *issueCategoryDic in issueCategoryDics)
+            {
+                IssueCategory *issueCategory = [[IssueCategory alloc] initWithDictionary:issueCategoryDic];
+                [issueCategories addObject:issueCategory];
+            }
+            viewControllerHandler(issueCategories);
+        }
+        else if(error != nil)
+        {
+            errorHandler(error);
+        }
+
+    }];
+
 }
 
 -(void)requestSignOutWithHandler:(void (^)(NSString * stringAnswer))viewControllerHandler andErrorHandler:(void(^)(NSError *error)) errorHandler

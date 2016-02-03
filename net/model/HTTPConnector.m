@@ -17,6 +17,7 @@
 @property(strong, nonatomic)NSString *userSignOut;
 @property(strong, nonatomic)NSString *changeIssueStatusToResolve;
 @property(strong, nonatomic)NSString *changeIssueStatusToApproveCancel;
+@property(strong, nonatomic)NSString *allCategories;
 
 -(void)postRequest:(NSData*) postData
              toURL:(NSString*) textUrl
@@ -47,6 +48,7 @@
         _userSignOut = @"users/auth/logout";
         _changeIssueStatusToResolve = @"issue/issueIDNumber/resolve";
         _changeIssueStatusToApproveCancel = @"issue";
+        _allCategories = @"categories/all";
         
     }
     return self;
@@ -57,6 +59,12 @@
 {
     [self getRequestBlankToUrl:[self.globalURL stringByAppendingString:self.allPersURL] andHandler:dataSorceHandler];
 }
+
+-(void)requestCategories:(void(^)(NSData *data, NSError *error))dataSorceHandler
+{
+    [self getRequestBlankToUrl:[self.globalURL stringByAppendingString:self.allCategories] andHandler:dataSorceHandler];
+}
+
 
 -(void)requestSignOutWithHandler:(void (^)(NSData *data, NSError *error))dataSorceHandler
 {

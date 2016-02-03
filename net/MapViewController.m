@@ -10,6 +10,7 @@
 #import "Issue.h"
 #import "LogInViewController.h"
 #import "NetworkDataSorce.h"
+#import "IssueCategory.h"
 #import "IssueHistoryViewController.h"
 
 #import "DescriptionViewController.h"
@@ -242,6 +243,66 @@ static double const MAP_REFRESHING_INTERVAL = 120.0;
 }
 
 #pragma mark Tab Bar
+-(void)mapView:(GMSMapView *)mapView didLongPressAtCoordinate:(CLLocationCoordinate2D)coordinate
+{
+    self.mapView.selectedMarker = nil;
+    [[self navigationController] setNavigationBarHidden:YES animated:NO];
+    [self requestGoogleApiPlace:coordinate];
+    [self requestCategories];
+    [self addBorderColor];
+    [UIView animateWithDuration:0.5 animations:^(void){
+        self.scrollViewLeadingConstraint.constant = 0;
+        [self hideTabBar];
+        [self.view layoutIfNeeded];
+    }];
+}
+
+-(void)requestGoogleApiPlace:(CLLocationCoordinate2D)coordinate
+{
+    NSString *urlString = [[NSString alloc] initWithFormat:DOMAIN_NAME_GOOGLE_PLACE_INFO,
+                           coordinate.latitude,
+                           coordinate.longitude,
+                           1,
+                           GOOGLE_WEB_API_KEY];
+    self.currentLocation = coordinate;
+    NSURL *url = [NSURL URLWithString:urlString];
+    NSURLRequest *request = [NSURLRequest requestWithURL:url];
+    [[[NSURLSession sharedSession]dataTaskWithRequest:request
+                                    completionHandler:^(NSData * _Nullable data, NSURLResponse * _Nullable response, NSError * _Nullable connectionError) {
+                                        if (data.length > 0 && connectionError == nil)
+                                        {
+                                                dispatch_async(dispatch_get_main_queue(), ^{
+                                                self.tapLocationLabel.numberOfLines = 2;
+                                                self.tapLocationLabel.lineBreakMode = NSLineBreakByCharWrapping;
+                                                self.tapLocationLabel.text = @"";
+                                                self.tapLocationLabel.text = [self.tapLocationLabel.text stringByAppendingFormat:@"Location of issue:\n%@, %@",
+                                                                              [self takeVicinityFromGoogleApiPlace:data],
+                                                                              [self takeStreetFromGoogleApiPlace:data]];
+                                            });
+                                        }
+                                    }] resume];
+
+}
+
+-(NSString *)takeStreetFromGoogleApiPlace:(NSData *)data
+{
+    NSDictionary *placeDictionary = [NSJSONSerialization JSONObjectWithData:data options:0 error:NULL];
+    NSArray *resultsArray = [placeDictionary valueForKey:@"results"];
+    NSDictionary *locationDictionary = [resultsArray objectAtIndex:0];
+    NSString *street = [locationDictionary valueForKey:@"name"];
+    return street;
+    
+}
+
+-(NSString *)takeVicinityFromGoogleApiPlace:(NSData *)data
+{
+    NSDictionary *placeDictionary = [NSJSONSerialization JSONObjectWithData:data options:0 error:NULL];
+    NSArray *resultsArray = [placeDictionary valueForKey:@"results"];
+    NSDictionary *locationDictionary = [resultsArray objectAtIndex:0];
+    NSString *vicinity = [locationDictionary valueForKey:@"vicinity"];
+    return vicinity;
+}
+
 -(BOOL)tabBarController:(UITabBarController *)tabBarController shouldSelectViewController:(UIViewController *)viewController
 {
     if ([viewController isKindOfClass:[DescriptionViewController class]]){

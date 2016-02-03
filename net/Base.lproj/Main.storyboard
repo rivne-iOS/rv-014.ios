@@ -514,7 +514,7 @@
                         <viewControllerLayoutGuide type="top" id="BZy-CD-oPZ"/>
                         <viewControllerLayoutGuide type="bottom" id="mxJ-z8-iEP"/>
                     </layoutGuides>
-                    <view key="view" contentMode="scaleToFill" id="A24-z5-pzn">
+                    <view key="view" contentMode="scaleToFill" restorationIdentifier="view" id="A24-z5-pzn">
                         <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
@@ -618,18 +618,15 @@
                                         <exclude reference="Xpy-ba-GpZ"/>
                                     </mask>
                                 </variation>
-                                <variation key="widthClass=compact" misplaced="YES">
-                                    <rect key="frame" x="0.0" y="0.0" width="400" height="67"/>
-                                </variation>
                             </view>
                             <view clipsSubviews="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="K9v-RP-I0I" customClass="GMSMapView">
                                 <rect key="frame" x="0.0" y="64" width="600" height="536"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                             </view>
-                            <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" bounces="NO" translatesAutoresizingMaskIntoConstraints="NO" id="NYS-ZF-PWz">
+                            <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" restorationIdentifier="scroll view" bounces="NO" translatesAutoresizingMaskIntoConstraints="NO" id="NYS-ZF-PWz">
                                 <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
                                 <subviews>
-                                    <view clipsSubviews="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Yqo-zb-mFR">
+                                    <view clipsSubviews="YES" contentMode="scaleToFill" restorationIdentifier="Adding issue view" translatesAutoresizingMaskIntoConstraints="NO" id="Yqo-zb-mFR">
                                         <rect key="frame" x="0.0" y="0.0" width="600" height="480"/>
                                         <subviews>
                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Add new issue:" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="vkK-dD-ver">
@@ -792,12 +789,16 @@
                         <outlet property="locationButton" destination="kLF-3I-Iln" id="5Wk-BZ-jwp"/>
                         <outlet property="mapView" destination="K9v-RP-I0I" id="S8A-K6-3hM"/>
                         <outlet property="moreButton" destination="bEb-G0-MTV" id="3Cn-PF-ZMg"/>
-                        <segue destination="Wyx-PR-bqC" kind="show" identifier="fromMapToLogIn" id="JER-bu-PYI"/>
+                        <outlet property="nameTextField" destination="Yfl-g3-YHX" id="AUB-3V-NH1"/>
+                        <outlet property="scrollView" destination="NYS-ZF-PWz" id="u3t-hy-KAG"/>
+                        <outlet property="scrollViewLeadingConstraint" destination="VMc-ez-U8k" id="5Dw-9c-Zc8"/>
+                        <outlet property="tapLocationLabel" destination="Seo-CW-BkQ" id="UiV-1T-hnw"/>
+                        <segue destination="Wyx-PR-bqC" kind="show" identifier="fromMapToLogIn" id="Sp2-29-wN1"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Cqa-31-3l5" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="333" y="-361"/>
+            <point key="canvasLocation" x="347" y="-361"/>
         </scene>
         <!--map-->
         <scene sceneID="rz9-tR-WYZ">
@@ -867,20 +868,37 @@
                                 <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                                 <nil key="highlightedColor"/>
                             </label>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Current issue status is somestatus." textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="pBt-CE-2DS">
+                                <rect key="frame" x="20" y="83" width="255" height="20"/>
+                                <fontDescription key="fontDescription" style="UICTFontTextStyleBody"/>
+                                <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                                <nil key="highlightedColor"/>
+                            </label>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <constraints>
                             <constraint firstItem="I5n-4q-giF" firstAttribute="top" secondItem="qJt-r0-2GN" secondAttribute="bottom" constant="40" id="DFY-vy-Y7A"/>
+                            <constraint firstItem="pBt-CE-2DS" firstAttribute="top" secondItem="qJt-r0-2GN" secondAttribute="top" id="FI9-wv-m9E"/>
                             <constraint firstItem="qJt-r0-2GN" firstAttribute="centerX" secondItem="sig-UO-uJx" secondAttribute="centerX" id="JRl-Yr-CIt"/>
+                            <constraint firstAttribute="leadingMargin" secondItem="pBt-CE-2DS" secondAttribute="leading" id="Je5-Oe-yko"/>
                             <constraint firstItem="718-Ei-h0f" firstAttribute="top" secondItem="I5n-4q-giF" secondAttribute="bottom" constant="16" id="MXt-dZ-1VW"/>
+                            <constraint firstItem="I5n-4q-giF" firstAttribute="top" secondItem="pBt-CE-2DS" secondAttribute="bottom" constant="17" id="RtG-zr-Xpg"/>
                             <constraint firstItem="I5n-4q-giF" firstAttribute="leading" secondItem="sig-UO-uJx" secondAttribute="leadingMargin" id="W7l-MC-EO3"/>
                             <constraint firstItem="I5n-4q-giF" firstAttribute="trailing" secondItem="sig-UO-uJx" secondAttribute="trailingMargin" id="Wrm-lX-c9b"/>
+                            <constraint firstItem="pBt-CE-2DS" firstAttribute="top" secondItem="qJt-r0-2GN" secondAttribute="bottom" constant="3" id="k3F-Oc-c5A"/>
                             <constraint firstItem="qJt-r0-2GN" firstAttribute="top" secondItem="7rX-L3-WUm" secondAttribute="bottom" constant="27" id="nxu-aK-dbG"/>
                             <constraint firstItem="718-Ei-h0f" firstAttribute="leading" secondItem="I5n-4q-giF" secondAttribute="leading" id="ycA-oP-JQp"/>
                         </constraints>
+                        <variation key="default">
+                            <mask key="constraints">
+                                <exclude reference="FI9-wv-m9E"/>
+                                <exclude reference="DFY-vy-Y7A"/>
+                            </mask>
+                        </variation>
                     </view>
                     <tabBarItem key="tabBarItem" title="description" image="button_background.png" id="Qx9-nQ-Zkg"/>
                     <connections>
+                        <outlet property="currentCategoryLabel" destination="pBt-CE-2DS" id="Mmi-xr-s5W"/>
                         <outlet property="currentStatusLabel" destination="718-Ei-h0f" id="HKI-NJ-i4g"/>
                         <outlet property="descriptionLabel" destination="I5n-4q-giF" id="XWx-mk-Che"/>
                         <outlet property="titleLabel" destination="qJt-r0-2GN" id="ydJ-Cz-WDc"/>
@@ -888,7 +906,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="fzt-he-aEq" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-350" y="394"/>
+            <point key="canvasLocation" x="-350" y="320"/>
         </scene>
         <!--History-->
         <scene sceneID="deE-fx-zmW">

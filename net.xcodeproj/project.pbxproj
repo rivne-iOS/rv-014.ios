@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		100D5E94A39CA00BFE42E1A3 /* libPods.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 3F322957FCEB450D078EB0DF /* libPods.a */; };
 		84114C691C61503B0092F507 /* UIColor+Bawl.m in Sources */ = {isa = PBXBuildFile; fileRef = 84114C681C61503B0092F507 /* UIColor+Bawl.m */; };
+		841429551C5FEEDE0092C0C5 /* Reachability.m in Sources */ = {isa = PBXBuildFile; fileRef = 841429541C5FEEDE0092C0C5 /* Reachability.m */; };
 		845245A71C4E5923000755AC /* DescriptionViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 845245A61C4E5923000755AC /* DescriptionViewController.m */; };
 		8460F9701C3C531E00ECB3A4 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 8460F96F1C3C531E00ECB3A4 /* main.m */; };
 		8460F9731C3C531E00ECB3A4 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 8460F9721C3C531E00ECB3A4 /* AppDelegate.m */; };
@@ -24,6 +25,7 @@
 		8460F9A21C3C666100ECB3A4 /* Parser.m in Sources */ = {isa = PBXBuildFile; fileRef = 8460F9A11C3C666100ECB3A4 /* Parser.m */; };
 		847595461C455C0F00E1BF87 /* Podfile in Resources */ = {isa = PBXBuildFile; fileRef = 847595451C455C0F00E1BF87 /* Podfile */; };
 		84D93FC91C5A245800D4E96D /* IssueChangeStatus.m in Sources */ = {isa = PBXBuildFile; fileRef = 84D93FC81C5A245800D4E96D /* IssueChangeStatus.m */; };
+		849930A01C5915E100EDBF5E /* IssueCategory.m in Sources */ = {isa = PBXBuildFile; fileRef = 8499309F1C5915E100EDBF5E /* IssueCategory.m */; };
 		84E19B211C4C131E00AABD7D /* TextFieldValidation.m in Sources */ = {isa = PBXBuildFile; fileRef = 84E19B201C4C131E00AABD7D /* TextFieldValidation.m */; };
 		84E3347F1C4435E800BEE6BA /* MapViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 84E3347E1C4435E800BEE6BA /* MapViewController.m */; };
 		84E334821C4436B200BEE6BA /* SingUpViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 84E334811C4436B200BEE6BA /* SingUpViewController.m */; };
@@ -48,6 +50,8 @@
 		3F322957FCEB450D078EB0DF /* libPods.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libPods.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		84114C671C61503B0092F507 /* UIColor+Bawl.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIColor+Bawl.h"; sourceTree = "<group>"; };
 		84114C681C61503B0092F507 /* UIColor+Bawl.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIColor+Bawl.m"; sourceTree = "<group>"; };
+		841429531C5FEEDE0092C0C5 /* Reachability.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Reachability.h; path = model/Reachability.h; sourceTree = "<group>"; };
+		841429541C5FEEDE0092C0C5 /* Reachability.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = Reachability.m; path = model/Reachability.m; sourceTree = "<group>"; };
 		845245A51C4E5923000755AC /* DescriptionViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DescriptionViewController.h; sourceTree = "<group>"; };
 		845245A61C4E5923000755AC /* DescriptionViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DescriptionViewController.m; sourceTree = "<group>"; };
 		8460F96A1C3C531E00ECB3A4 /* net.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = net.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -76,6 +80,8 @@
 		847595451C455C0F00E1BF87 /* Podfile */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = Podfile; sourceTree = "<group>"; };
 		84D93FC71C5A245800D4E96D /* IssueChangeStatus.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = IssueChangeStatus.h; path = model/IssueChangeStatus.h; sourceTree = "<group>"; };
 		84D93FC81C5A245800D4E96D /* IssueChangeStatus.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = IssueChangeStatus.m; path = model/IssueChangeStatus.m; sourceTree = "<group>"; };
+		8499309E1C5915E100EDBF5E /* IssueCategory.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = IssueCategory.h; path = model/IssueCategory.h; sourceTree = "<group>"; };
+		8499309F1C5915E100EDBF5E /* IssueCategory.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = IssueCategory.m; path = model/IssueCategory.m; sourceTree = "<group>"; };
 		84E19B1F1C4C131E00AABD7D /* TextFieldValidation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TextFieldValidation.h; path = model/TextFieldValidation.h; sourceTree = "<group>"; };
 		84E19B201C4C131E00AABD7D /* TextFieldValidation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = TextFieldValidation.m; path = model/TextFieldValidation.m; sourceTree = "<group>"; };
 		84E3347D1C4435E800BEE6BA /* MapViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MapViewController.h; sourceTree = "<group>"; };
@@ -215,6 +221,8 @@
 				84D93FC81C5A245800D4E96D /* IssueChangeStatus.m */,
 				84114C671C61503B0092F507 /* UIColor+Bawl.h */,
 				84114C681C61503B0092F507 /* UIColor+Bawl.m */,
+				8499309E1C5915E100EDBF5E /* IssueCategory.h */,
+				8499309F1C5915E100EDBF5E /* IssueCategory.m */,
 			);
 			name = model;
 			sourceTree = "<group>";
