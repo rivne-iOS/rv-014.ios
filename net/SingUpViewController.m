@@ -177,7 +177,7 @@
     textField.placeholder = textField.restorationIdentifier;
     
     NSMutableAttributedString *attrStr = [[NSMutableAttributedString alloc] initWithString:textField.restorationIdentifier
-                                                                                attributes:@{NSForegroundColorAttributeName : [UIColor bawlRedColorWithAlpha:0.3]}];
+                                                                                attributes:@{NSForegroundColorAttributeName : [UIColor bawlRedColor03alpha]}];
     textField.attributedPlaceholder = attrStr;
 
     

@@ -38,7 +38,7 @@
     self.textFieldValidator = [[TextFieldValidation alloc] init];
     // frame color
     self.textFields = [NSArray arrayWithObjects:self.userTextFild, self.passTextField, nil];
-    for (__weak UITextField *textField in self.textFields)
+    for (UITextField *textField in self.textFields)
     {
         textField.layer.borderColor = [[UIColor bawlRedColor] CGColor];
         textField.layer.borderWidth = 1;
@@ -46,7 +46,7 @@
         
         
         NSMutableAttributedString *attrStr = [[NSMutableAttributedString alloc] initWithString:textField.restorationIdentifier
-                                                                                    attributes:@{NSForegroundColorAttributeName : [UIColor bawlRedColorWithAlpha:0.3]}];
+                                                                                    attributes:@{NSForegroundColorAttributeName : [UIColor bawlRedColor03alpha]}];
         textField.attributedPlaceholder = attrStr;
     }
 }

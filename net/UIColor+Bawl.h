@@ -11,6 +11,7 @@
 @interface UIColor (Bawl)
 
 +(UIColor*)bawlRedColor;
++(UIColor*)bawlRedColor03alpha;
 +(UIColor*)bawlRedColorWithAlpha:(CGFloat)alpha;
 
 @end

@@ -30,10 +30,14 @@ typedef enum : NSUInteger {
 
 
 +(NSArray*)userStringRoles;
+
 -(instancetype)initWithName:(NSString*)name
                    andLogin:(NSString*)login
                     andPass:(NSString*)pass
                    andEmail:(NSString*)email;
 
+-(instancetype)initWitDictionary:(NSDictionary <NSString*, NSString*>*)dic;
+
+-(NSDictionary <NSString*, NSString*> *)puckToDictionary;
 
 @end

@@ -10,6 +10,10 @@
 #import "DescriptionViewController.h"
 #import "IssueChangeStatus.h"
 #import "NetworkDataSorce.h"
+#import "ChangerBox.h"
+
+
+
 
 @interface DescriptionViewController ()
 @property (weak, nonatomic) IBOutlet UILabel *currentCategoryLabel;
@@ -21,16 +25,39 @@
 @property (strong, nonatomic) NSArray <NSString*> *stringNewStatuses;
 @property (strong, nonatomic) UIView *viewToConnectChangeButtons;
 
+//dynamic items (for change ctatus)
+@property (strong, nonatomic) UIView *backGreyView;
+@property (strong, nonatomic) UIButton *changeButton;
+@property (strong, nonatomic) NSMutableArray <ChangerBox*> *changerBoxArr;
+
 
 @end
 
 @implementation DescriptionViewController
 
-- (void)viewDidLoad
+
+
+
+
+-(NSMutableArray <ChangerBox*> *)changerBoxArr
 {
-    [super viewDidLoad];
-    self.statusChanger = [[IssueChangeStatus alloc] init];
-    self.dataSorce = [[NetworkDataSorce alloc] init];
+    if(_changerBoxArr == nil)
+        _changerBoxArr = [[NSMutableArray alloc] init];
+    return _changerBoxArr;
+}
+
+-(IssueChangeStatus*)statusChanger
+{
+    if(_statusChanger == nil)
+        _statusChanger = [[IssueChangeStatus alloc] init];
+    return _statusChanger;
+}
+
+-(id<DataSorceProtocol>)dataSorce
+{
+    if(_dataSorce == nil)
+        _dataSorce = [[NetworkDataSorce alloc] init];
+    return _dataSorce;
 }
 
 - (void) viewWillAppear:(BOOL)animated
@@ -44,6 +71,7 @@
 -(void)setDataToView
 {
     self.titleLabel.text = self.currentIssue.name;
+    self.titleLabel.textColor = [UIColor bawlRedColor];
     self.descriptionLabel.text = self.currentIssue.issueDescription;
     
     NSString *firstPart = @"Issue status: ";
@@ -88,112 +116,195 @@
 {
     self.stringNewStatuses = [self.statusChanger newIssueStatusesForUser:[[User userStringRoles] objectAtIndex:self.currentUser.role] andCurretIssueStatus:self.currentIssue.status];
     
-    self.stringNewStatuses = @[@"111", @"222", @"333"];
+    // self.stringNewStatuses = @[@"111", @"222", @"333"];
     
     if (self.stringNewStatuses == nil)
         return;
-    
-    
-    
-    
-    
-//     self.viewToConnectChangeButtons = inviteLable1;
 
     UIButton *changeButton = [[UIButton alloc] init];
     [changeButton setTitle:@"Change Status" forState:UIControlStateNormal];
     [changeButton addTarget:self action:@selector(showNewStatuses) forControlEvents:UIControlEventTouchUpInside];
     [changeButton setBackgroundColor:[UIColor bawlRedColor]];
     [changeButton setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
-    changeButton.restorationIdentifier = @"dynamicItem";
     [changeButton sizeToFit];
     changeButton.translatesAutoresizingMaskIntoConstraints = NO;
+    
     [self.view addSubview:changeButton];
     [changeButton.centerXAnchor constraintEqualToAnchor:self.view.centerXAnchor].active = YES;
     [changeButton.topAnchor constraintEqualToAnchor:self.currentStatusLabel.bottomAnchor constant:10.0].active = YES;
     [changeButton.heightAnchor constraintEqualToConstant:changeButton.frame.size.height].active = YES;
     [changeButton.widthAnchor constraintEqualToConstant:changeButton.frame.size.width+40].active = YES;
-    self.viewToConnectChangeButtons = changeButton;
-    
+    self.changeButton = changeButton;
 
 }
 
 -(void)clearOldDynamicElements
 {
-    for (UIView *view in self.view.subviews)
+    [self.changeButton removeFromSuperview];
+    [self.backGreyView removeFromSuperview];
+    
+    for (ChangerBox *box in self.changerBoxArr)
     {
-        if([view.restorationIdentifier isEqualToString:@"dynamicItem"])
-        {
-            [view removeFromSuperview];
-        }
+        [box.button removeFromSuperview];
+        [box.label removeFromSuperview];
+        [box.image removeFromSuperview];
     }
 }
+
+
 
 -(void)showNewStatuses
 {
-    NSMutableArray <UIButton*> *changeButtons = [[NSMutableArray alloc] init];
-    for (NSString *strNewStatus in self.stringNewStatuses)
+    UIView *backView = [[UIView alloc] init];
+    backView.backgroundColor = [UIColor grayColor];
+    backView.alpha = 0;
+    backView.restorationIdentifier =@"dynamicItem showNewStatuses";
+    backView.translatesAutoresizingMaskIntoConstraints = NO;
+    [self.view addSubview:backView];
+    [backView.topAnchor constraintEqualToAnchor:self.view.topAnchor].active = YES;
+    [backView.bottomAnchor constraintEqualToAnchor:self.view.bottomAnchor].active = YES;
+    [backView.leadingAnchor constraintEqualToAnchor:self.view.leadingAnchor].active = YES;
+    [backView.trailingAnchor constraintEqualToAnchor:self.view.trailingAnchor].active = YES;
+    self.backGreyView = backView;
+    
+#define CORNER_RADIUS 6
+
+    ///cancel button
+    ChangerBox *cancelBox = [[ChangerBox alloc] init];
+    UIButton *cancelButton = [[UIButton alloc] init];
+    [cancelButton setTitle:@"Cancel" forState:UIControlStateNormal];
+    [cancelButton addTarget:self action:@selector(rerformChangeStatus:) forControlEvents:UIControlEventTouchUpInside];
+    [cancelButton setBackgroundColor:[UIColor whiteColor]];
+    [cancelButton setTitleColor:[UIColor blackColor]forState:UIControlStateNormal];
+    cancelButton.restorationIdentifier = @"cancel";
+    cancelButton.alpha=0;
+    [cancelButton sizeToFit];
+    cancelButton.layer.cornerRadius = CORNER_RADIUS;
+    cancelButton.translatesAutoresizingMaskIntoConstraints = NO;
+    cancelBox.button = cancelButton;
+    [self.changerBoxArr addObject:cancelBox];
+    
+    [self.view addSubview:cancelButton];
+    [cancelButton.leadingAnchor constraintEqualToAnchor:self.view.leadingAnchor].active=YES;
+    [cancelButton.trailingAnchor constraintEqualToAnchor:self.view.trailingAnchor].active = YES;
+    [cancelButton.topAnchor constraintEqualToAnchor:self.view.centerYAnchor].active=YES;
+    self.viewToConnectChangeButtons = cancelButton;
+    
+    CGFloat firstOffset = 8;
+    for (NSInteger a =self.stringNewStatuses.count; a>0; --a)
     {
+        NSString *strNewStatus = [self.stringNewStatuses objectAtIndex:a-1];
         UIButton *newStatusButton = [[UIButton alloc] init];
-        [newStatusButton setTitle:strNewStatus forState:UIControlStateNormal];
+        newStatusButton.restorationIdentifier = strNewStatus;
         [newStatusButton addTarget:self action:@selector(rerformChangeStatus:) forControlEvents:UIControlEventTouchUpInside];
         [newStatusButton setBackgroundColor:[UIColor whiteColor]];
-        [newStatusButton setTitleColor:self.view.tintColor forState:UIControlStateNormal];
-        newStatusButton.restorationIdentifier = @"dynamicItem";
-        [newStatusButton sizeToFit];
-        newStatusButton.translatesAutoresizingMaskIntoConstraints = NO;
-        newStatusButton.backgroundColor = nil;
         newStatusButton.alpha=0;
-        [changeButtons addObject:newStatusButton];
+        [newStatusButton sizeToFit];
+        newStatusButton.layer.cornerRadius = CORNER_RADIUS;
+        newStatusButton.translatesAutoresizingMaskIntoConstraints = NO;
+        
+        UIImageView *newStatusImage = [[UIImageView alloc] init];
+        if ([strNewStatus isEqualToString:@"CANCELED"])
+            newStatusImage.image = [UIImage imageNamed:@"description_status_CANCELED"];
+        else
+            newStatusImage.image = [UIImage imageNamed:@"description_status_yes"];
+        newStatusImage.alpha=0;
+        [newStatusImage sizeToFit];
+        newStatusImage.translatesAutoresizingMaskIntoConstraints = NO;
+        newStatusImage.userInteractionEnabled = NO;
+        
+        UILabel *newStatusLabel = [[UILabel alloc] init];
+        newStatusLabel.text = [self.statusChanger labelTextForNewStatus:strNewStatus];
+        newStatusLabel.backgroundColor = [UIColor clearColor];
+        [newStatusLabel sizeToFit];
+        newStatusLabel.alpha =0;
+        newStatusLabel.translatesAutoresizingMaskIntoConstraints = NO;
+        newStatusLabel.userInteractionEnabled = NO;
+        
+        ChangerBox *box = [[ChangerBox alloc] initWithButton:newStatusButton andImage:newStatusImage andLabel:newStatusLabel];
+        [self.changerBoxArr addObject:box];
         
         [self.view addSubview:newStatusButton];
-        [newStatusButton.leadingAnchor constraintEqualToAnchor:self.viewToConnectChangeButtons.leadingAnchor].active=YES;
-        NSLayoutConstraint *c = [newStatusButton.topAnchor constraintEqualToAnchor:self.viewToConnectChangeButtons.bottomAnchor constant:-(self.viewToConnectChangeButtons.frame.size.height)];
+        [newStatusButton.leadingAnchor constraintEqualToAnchor:self.view.leadingAnchor].active=YES;
+        [newStatusButton.trailingAnchor constraintEqualToAnchor:self.view.trailingAnchor].active = YES;
+        [newStatusButton.bottomAnchor constraintEqualToAnchor:self.viewToConnectChangeButtons.topAnchor constant:-firstOffset].active=YES;
+        [newStatusButton.heightAnchor constraintEqualToConstant:newStatusButton.frame.size.height+15].active=YES;
+        firstOffset = 1;
         self.viewToConnectChangeButtons = newStatusButton;
-        c.active = YES;
-        c.identifier = @"constraintOfTopAnchor";
-
+        
+        [self.view addSubview:newStatusImage];
+        [newStatusImage.leadingAnchor constraintEqualToAnchor:newStatusButton.leadingAnchor constant:15].active = YES;
+        [newStatusImage.widthAnchor constraintEqualToConstant:30].active=YES;
+        [newStatusImage.heightAnchor constraintEqualToConstant:30].active=YES;
+        [newStatusImage.centerYAnchor constraintEqualToAnchor:newStatusButton.centerYAnchor].active=YES;
+        
+        [self.view addSubview:newStatusLabel];
+        [newStatusLabel.leadingAnchor constraintEqualToAnchor:newStatusImage.trailingAnchor constant:15].active=YES;
+        [newStatusLabel.trailingAnchor constraintEqualToAnchor:newStatusButton.trailingAnchor].active=YES;
+        [newStatusLabel.centerYAnchor constraintEqualToAnchor:newStatusButton.centerYAnchor].active=YES;
+        
+        
     }
-    [self.view layoutIfNeeded];
     
-    __weak UIView * v = self.view;
+    
     [UIView animateWithDuration:0.3
-                          delay:0
-                        options:UIViewAnimationOptionCurveEaseOut
                      animations:^{
-                         CGFloat offsetFirstButton = 0;
-                         CGFloat offsetButton = 0;
-                         for (NSUInteger a = 0; a < changeButtons.count; ++a)
-                         {
-                             
-                             [changeButtons objectAtIndex:a].alpha=1.0;
-                             for (NSLayoutConstraint *c in v.constraints)
-                             {
-                                 if ([c.identifier isEqualToString:@"constraintOfTopAnchor"] && c.firstItem == [changeButtons objectAtIndex:a])
-                                 {
-                                     c.constant = offsetButton + offsetFirstButton;
-                                     offsetFirstButton = 0;
-                                     [self.view layoutIfNeeded];
-                                     break;
-                                 }
-                             }
-                         }
- 
-                     }
-                     completion:^(BOOL finished) {
+                         backView.alpha=0.7;
                      }];
-    
-
+    [UIView animateWithDuration:0.3
+                          delay:0.15
+                        options:0
+                     animations:^{
+                         for (ChangerBox *box in self.changerBoxArr)
+                         {
+                             box.button.alpha=1;
+                             box.label.alpha=1;
+                             box.image.alpha=1;
+                         }
+                     } completion:NULL];
     
     
 }
 
-
-
 -(void)rerformChangeStatus:(UIButton*)sender
 {
+
+    [UIView animateWithDuration:0.3
+                     animations:^{
+                         for (ChangerBox *box in self.changerBoxArr)
+                         {
+                             box.button.alpha=0;
+                             box.label.alpha=0;
+                             box.image.alpha=0;
+                         }
+                         
+                     }];
+    [UIView animateWithDuration:4.3
+                          delay:0.15
+                        options:0
+                     animations:^{
+                         self.backGreyView.alpha = 0;
+                     } completion:^(BOOL finished) {
+                         [self.backGreyView removeFromSuperview];
+                         for (ChangerBox *box in self.changerBoxArr)
+                         {
+                             [box.button removeFromSuperview];
+                             [box.label removeFromSuperview];
+                             [box.image removeFromSuperview];
+                         }
+                         
+                     }];
+    
+    
+    
+    
+
+    
+    if ([sender.restorationIdentifier isEqualToString:@"cancel"])
+        return;
     
     [self.dataSorce requestChangeStatusWithID:self.currentIssue.issueId
-                                     toStatus:sender.currentTitle
+                                     toStatus:sender.restorationIdentifier
                      andViewControllerHandler:^(NSString *stringAnswer, Issue *issue) {
                          dispatch_async(dispatch_get_main_queue(), ^ {
                              if (stringAnswer == nil)
@@ -206,7 +317,7 @@
                                                                        otherButtonTitles:nil];
                                  [alert show];
                                  self.currentIssue = issue;
-                                 self.currentMarker.userData = issue;
+                                 [self.mapViewControllerDelegate renewMap];
                                  [self setDataToView];
                                  [self clearOldDynamicElements];
                                  [self prepareUIChangeStatusElements];

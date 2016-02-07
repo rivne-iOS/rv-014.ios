@@ -32,6 +32,7 @@ static double const MAP_REFRESHING_INTERVAL = 120.0;
 @property (weak, nonatomic) IBOutlet GMSMapView *mapView;
 @property (strong, nonatomic) GMSMarker *currentMarker;
 @property (assign, nonatomic) CLLocationCoordinate2D currentLocation;
+@property (nonatomic) BOOL userLogined;
 
 @end
 
@@ -41,13 +42,43 @@ static double const MAP_REFRESHING_INTERVAL = 120.0;
     [super viewDidLoad];
     self.title = @"Bowl";
     self.dataSorce = [[NetworkDataSorce alloc] init];
-    self.navigationItem.rightBarButtonItem.title = @"Log In";
-    
+    [self checkCurrentUser];
     self.scrollViewLeadingConstraint.constant = CGRectGetWidth(self.mapView.bounds);
     self.tabBarController.delegate = self;
     [self hideTabBar];
     [self customizeTabBar];
     [self createAndShowMap];
+}
+
+
+-(void)checkCurrentUser
+{
+    
+    NSDictionary *userDictionary = [[NSUserDefaults standardUserDefaults] objectForKey:@"userDictionary"];
+    if(userDictionary!=nil)
+    {
+        self.navigationItem.rightBarButtonItem.title = @"User check...";
+        [self.dataSorce requestLogInWithUser:[userDictionary objectForKey:@"LOGIN"]
+                                     andPass:[userDictionary objectForKey:@"PASSWORD"]
+                    andViewControllerHandler:^(User *resUser)
+         {
+             if (resUser == nil)
+             {
+                 dispatch_async(dispatch_get_main_queue(), ^ {
+                     self.currentUser = nil;
+                 });
+                 
+             }
+             else
+             {
+                 dispatch_async(dispatch_get_main_queue(), ^ {
+                     self.currentUser = resUser;
+                 });
+             }
+         } andErrorHandler:^(NSError *error) {
+             // error!
+         }];
+    }
 }
 
 -(void)viewWillAppear:(BOOL)animated
@@ -78,12 +109,14 @@ static double const MAP_REFRESHING_INTERVAL = 120.0;
     {
         self.title = [NSString stringWithFormat:@"Bowl"];
         self.navigationItem.rightBarButtonItem.title = @"Log In";
+        self.userLogined=NO;
 
     }
     else
     {
         self.title = [NSString stringWithFormat:@"Bowl(%@)", user.name];
-        self.navigationItem.rightBarButtonItem.title = @"Sing Out";
+        self.navigationItem.rightBarButtonItem.title = @"Sign Out";
+        self.userLogined = YES;
     }
 }
 
@@ -114,11 +147,11 @@ static double const MAP_REFRESHING_INTERVAL = 120.0;
 - (IBAction)sequeToLogInButton:(UIBarButtonItem *)sender {
     
     
-    if ([sender.title isEqualToString:@"Log In"])
+    if (!self.userLogined)
     {
         [self performSegueWithIdentifier:@"fromMapToLogIn" sender:self];
     }
-    else if ([sender.title isEqualToString:@"Sing Out"])
+    else
     {
         [self.dataSorce requestSignOutWithHandler:^(NSString *stringAnswer) {
             dispatch_async(dispatch_get_main_queue(), ^{
@@ -308,8 +341,8 @@ static double const MAP_REFRESHING_INTERVAL = 120.0;
     if ([viewController isKindOfClass:[DescriptionViewController class]]){
         DescriptionViewController *descriptionVC = (DescriptionViewController *)viewController;
         descriptionVC.currentIssue = self.currentMarker.userData;
-        descriptionVC.currentMarker = self.currentMarker;
         descriptionVC.currentUser = self.currentUser;
+        descriptionVC.mapViewControllerDelegate = self;
         //descriptionVC.view.frame;
 //        [descriptionVC setDataToView];
 //        [descriptionVC clearOldDynamicElements];
