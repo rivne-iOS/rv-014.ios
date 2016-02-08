@@ -23,6 +23,7 @@
 		8460F99F1C3C651500ECB3A4 /* HTTPConnector.m in Sources */ = {isa = PBXBuildFile; fileRef = 8460F99E1C3C651500ECB3A4 /* HTTPConnector.m */; };
 		8460F9A21C3C666100ECB3A4 /* Parser.m in Sources */ = {isa = PBXBuildFile; fileRef = 8460F9A11C3C666100ECB3A4 /* Parser.m */; };
 		847595461C455C0F00E1BF87 /* Podfile in Resources */ = {isa = PBXBuildFile; fileRef = 847595451C455C0F00E1BF87 /* Podfile */; };
+		84D93FC91C5A245800D4E96D /* IssueChangeStatus.m in Sources */ = {isa = PBXBuildFile; fileRef = 84D93FC81C5A245800D4E96D /* IssueChangeStatus.m */; };
 		849930A01C5915E100EDBF5E /* IssueCategory.m in Sources */ = {isa = PBXBuildFile; fileRef = 8499309F1C5915E100EDBF5E /* IssueCategory.m */; };
 		84E19B211C4C131E00AABD7D /* TextFieldValidation.m in Sources */ = {isa = PBXBuildFile; fileRef = 84E19B201C4C131E00AABD7D /* TextFieldValidation.m */; };
 		84E3347F1C4435E800BEE6BA /* MapViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 84E3347E1C4435E800BEE6BA /* MapViewController.m */; };
@@ -74,6 +75,8 @@
 		8460F9A01C3C666100ECB3A4 /* Parser.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Parser.h; path = model/Parser.h; sourceTree = "<group>"; };
 		8460F9A11C3C666100ECB3A4 /* Parser.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = Parser.m; path = model/Parser.m; sourceTree = "<group>"; };
 		847595451C455C0F00E1BF87 /* Podfile */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = Podfile; sourceTree = "<group>"; };
+		84D93FC71C5A245800D4E96D /* IssueChangeStatus.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = IssueChangeStatus.h; path = model/IssueChangeStatus.h; sourceTree = "<group>"; };
+		84D93FC81C5A245800D4E96D /* IssueChangeStatus.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = IssueChangeStatus.m; path = model/IssueChangeStatus.m; sourceTree = "<group>"; };
 		8499309E1C5915E100EDBF5E /* IssueCategory.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = IssueCategory.h; path = model/IssueCategory.h; sourceTree = "<group>"; };
 		8499309F1C5915E100EDBF5E /* IssueCategory.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = IssueCategory.m; path = model/IssueCategory.m; sourceTree = "<group>"; };
 		84E19B1F1C4C131E00AABD7D /* TextFieldValidation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TextFieldValidation.h; path = model/TextFieldValidation.h; sourceTree = "<group>"; };
@@ -211,6 +214,8 @@
 				84E7BF451C430AA600E66585 /* NetworkDataSorce.m */,
 				84E19B1F1C4C131E00AABD7D /* TextFieldValidation.h */,
 				84E19B201C4C131E00AABD7D /* TextFieldValidation.m */,
+				84D93FC71C5A245800D4E96D /* IssueChangeStatus.h */,
+				84D93FC81C5A245800D4E96D /* IssueChangeStatus.m */,
 				8499309E1C5915E100EDBF5E /* IssueCategory.h */,
 				8499309F1C5915E100EDBF5E /* IssueCategory.m */,
 			);

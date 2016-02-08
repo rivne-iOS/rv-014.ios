@@ -10,6 +10,7 @@
 #import "Issue.h"
 #import "LogInViewController.h"
 #import "NetworkDataSorce.h"
+#import "IssueHistoryViewController.h"
 #import "IssueCategory.h"
 
 #import "DescriptionViewController.h"
@@ -108,6 +109,7 @@ static double const MAP_REFRESHING_INTERVAL = 120.0;
         }
     }
 }
+
 
 - (IBAction)sequeToLogInButton:(UIBarButtonItem *)sender {
     
