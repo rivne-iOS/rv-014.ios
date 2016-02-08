@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		100D5E94A39CA00BFE42E1A3 /* libPods.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 3F322957FCEB450D078EB0DF /* libPods.a */; };
+		841429551C5FEEDE0092C0C5 /* Reachability.m in Sources */ = {isa = PBXBuildFile; fileRef = 841429541C5FEEDE0092C0C5 /* Reachability.m */; };
 		84114C691C61503B0092F507 /* UIColor+Bawl.m in Sources */ = {isa = PBXBuildFile; fileRef = 84114C681C61503B0092F507 /* UIColor+Bawl.m */; };
 		845245A71C4E5923000755AC /* DescriptionViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 845245A61C4E5923000755AC /* DescriptionViewController.m */; };
 		8460F9701C3C531E00ECB3A4 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 8460F96F1C3C531E00ECB3A4 /* main.m */; };
@@ -47,6 +48,8 @@
 /* Begin PBXFileReference section */
 		08867A3C0D2FEEC4E51F31EC /* Pods.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.debug.xcconfig; path = "Pods/Target Support Files/Pods/Pods.debug.xcconfig"; sourceTree = "<group>"; };
 		3F322957FCEB450D078EB0DF /* libPods.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libPods.a; sourceTree = BUILT_PRODUCTS_DIR; };
+		841429531C5FEEDE0092C0C5 /* Reachability.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Reachability.h; path = model/Reachability.h; sourceTree = "<group>"; };
+		841429541C5FEEDE0092C0C5 /* Reachability.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = Reachability.m; path = model/Reachability.m; sourceTree = "<group>"; };
 		84114C671C61503B0092F507 /* UIColor+Bawl.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIColor+Bawl.h"; sourceTree = "<group>"; };
 		84114C681C61503B0092F507 /* UIColor+Bawl.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIColor+Bawl.m"; sourceTree = "<group>"; };
 		845245A51C4E5923000755AC /* DescriptionViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DescriptionViewController.h; sourceTree = "<group>"; };
@@ -216,6 +219,8 @@
 				84E19B201C4C131E00AABD7D /* TextFieldValidation.m */,
 				84D93FC71C5A245800D4E96D /* IssueChangeStatus.h */,
 				84D93FC81C5A245800D4E96D /* IssueChangeStatus.m */,
+				8499309E1C5915E100EDBF5E /* IssueCategory.h */,
+				8499309F1C5915E100EDBF5E /* IssueCategory.m */,
 				84114C671C61503B0092F507 /* UIColor+Bawl.h */,
 				84114C681C61503B0092F507 /* UIColor+Bawl.m */,
 			);
