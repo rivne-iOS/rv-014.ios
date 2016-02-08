@@ -62,22 +62,17 @@ static double const MAP_REFRESHING_INTERVAL = 120.0;
                                      andPass:[userDictionary objectForKey:@"PASSWORD"]
                     andViewControllerHandler:^(User *resUser)
          {
-             if (resUser == nil)
-             {
-                 dispatch_async(dispatch_get_main_queue(), ^ {
-                     self.currentUser = nil;
-                 });
-                 
-             }
-             else
-             {
                  dispatch_async(dispatch_get_main_queue(), ^ {
                      self.currentUser = resUser;
                  });
-             }
          } andErrorHandler:^(NSError *error) {
              // error!
          }];
+    }
+    else
+    {
+        self.currentUser = nil;
+        
     }
 }
 

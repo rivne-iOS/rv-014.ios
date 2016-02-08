@@ -56,11 +56,7 @@
         if (data.length > 0 && error==nil)
         {
             NSString *resStr = [Parser parseAnswer:data andReturnObjectForKey:@"message"];
-            
-            if([[resStr substringToIndex:2] isEqualToString:@"Bye"]) //good
-            {
-                [[NSUserDefaults standardUserDefaults] removeObjectForKey:@"userDictionary"];
-            }
+            [[NSUserDefaults standardUserDefaults] removeObjectForKey:@"userDictionary"];
             viewControllerHandler(resStr);
         }
         else if(error != nil)
