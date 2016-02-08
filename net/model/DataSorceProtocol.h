@@ -10,10 +10,13 @@
 #define net_DataSorceProtocol_h
 #import "User.h"
 #import "Issue.h"
+#import "IssueCategory.h"
+
 
 @protocol DataSorceProtocol <NSObject>
 
--(void)requestUsers:(void (^)(NSArray * stringPers))viewControllerHandler withErrorHandler:(void(^)(NSError *error)) errorHandler;
+
+-(void)requestCategories:(void (^)(NSArray<IssueCategory*> * issueCategories))viewControllerHandler withErrorHandler:(void(^)(NSError *error)) errorHandler;
 
 -(void)requestLogInWithUser:(NSString*)user
                     andPass:(NSString*)pass

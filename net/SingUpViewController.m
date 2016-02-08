@@ -5,18 +5,14 @@
 //  Created by Admin on 11.01.16.
 //  Copyright (c) 2016 Admin. All rights reserved.
 //
-#import <Quartzcore/QuartzCore.h>
 
+#import "UIColor+Bawl.h"
 #import "DataSorceProtocol.h"
 #import "NetworkDataSorce.h"
 #import "SingUpViewController.h"
 #import "User.h"
 #import "TextFieldValidation.h"
 
-#define R_COLOR 0.88235294117647056
-#define G_COLOR 0.21176470588235294
-#define B_COLOR 0.33333333333333331
-#define COLOR_MULT 1.5
 
 
 @interface SingUpViewController () <UITextFieldDelegate>
@@ -46,13 +42,13 @@
     // frame color
     for (__weak UITextField *textField in self.textFields)
     {
-        textField.layer.borderColor = [[UIColor colorWithRed:R_COLOR green:G_COLOR blue:B_COLOR alpha:0.5] CGColor];
+        textField.layer.borderColor = [[UIColor bawlRedColorWithAlpha:0.5] CGColor];
         textField.layer.borderWidth = 1;
         textField.layer.cornerRadius = 6;
         
         
         NSMutableAttributedString *attrStr = [[NSMutableAttributedString alloc] initWithString:textField.restorationIdentifier
-                                                                                    attributes:@{NSForegroundColorAttributeName : [UIColor colorWithRed:R_COLOR green:G_COLOR blue:B_COLOR alpha:0.3]}];
+                                                                                    attributes:@{NSForegroundColorAttributeName : [UIColor bawlRedColorWithAlpha:0.3]}];
        textField.attributedPlaceholder = attrStr;
 
     }
@@ -181,7 +177,7 @@
     textField.placeholder = textField.restorationIdentifier;
     
     NSMutableAttributedString *attrStr = [[NSMutableAttributedString alloc] initWithString:textField.restorationIdentifier
-                                                                                attributes:@{NSForegroundColorAttributeName : [UIColor colorWithRed:R_COLOR green:G_COLOR blue:B_COLOR alpha:0.3]}];
+                                                                                attributes:@{NSForegroundColorAttributeName : [UIColor bawlRedColor03alpha]}];
     textField.attributedPlaceholder = attrStr;
 
     

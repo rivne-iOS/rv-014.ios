@@ -11,5 +11,7 @@
 @interface IssueChangeStatus : NSObject
 
 -(NSArray <NSString*> *)newIssueStatusesForUser:(NSString*)user andCurretIssueStatus:(NSString*)status;
+-(NSArray <NSString*> *)newIssueLabelStatusesForUser:(NSString*)user andCurretIssueStatus:(NSString*)status;
+-(NSString*)labelTextForNewStatus:(NSString*)newStatus;
 
 @end

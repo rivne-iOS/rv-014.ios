@@ -24,7 +24,7 @@
 {
     if(_changingDic == nil)
     {
-        NSArray *newForManager = @[@"APPROVED", @"CANCEL"];
+        NSArray *newForManager = @[@"APPROVED", @"CANCELED"];
         NSArray *toResolveForManager = @[@"RESOLVED"];
         NSDictionary *dicForManager = @{@"NEW" : newForManager, @"TO_RESOLVE" : toResolveForManager};
 
@@ -37,9 +37,44 @@
     return _changingDic;
 }
 
+-(NSDictionary <NSString*, NSDictionary<NSString*, NSArray<NSString*> *> *> *)changingDicLabel
+{
+    if(_changingDic == nil)
+    {
+        NSArray *newForManager = @[@"Approve Issue", @"Disaprove issue"];
+        NSArray *toResolveForManager = @[@"Conmirm resolving issue"];
+        NSDictionary *dicForManager = @{@"NEW" : newForManager, @"TO_RESOLVE" : toResolveForManager};
+        
+        NSArray *approvedForUser = @[@"Mark as resolved"];
+        NSDictionary *dicForUser = @{@"APPROVED" : approvedForUser};
+        
+        _changingDic = @{@"USER" : dicForUser,  @"MANAGER": dicForManager};
+    }
+    
+    return _changingDic;
+}
+
 -(NSArray <NSString*> *)newIssueStatusesForUser:(NSString*)user andCurretIssueStatus:(NSString*)status
 {
     return [[self.changingDic objectForKey:user] objectForKey:status];
+}
+
+-(NSArray <NSString*> *)newIssueLabelStatusesForUser:(NSString*)user andCurretIssueStatus:(NSString*)status
+{
+    return [[self.changingDicLabel objectForKey:user] objectForKey:status];
+}
+
+-(NSString*)labelTextForNewStatus:(NSString*)newStatus
+{
+    if([newStatus isEqualToString:@"APPROVED"])
+        return @"Approve Issue";
+    else if([newStatus isEqualToString:@"CANCELED"])
+        return @"Disaprove issue";
+    else if([newStatus isEqualToString:@"TO_RESOLVE"])
+        return @"Mark as resolved";
+    else if([newStatus isEqualToString:@"RESOLVED"])
+        return @"Conmirm resolving issue";
+    return nil;
 }
 
 
