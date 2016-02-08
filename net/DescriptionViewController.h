@@ -9,17 +9,17 @@
 #import <UIKit/UIKit.h>
 #import "Issue.h"
 #import "User.h"
-@import GoogleMaps;
+#import "MapViewController.h"
 
 @interface DescriptionViewController : UIViewController
 
 @property (strong, nonatomic) Issue *currentIssue;
 @property (strong, nonatomic) User *currentUser;
-@property (strong, nonatomic) GMSMarker *currentMarker;
 
 @property (weak, nonatomic) IBOutlet UILabel *titleLabel;
 @property (weak, nonatomic) IBOutlet UILabel *descriptionLabel;
 
+@property (weak, nonatomic) MapViewController *mapViewControllerDelegate;
 
 
 -(void)setDataToView;

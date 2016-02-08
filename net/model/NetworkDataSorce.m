@@ -12,36 +12,41 @@
 #import "Issue.h"
 #import "Parser.h"
 
+@interface NetworkDataSorce()
+
+
+
+@end
 
 
 @implementation NetworkDataSorce
 
 
--(void)requestUsers:(void (^)(NSArray * stringPers))viewControllerHandler withErrorHandler:(void(^)(NSError *error)) errorHandler
-{
-    HTTPConnector *wizard = [[HTTPConnector alloc] init];
-    [wizard requestUsers:^(NSData * data, NSError *error)
-    {
-        if (data.length > 0 && error == nil)
-        {
-            NSArray *arrOfPers = [Parser parseDataToArrayOfUsers:data];
-            NSMutableArray *arrOfStringPers = [[NSMutableArray alloc] init];
-            for (User *p in arrOfPers)
-            {
-                [arrOfStringPers addObject: [[p description] stringByAppendingString:@"\n\n"]];
-            }
 
-            NSLog(@"Created arrOfStringPers. First Pers:%@", arrOfStringPers[0]);
+
+-(void)requestCategories:(void (^)(NSArray<IssueCategory*> * issueCategories))viewControllerHandler withErrorHandler:(void(^)(NSError *error)) errorHandler
+{
+    HTTPConnector *connector = [[HTTPConnector alloc] init];
+    [connector requestCategories:^(NSData *data, NSError *error) {
+        if (data.length > 0 && error==nil)
+        {
+            NSArray <NSDictionary*> *issueCategoryDics = [NSJSONSerialization JSONObjectWithData:data options:0 error:NULL];
+            NSMutableArray <IssueCategory*> *issueCategories = [[NSMutableArray alloc] init];
             
-            viewControllerHandler(arrOfStringPers);
-            
+            for(NSDictionary *issueCategoryDic in issueCategoryDics)
+            {
+                IssueCategory *issueCategory = [[IssueCategory alloc] initWithDictionary:issueCategoryDic];
+                [issueCategories addObject:issueCategory];
+            }
+            viewControllerHandler(issueCategories);
         }
-        else if (error !=  nil)
+        else if(error != nil)
         {
             errorHandler(error);
         }
 
     }];
+
 }
 
 -(void)requestSignOutWithHandler:(void (^)(NSString * stringAnswer))viewControllerHandler andErrorHandler:(void(^)(NSError *error)) errorHandler
@@ -50,7 +55,9 @@
     [wizard requestSignOutWithHandler:^(NSData *data, NSError *error) {
         if (data.length > 0 && error==nil)
         {
-            viewControllerHandler([Parser parseAnswer:data andReturnObjectForKey:@"message"]);
+            NSString *resStr = [Parser parseAnswer:data andReturnObjectForKey:@"message"];
+            [[NSUserDefaults standardUserDefaults] removeObjectForKey:@"userDictionary"];
+            viewControllerHandler(resStr);
         }
         else if(error != nil)
         {
@@ -60,18 +67,39 @@
 }
 
 
--(void)requestLogInWithUser:(NSString*)user
-                    andPass:(NSString*)pass
-   andViewControllerHandler:(void (^)(User *resPerson))viewControllerHandler
+-(void)requestLogInWithUser:(NSString*)login
+                    andPass:(NSString*)password
+   andViewControllerHandler:(void (^)(User *user))viewControllerHandler
             andErrorHandler:(void(^)(NSError *error)) errorHandler;
 {
-    HTTPConnector *wizard = [[HTTPConnector alloc] init];
     
-    [wizard requestLogInWithData:[Parser parseToDataWithLogIn:user andPassword:pass]
+    NSDictionary *dictionary = [[NSDictionary alloc] initWithObjectsAndKeys:
+                                login, @"login",
+                                password, @"password", nil];
+    NSError *err;
+    NSData *postData = [NSJSONSerialization dataWithJSONObject:dictionary
+                                                       options:0
+                                                         error:&err];
+    
+    HTTPConnector *connector = [[HTTPConnector alloc] init];
+    [connector requestLogInWithData:postData
              andDataSorceHandler:^(NSData *data, NSError *error) {
         if(data.length >0 && error == nil)
         {
-            viewControllerHandler([Parser parseDataToUser:data]);
+            NSDictionary *userDic = [NSJSONSerialization JSONObjectWithData:data
+                                                                      options:0
+                                                                        error:NULL];
+            User *tempUser = nil;
+            if ([userDic count] >1)
+            {
+                [[NSUserDefaults standardUserDefaults] setObject:userDic forKey:@"userDictionary"];
+                tempUser = [[User alloc] initWitDictionary:userDic];
+            }
+            viewControllerHandler(tempUser);
+        }
+        else
+        {
+            errorHandler(error);
         }
              }];
     
@@ -79,15 +107,29 @@
 
 
 -(void)requestSingUpWithUser:(User*)user
-    andViewControllerHandler:(void (^)(User *resPerson))viewControllerHandler
+    andViewControllerHandler:(void (^)(User *user))viewControllerHandler
              andErrorHandler:(void(^)(NSError *error)) errorHandler
 {
+    NSDictionary *dictionary = [user puckToDictionary];
+    NSError *err;
+    NSData *postData = [NSJSONSerialization dataWithJSONObject:dictionary
+                                                           options:0
+                                                             error:&err];
     HTTPConnector *connector = [[HTTPConnector alloc] init];
-    [connector requestSingUpWithData:[Parser parseUserToData:user]
+    [connector requestSingUpWithData:postData
                  andDataSorceHandler:^(NSData *data, NSError *error) {
                      if(data.length >0 && error == nil)
                      {
-                         viewControllerHandler([Parser parseDataToUser:data]);
+                         NSDictionary *userDic = [NSJSONSerialization JSONObjectWithData:data
+                                                                                   options:0
+                                                                                     error:NULL];
+                         User *user = nil;
+                         if([userDic count]>1)
+                         {
+                             [[NSUserDefaults standardUserDefaults] setObject:userDic forKey:@"userDictionary"];
+                             user = [[User alloc] initWitDictionary:userDic];
+                         }
+                         viewControllerHandler(user);
                      }
                      else if (error!=nil)
                      {

@@ -32,9 +32,11 @@
 
 @property (strong, nonatomic) NSTimer *timerForMapRenew;
 
+
+
 - (IBAction)buttonBackPressed:(id)sender;
 - (IBAction)buttonAddPressed:(id)sender;
 - (void)renewMapWithNSTimer:(NSTimer *)timer;
-
+-(void)renewMap;
 
 @end

@@ -13,20 +13,6 @@
 @interface Parser : NSObject
 
 
-+(User*)parseDataToUser:(NSData*)data;
-+(User*)parseDictionaryToUser:(NSDictionary*)dic;
-
-+(NSData*)parseUserToData:(User*)user;
-+(NSData*)parseToDataWithLogIn:(NSString*)login andPassword:(NSString*)password;
-
-
-//array of persons
-+(NSArray*)parseDataToArrayOfUsers:(NSData*)data;
-
-
-+(Issue*)parseDataToPoint:(NSData*)data;
-+(Issue*)parseDictionaryToPoint:(NSDictionary*)dic;
-
 +(NSString*)parseAnswer:(NSData*)data andReturnObjectForKey:(NSString*)stringKey;
 
 
