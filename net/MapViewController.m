@@ -227,12 +227,14 @@ static double const MAP_REFRESHING_INTERVAL = 120.0;
                                                     [self.mapView clear];
                                                     
                                                     for (Issue *issue in issuesClassArray) {
-                                                        GMSMarker *marker = [[GMSMarker alloc] init];
-                                                        marker.position = CLLocationCoordinate2DMake(issue.getLatitude, issue.getLongitude);
-                                                        marker.userData = issue;
-                                                        marker.title = issue.name;
-                                                        marker.icon = [self changeIconColor:issue];
-                                                        marker.map = self.mapView;
+                                                        if ([issue.status isEqualToString:@"TO_RESOLVE"] || [issue.status isEqualToString:@"APPROVED"]){
+                                                            GMSMarker *marker = [[GMSMarker alloc] init];
+                                                            marker.position = CLLocationCoordinate2DMake(issue.getLatitude, issue.getLongitude);
+                                                            marker.userData = issue;
+                                                            marker.title = issue.name;
+                                                            marker.icon = [self changeIconColor:issue];
+                                                            marker.map = self.mapView;
+                                                        }
                                                     }
                                                 });
                                             } else {

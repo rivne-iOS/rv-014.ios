@@ -214,6 +214,8 @@
 				84E19B201C4C131E00AABD7D /* TextFieldValidation.m */,
 				84D93FC71C5A245800D4E96D /* IssueChangeStatus.h */,
 				84D93FC81C5A245800D4E96D /* IssueChangeStatus.m */,
+				8499309E1C5915E100EDBF5E /* IssueCategory.h */,
+				8499309F1C5915E100EDBF5E /* IssueCategory.m */,
 				84114C671C61503B0092F507 /* UIColor+Bawl.h */,
 				84114C681C61503B0092F507 /* UIColor+Bawl.m */,
 				8459C76D1C6505C700F7F595 /* ChangerBox.h */,
