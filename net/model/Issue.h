@@ -11,17 +11,20 @@
 
 
 typedef enum : NSUInteger {
+    NEW,
     APPROVED,
+    CANCEL,
     TO_RESOLVE,
     RESOLVED,
-} status;
+} Status;
 
 
 @interface Issue : NSObject
 
-@property(nonatomic, readonly)NSArray *stringStatus;
+@property(nonatomic, readonly)NSString *stringStatus;
 
 @property(nonatomic)NSUInteger pointId;
+@property(nonatomic)Status statusEnum;
 @property(strong, nonatomic)NSString *pDescription;
 @property(strong, nonatomic)NSString *mapInfo;
 @property(strong, nonatomic)NSString *name;
@@ -59,7 +62,7 @@ typedef enum : NSUInteger {
 @property (strong, nonatomic) NSString *status;
 
 
-+(NSArray*)BPPointStringStatuses;
++(NSArray*)stringStatusesArray;
 -(instancetype)initWithDictionary:(NSDictionary *)issueDictionary;
 -(double)getLongitude;
 -(double)getLatitude;
