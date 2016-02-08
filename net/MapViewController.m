@@ -11,9 +11,19 @@
 #import "LogInViewController.h"
 #import "NetworkDataSorce.h"
 #import "IssueHistoryViewController.h"
+#import "IssueCategory.h"
 
 #import "DescriptionViewController.h"
 @import GoogleMaps;
+
+static NSString * const GOOGLE_WEB_API_KEY = @"AIzaSyB7InJ3J2AoxlHjsYtde9BNawMINCaHykg";
+static NSString * const DOMAIN_NAME_ALL_ISSUES = @"https://bawl-rivne.rhcloud.com/issue/all";
+static NSString * const DOMAIN_NAME_GOOGLE_PLACE_INFO = @"https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=%f,%f&radius=%d&key=%@";
+static NSString * const DOMAIN_NAME_ALL_CATEGORIES = @"https://bawl-rivne.rhcloud.com/categories/all";
+static NSString * const DOMAIN_NAME_ADD_ISSUE = @"https://bawl-rivne.rhcloud.com/issue";
+
+static NSInteger const HTTP_RESPONSE_CODE_OK = 200;
+static double const MAP_REFRESHING_INTERVAL = 120.0;
 
 @interface MapViewController () <GMSMapViewDelegate, UITabBarControllerDelegate>
 
@@ -21,6 +31,7 @@
 @property (strong, nonatomic) id <DataSorceProtocol> dataSorce;
 @property (weak, nonatomic) IBOutlet GMSMapView *mapView;
 @property (strong, nonatomic) GMSMarker *currentMarker;
+@property (assign, nonatomic) CLLocationCoordinate2D currentLocation;
 
 @end
 
@@ -32,10 +43,32 @@
     self.dataSorce = [[NetworkDataSorce alloc] init];
     self.navigationItem.rightBarButtonItem.title = @"Log In";
     
+    self.scrollViewLeadingConstraint.constant = CGRectGetWidth(self.mapView.bounds);
     self.tabBarController.delegate = self;
     [self hideTabBar];
     [self customizeTabBar];
     [self createAndShowMap];
+}
+
+-(void)viewWillAppear:(BOOL)animated
+{
+    [self renewMap];
+    
+    [self.timerForMapRenew invalidate];
+
+    self.timerForMapRenew = [NSTimer scheduledTimerWithTimeInterval:MAP_REFRESHING_INTERVAL
+                                     target:self
+                                   selector:@selector(renewMapWithNSTimer:)
+                                   userInfo:nil
+                                    repeats:YES];
+    
+    NSRunLoop *runner = [NSRunLoop currentRunLoop];
+    [runner addTimer:self.timerForMapRenew forMode: NSDefaultRunLoopMode];
+}
+
+-(void)viewWillDisappear:(BOOL)animated
+{
+    [self.timerForMapRenew invalidate];
 }
 
 -(void)setCurrentUser:(User *) user
@@ -140,19 +173,19 @@
     self.mapView.delegate = self;
     
     [self.tabBarController.tabBar setHidden:YES];
-    [self requestIssues];
+//    [self requestIssues];
 }
 
 
 -(void)requestIssues
 {
-        NSURL *url = [NSURL URLWithString:@"https://bawl-rivne.rhcloud.com/issue/all"];
+        [self testInternetConnection:DOMAIN_NAME_ALL_ISSUES];
+        NSURL *url = [NSURL URLWithString:DOMAIN_NAME_ALL_ISSUES];
         NSURLRequest *request = [NSURLRequest requestWithURL:url];
     
         [[[NSURLSession sharedSession]dataTaskWithRequest:request
                                         completionHandler:^(NSData * _Nullable data, NSURLResponse * _Nullable response, NSError * _Nullable connectionError) {
-                                            if (data.length > 0 && connectionError == nil)
-                                            {
+                                            if (data.length > 0 && connectionError == nil){
                                         
                                                 NSArray *issuesDictionaryArray = [NSJSONSerialization JSONObjectWithData:data options:0                                                                                                    error:NULL];
                                                 
@@ -162,14 +195,27 @@
                                                 }
                                                 
                                                 dispatch_async(dispatch_get_main_queue(), ^{
+                                                    
+                                                    [self.mapView clear];
+                                                    
                                                     for (Issue *issue in issuesClassArray) {
-                                                        GMSMarker *marker = [[GMSMarker alloc] init];
-                                                        marker.position = CLLocationCoordinate2DMake(issue.getLatitude, issue.getLongitude);
-                                                        marker.userData = issue;
-                                                        marker.title = issue.name;
-                                                        marker.map = self.mapView;
+                                                        if ([issue.status isEqualToString:@"TO_RESOLVE"] || [issue.status isEqualToString:@"APPROVED"]){
+                                                            GMSMarker *marker = [[GMSMarker alloc] init];
+                                                            marker.position = CLLocationCoordinate2DMake(issue.getLatitude, issue.getLongitude);
+                                                            marker.userData = issue;
+                                                            marker.title = issue.name;
+                                                            marker.icon = [self changeIconColor:issue];
+                                                            marker.map = self.mapView;
+                                                        }
                                                     }
                                                 });
+                                            } else {
+                                                UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Attention!"
+                                                                                                message:@"Troubles with connection!"
+                                                                                               delegate:nil
+                                                                                      cancelButtonTitle:@"I understood"
+                                                                                      otherButtonTitles:nil];
+                                                [alert show];
                                             }
                                         }] resume];
 }
@@ -198,7 +244,66 @@
     }];
 }
 
-#pragma mark Tab Bar
+-(void)mapView:(GMSMapView *)mapView didLongPressAtCoordinate:(CLLocationCoordinate2D)coordinate
+{
+    self.mapView.selectedMarker = nil;
+    [[self navigationController] setNavigationBarHidden:YES animated:NO];
+    [self requestGoogleApiPlace:coordinate];
+    [self requestCategories];
+    [self addBorderColor];
+    [UIView animateWithDuration:0.5 animations:^(void){
+        self.scrollViewLeadingConstraint.constant = 0;
+        [self hideTabBar];
+        [self.view layoutIfNeeded];
+    }];
+}
+
+-(void)requestGoogleApiPlace:(CLLocationCoordinate2D)coordinate
+{
+    NSString *urlString = [[NSString alloc] initWithFormat:DOMAIN_NAME_GOOGLE_PLACE_INFO,
+                           coordinate.latitude,
+                           coordinate.longitude,
+                           1,
+                           GOOGLE_WEB_API_KEY];
+    self.currentLocation = coordinate;
+    NSURL *url = [NSURL URLWithString:urlString];
+    NSURLRequest *request = [NSURLRequest requestWithURL:url];
+    [[[NSURLSession sharedSession]dataTaskWithRequest:request
+                                    completionHandler:^(NSData * _Nullable data, NSURLResponse * _Nullable response, NSError * _Nullable connectionError) {
+                                        if (data.length > 0 && connectionError == nil)
+                                        {
+                                                dispatch_async(dispatch_get_main_queue(), ^{
+                                                self.tapLocationLabel.numberOfLines = 2;
+                                                self.tapLocationLabel.lineBreakMode = NSLineBreakByCharWrapping;
+                                                self.tapLocationLabel.text = @"";
+                                                self.tapLocationLabel.text = [self.tapLocationLabel.text stringByAppendingFormat:@"Location of issue:\n%@, %@",
+                                                                              [self takeVicinityFromGoogleApiPlace:data],
+                                                                              [self takeStreetFromGoogleApiPlace:data]];
+                                            });
+                                        }
+                                    }] resume];
+
+}
+
+-(NSString *)takeStreetFromGoogleApiPlace:(NSData *)data
+{
+    NSDictionary *placeDictionary = [NSJSONSerialization JSONObjectWithData:data options:0 error:NULL];
+    NSArray *resultsArray = [placeDictionary valueForKey:@"results"];
+    NSDictionary *locationDictionary = [resultsArray objectAtIndex:0];
+    NSString *street = [locationDictionary valueForKey:@"name"];
+    return street;
+    
+}
+
+-(NSString *)takeVicinityFromGoogleApiPlace:(NSData *)data
+{
+    NSDictionary *placeDictionary = [NSJSONSerialization JSONObjectWithData:data options:0 error:NULL];
+    NSArray *resultsArray = [placeDictionary valueForKey:@"results"];
+    NSDictionary *locationDictionary = [resultsArray objectAtIndex:0];
+    NSString *vicinity = [locationDictionary valueForKey:@"vicinity"];
+    return vicinity;
+}
+
 -(BOOL)tabBarController:(UITabBarController *)tabBarController shouldSelectViewController:(UIViewController *)viewController
 {
     if ([viewController isKindOfClass:[DescriptionViewController class]]){
@@ -300,4 +405,193 @@
                             }
                         }];
 }
+
+// returns the number of 'columns' to display.
+- (NSInteger)numberOfComponentsInPickerView:(UIPickerView *)pickerView
+{
+    return 1;
+}
+
+// returns the # of rows in each component..
+- (NSInteger)pickerView:(UIPickerView *)pickerView numberOfRowsInComponent:(NSInteger)component
+{
+    return self.categoryClassArray.count;
+}
+
+// The data to return for the row and component (column) that's being passed in
+- (NSString*)pickerView:(UIPickerView *)pickerView titleForRow:(NSInteger)row forComponent:(NSInteger)component
+{
+    return [self.categoryClassArray[row] name];
+}
+
+-(void)requestCategories
+{
+    NSURL *url = [NSURL URLWithString:DOMAIN_NAME_ALL_CATEGORIES];
+    NSURLRequest *request = [NSURLRequest requestWithURL:url];
+    [[[NSURLSession sharedSession]dataTaskWithRequest:request
+                                    completionHandler:^(NSData * _Nullable data, NSURLResponse * _Nullable response, NSError * _Nullable connectionError) {
+                                        if (data.length > 0 && connectionError == nil)
+                                        {
+                                            NSArray *categoryDictionaryArray = [NSJSONSerialization JSONObjectWithData:data options:0                                                                                                   error:NULL];
+                                            
+                                            self.categoryClassArray = [[NSMutableArray alloc] init];
+                                            
+                                            for (NSDictionary *category in categoryDictionaryArray) {
+                                                [self.categoryClassArray addObject:[[IssueCategory alloc] initWithDictionary:category]];
+                                            }
+                                            
+                                            dispatch_async(dispatch_get_main_queue(), ^{
+                                                [self.categoryPicker reloadAllComponents];
+                                            }
+                                                           );}
+                                    }] resume];
+}
+
+-(void)addBorderColor
+{
+    [self.descriptionTextView.layer setBorderColor:[[[UIColor redColor] colorWithAlphaComponent:0.5] CGColor]];
+    [self.descriptionTextView.layer setBorderWidth:1.0];
+    [self.nameTextField.layer setBorderColor:[[[UIColor redColor] colorWithAlphaComponent:0.5] CGColor]];
+    [self.nameTextField.layer setBorderWidth:1.0];
+    [self.categoryPicker.layer setBorderColor:[[[UIColor redColor] colorWithAlphaComponent:0.5] CGColor]];
+    [self.categoryPicker.layer setBorderWidth:1.0];
+    [self.attachmentTextField.layer setBorderColor:[[[UIColor redColor] colorWithAlphaComponent:0.5] CGColor]];
+    [self.attachmentTextField.layer setBorderWidth:1.0];
+}
+
+- (IBAction)buttonBackPressed:(id)sender
+{
+    [[self navigationController] setNavigationBarHidden:NO animated:NO];
+    [UIView animateWithDuration:0.5 animations:^(void){
+        self.scrollViewLeadingConstraint.constant = CGRectGetWidth(self.mapView.bounds);
+        [self.view layoutIfNeeded];
+    }];
+}
+
+- (IBAction)buttonAddPressed:(id)sender
+{
+    [self requestAddingNewIssue:[self getJsonFromAddingNewIssueView]];
+    [[self navigationController] setNavigationBarHidden:NO animated:NO];
+    [UIView animateWithDuration:0.5 animations:^(void){
+        self.scrollViewLeadingConstraint.constant = CGRectGetWidth(self.mapView.bounds);
+        [self.view layoutIfNeeded];
+    }];
+}
+
+-(NSDictionary *)getJsonFromAddingNewIssueView
+{
+    //    JSON example
+    //    {
+    //        "name": "Huge traffic jam",
+    //        "desc": "Many cars stucked in the long row.",
+    //        "point": "LatLng(50.55845, 26.3072)",
+    //        "status": "NEW",
+    //        "category": 3,
+    //    }
+    NSArray *addIssueValues = [[NSArray alloc] initWithObjects:
+                               self.nameTextField.text,
+                               self.descriptionTextView.text,
+                               [[NSString alloc] initWithFormat:@"LatLng(%f, %f)", self.currentLocation.latitude, self.currentLocation.longitude],
+                               @"NEW",
+                               [NSNumber numberWithInt:[self.categoryPicker selectedRowInComponent:0]],
+                               nil];
+    NSArray *addIssueKeys = [[NSArray alloc] initWithObjects:
+                             @"name",
+                             @"desc",
+                             @"point",
+                             @"status",
+                             @"category",
+                             nil];
+    return [[NSDictionary alloc] initWithObjects:addIssueValues forKeys:addIssueKeys];
+}
+
+-(void)requestAddingNewIssue:(NSDictionary *)jsonDictionary
+{
+    // 1
+    NSURL *url = [NSURL URLWithString:DOMAIN_NAME_ADD_ISSUE];
+    NSURLSessionConfiguration *config = [NSURLSessionConfiguration defaultSessionConfiguration];
+    NSURLSession *session = [NSURLSession sessionWithConfiguration:config];
+    
+    // 2
+    NSMutableURLRequest *request = [[NSMutableURLRequest alloc] initWithURL:url];
+    request.HTTPMethod = @"POST";
+    [request setValue:@"application/json" forHTTPHeaderField:@"Content-Type"];
+    
+    // 3
+    NSError *error = nil;
+    NSData *data = [NSJSONSerialization dataWithJSONObject:jsonDictionary
+                                                   options:kNilOptions error:&error];
+    
+    if (!error) {
+        // 4
+        NSURLSessionUploadTask *uploadTask = [session uploadTaskWithRequest:request
+                                                                   fromData:data completionHandler:^(NSData *data,NSURLResponse *response,NSError *error) {
+                                                                       NSHTTPURLResponse *httpResponse = (NSHTTPURLResponse *) response;
+                                                                       if ([httpResponse statusCode] != HTTP_RESPONSE_CODE_OK){
+                                                                           UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Attention!"
+                                                                                                                           message:@"Something has gone wrong! (we have ansswer from server, but it's incorrect)"
+                                                                                                                          delegate:nil
+                                                                                                                 cancelButtonTitle:@"I understood"
+                                                                                                                 otherButtonTitles:nil];
+                                                                           [alert show];
+                                                                       } else {
+                                                                           dispatch_async(dispatch_get_main_queue(), ^{
+                                                                               [self renewMap];
+                                                                           });
+                                                                       }
+                                                                   }];
+        
+        // 5
+        [uploadTask resume];
+    }
+}
+
+-(void)renewMap
+{
+    [self requestIssues];
+}
+
+-(void)renewMapWithNSTimer:(NSTimer *)timer
+{
+    [self requestIssues];
+}
+
+// Checks if we have an internet connection or not
+- (void)testInternetConnection:(NSString *)hostName
+{
+    Reachability *internetReachableFoo = [Reachability reachabilityWithHostname:hostName];
+    
+    // Internet is reachable
+//    internetReachableFoo.reachableBlock = ^(Reachability*reach)
+//    {
+//        // Update the UI on the main thread
+//        dispatch_async(dispatch_get_main_queue(), ^{
+//            NSLog(@"Yayyy, we have the interwebs!");
+//        });
+//        reachInternet = YES;
+//    };
+    
+    // Internet is not reachable
+    internetReachableFoo.unreachableBlock = ^(Reachability*reach)
+    {
+        // Update the UI on the main thread
+        dispatch_async(dispatch_get_main_queue(), ^{
+            NSLog(@"Someone broke the internet :(");
+        });
+    };
+    
+    [internetReachableFoo startNotifier];
+}
+
+-(UIImage *)changeIconColor:(Issue *)issue
+{
+    if ([issue.status isEqualToString:@"APPROVED"]){
+        return [GMSMarker markerImageWithColor:[UIColor greenColor]];
+    } else if ([issue.status isEqualToString:@"TO_RESOLVE"]){
+        return [GMSMarker markerImageWithColor:[UIColor orangeColor]];
+    }
+    
+    return [GMSMarker markerImageWithColor:[UIColor redColor]];
+}
+
 @end
