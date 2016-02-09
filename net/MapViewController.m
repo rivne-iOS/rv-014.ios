@@ -103,14 +103,15 @@ static double const MAP_REFRESHING_INTERVAL = 120.0;
     _currentUser = user;
     if(user == nil)
     {
-        self.title = [NSString stringWithFormat:@"Bowl"];
+        self.title = [NSString stringWithFormat:@"Bawl"];
         self.navigationItem.rightBarButtonItem.title = @"Log In";
         self.userLogined=NO;
 
     }
     else
     {
-        self.title = [NSString stringWithFormat:@"Bowl(%@)", user.name];
+        self.title = [NSString stringWithFormat:@"Bawl(%@)", user.name];
+        [self.tabBarController.tabBar.items objectAtIndex:0].title = @"Location";
         self.navigationItem.rightBarButtonItem.title = @"Sign Out";
         self.userLogined = YES;
     }
@@ -336,20 +337,24 @@ static double const MAP_REFRESHING_INTERVAL = 120.0;
 
 -(BOOL)tabBarController:(UITabBarController *)tabBarController shouldSelectViewController:(UIViewController *)viewController
 {
-    if ([viewController isKindOfClass:[DescriptionViewController class]]){
-        DescriptionViewController *descriptionVC = (DescriptionViewController *)viewController;
+    if ([viewController isKindOfClass:[UINavigationController class]] && [viewController.restorationIdentifier isEqualToString:@"description"]){
+        UINavigationController *destController = (UINavigationController *)viewController;
+        DescriptionViewController *descriptionVC = (DescriptionViewController *)destController.topViewController;
         descriptionVC.currentIssue = self.currentMarker.userData;
         descriptionVC.currentUser = self.currentUser;
         descriptionVC.mapViewControllerDelegate = self;
+        descriptionVC.title = self.title;
         //descriptionVC.view.frame;
 //        [descriptionVC setDataToView];
 //        [descriptionVC clearOldDynamicElements];
 //        [descriptionVC prepareUIChangeStatusElements];
 
     }
-    if ([viewController isKindOfClass:[IssueHistoryViewController class]]){
-        IssueHistoryViewController *issueHistoryViewController = (IssueHistoryViewController *)viewController;
+    else if ([viewController isKindOfClass:[UINavigationController class]] && [viewController.restorationIdentifier isEqualToString:@"history"]){
+        UINavigationController *destController = (UINavigationController *)viewController;
+        IssueHistoryViewController *issueHistoryViewController = (IssueHistoryViewController *)destController.topViewController;
         issueHistoryViewController.issue = (Issue *)self.currentMarker.userData;
+        issueHistoryViewController.title = self.title;
     }
 //    [self animateTabsSwitching:viewController];
     return YES;

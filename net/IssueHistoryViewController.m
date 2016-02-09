@@ -78,6 +78,7 @@ static NSString * const kSimpleTableIdentifier = @"SampleTableCell";
 - (void)viewDidLoad {
     [super viewDidLoad];
     // Do any additional setup after loading the view.
+    [self.tabBarController.tabBar.items objectAtIndex:0].title = @"History";
     [self.issueTitle setText:self.issue.issueDescription];
     self.issueHistory = [[NSMutableArray alloc] init];
     self.issueTitle.textColor = [UIColor colorWithRed:(255/225.0f) green:(0/255.0f) blue:(137/255.0f) alpha:1];

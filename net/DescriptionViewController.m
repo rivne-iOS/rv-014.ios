@@ -60,6 +60,12 @@
     return _dataSorce;
 }
 
+-(void)viewDidLoad
+{
+    [super viewDidLoad];
+    [self.tabBarController.tabBar.items objectAtIndex:1].title = @"Description";
+}
+
 - (void) viewWillAppear:(BOOL)animated
 {
     [self setDataToView];
