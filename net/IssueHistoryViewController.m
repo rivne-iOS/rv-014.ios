@@ -7,6 +7,7 @@
 //
 
 #import "IssueHistoryViewController.h"
+#import "UIColor+Bawl.h"
 
 static NSString * const kSimpleTableIdentifier = @"SampleTableCell";
 
@@ -33,7 +34,7 @@ static NSString * const kSimpleTableIdentifier = @"SampleTableCell";
                                                                                                              options:0
                                                                                                                error:NULL];
                                             
-                                            UIColor *color = [[UIColor alloc] initWithRed: (255/225.0f) green:(0/255.0f) blue:(137/255.0f) alpha:1];
+                                            UIColor *color = [UIColor bawlRedColor];
                                             NSDictionary *attrs = @{ NSForegroundColorAttributeName : color };
                                             
                                             [_weakSelf.issueHistory removeAllObjects];
@@ -78,13 +79,17 @@ static NSString * const kSimpleTableIdentifier = @"SampleTableCell";
 - (void)viewDidLoad {
     [super viewDidLoad];
     // Do any additional setup after loading the view.
-    [self.tabBarController.tabBar.items objectAtIndex:0].title = @"History";
     [self.issueTitle setText:self.issue.issueDescription];
     self.issueHistory = [[NSMutableArray alloc] init];
-    self.issueTitle.textColor = [UIColor colorWithRed:(255/225.0f) green:(0/255.0f) blue:(137/255.0f) alpha:1];
+    self.issueTitle.textColor = [UIColor bawlRedColor];
+    
+    self.navigationController.navigationBar.tintColor = [UIColor whiteColor];
+    self.navigationController.navigationBar.barTintColor = [UIColor bawlRedColor];
+    self.navigationController.navigationBar.titleTextAttributes = @{NSForegroundColorAttributeName : [UIColor whiteColor]};
+    self.navigationController.navigationBar.barStyle = UIBarStyleBlack;
     
     self.refreshControl = [[UIRefreshControl alloc] init];
-    self.refreshControl.backgroundColor = [UIColor purpleColor];
+    self.refreshControl.backgroundColor = [UIColor bawlRedColor];
     self.refreshControl.tintColor = [UIColor whiteColor];
     [self.refreshControl addTarget:self action:@selector(requestIssueHistory) forControlEvents:UIControlEventValueChanged];
     
@@ -95,16 +100,11 @@ static NSString * const kSimpleTableIdentifier = @"SampleTableCell";
 
 - (void) viewWillAppear:(BOOL)animated {
     [super viewWillAppear:YES];
-    
+    [self.tabBarController.tabBar.items objectAtIndex:2].title = @"History";
     [self.issueTitle setText:self.issue.issueDescription];
     [self requestIssueHistory];
-    
 }
 
-- (void)didReceiveMemoryWarning {
-    [super didReceiveMemoryWarning];
-    // Dispose of any resources that can be recreated.
-}
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
     return [self.issueHistory count];

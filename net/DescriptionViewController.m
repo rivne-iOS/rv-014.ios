@@ -18,6 +18,7 @@
 @interface DescriptionViewController ()
 @property (weak, nonatomic) IBOutlet UILabel *currentCategoryLabel;
 @property (weak, nonatomic) IBOutlet UILabel *currentStatusLabel;
+@property (weak, nonatomic) IBOutlet UIImageView *issueImageView;
 
 @property (strong, nonatomic) IssueChangeStatus *statusChanger;
 @property (strong, nonatomic) id <DataSorceProtocol> dataSorce;
@@ -60,18 +61,29 @@
     return _dataSorce;
 }
 
--(void)viewDidLoad
-{
-    [super viewDidLoad];
-    [self.tabBarController.tabBar.items objectAtIndex:1].title = @"Description";
-}
-
 - (void) viewWillAppear:(BOOL)animated
 {
     [self setDataToView];
     [self clearOldDynamicElements];
     [self prepareUIChangeStatusElements];
+    [self.tabBarController.tabBar.items objectAtIndex:1].title = @"Description";
+    
+    [self.dataSorce requestImage:^(UIImage *image) {
+        dispatch_async(dispatch_get_main_queue(), ^{
+            self.issueImageView.image = image;
+        });
+    } withErrorHandler:^(NSError *error) {
+        // error
+    }];
 
+}
+
+-(void)viewDidLoad
+{
+    self.navigationController.navigationBar.tintColor = [UIColor whiteColor];
+    self.navigationController.navigationBar.barTintColor = [UIColor bawlRedColor];
+    self.navigationController.navigationBar.titleTextAttributes = @{NSForegroundColorAttributeName : [UIColor whiteColor]};
+    self.navigationController.navigationBar.barStyle = UIBarStyleBlack;
 }
 
 -(void)setDataToView
@@ -220,7 +232,19 @@
         newStatusImage.userInteractionEnabled = NO;
         
         UILabel *newStatusLabel = [[UILabel alloc] init];
-        newStatusLabel.text = [self.statusChanger labelTextForNewStatus:strNewStatus];
+        NSString *mainText = [self.statusChanger labelTextForNewStatus:strNewStatus];
+        newStatusLabel.text = mainText;
+        
+        NSString *addText = [self.statusChanger labelAdditionalTextForNewStatus:strNewStatus];
+        if (addText != nil)
+        {
+            newStatusLabel.numberOfLines = 2;
+            NSMutableAttributedString *attr = [[NSMutableAttributedString alloc] initWithString:[NSString stringWithFormat:@"%@\n%@", mainText, addText]];
+            [attr addAttribute:NSFontAttributeName value:[UIFont fontWithName:newStatusLabel.font.fontName size:newStatusLabel.font.pointSize-5] range:NSMakeRange(mainText.length+1, addText.length)];
+            
+            newStatusLabel.attributedText = attr;
+        }
+        
         newStatusLabel.backgroundColor = [UIColor clearColor];
         [newStatusLabel sizeToFit];
         newStatusLabel.alpha =0;
@@ -285,7 +309,7 @@
                          }
                          
                      }];
-    [UIView animateWithDuration:4.3
+    [UIView animateWithDuration:0.3
                           delay:0.15
                         options:0
                      animations:^{
@@ -316,10 +340,10 @@
                              if (stringAnswer == nil)
                              {
                                  // good
-                                 UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Attention!"
+                                 UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Status change"
                                                                                  message:@"Status changed successfully!"
                                                                                 delegate:nil
-                                                                       cancelButtonTitle:@"I understood"
+                                                                       cancelButtonTitle:@"OK"
                                                                        otherButtonTitles:nil];
                                  [alert show];
                                  self.currentIssue = issue;
@@ -332,10 +356,10 @@
                              else
                              {
                                  // bad
-                                 UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Attention!"
+                                 UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Status change"
                                                                                  message:[NSString stringWithFormat:@"Fail to change, answer:%@", stringAnswer]
                                                                                 delegate:nil
-                                                                       cancelButtonTitle:@"I understood"
+                                                                       cancelButtonTitle:@"OK"
                                                                        otherButtonTitles:nil];
                                  [alert show];
                              }

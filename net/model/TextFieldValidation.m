@@ -28,10 +28,10 @@
     if(self=[super init])
     {
         _fieldsDic = [NSDictionary dictionaryWithObjectsAndKeys:
-                            @"[A-Z][a-z]+ [A-Z][a-z]+ [A-Z][a-z]+", @"Full name",
-                            @"[A-Za-z0-9\\-_\\.]{3,20}[A-Za-z0-9]+", @"User name",
-                            @"[A-Za-z]+[A-Za-z0-9\\-_\\.]*[A-Za-z0-9]@[a-z]{3,}\\.[a-z]{3}", @"Email",
-                            @"[A-Za-z0-9\\.\\|\\!\\@\\#\\$\\%\\^\\&\\*]{4,20}", @"Password",
+                            @"[A-Za-z ]{3,}", @"Full name",
+                            @"^[a-zA-Z][a-z0-9_.-]+$", @"User name",
+                            @"^[-a-z0-9!#$%&'*+/=?^_`{|}~]+(?:\\.[-a-z0-9!#$%&'*+/=?^_`{|}~]+)*@(?:[a-z0-9]([-a-z0-9]{0,61}[a-z0-9])?\\.)*(?:aero|arpa|asia|biz|cat|com|coop|edu|gov|info|int|jobs|mil|mobi|museum|name|net|org|pro|tel|travel|[a-z][a-z])$", @"Email",
+                            @"^[a-zA-Z0-9][a-z0-9_.-]+$", @"Password",
                             nil];
         
     }

@@ -15,6 +15,7 @@
 #import "IssueCategory.h"
 
 #import "DescriptionViewController.h"
+#import "UIColor+Bawl.h"
 @import GoogleMaps;
 
 static NSString * const GOOGLE_WEB_API_KEY = @"AIzaSyB7InJ3J2AoxlHjsYtde9BNawMINCaHykg";
@@ -43,6 +44,10 @@ static double const MAP_REFRESHING_INTERVAL = 120.0;
     [super viewDidLoad];
     self.title = @"Bowl";
     self.dataSorce = [[NetworkDataSorce alloc] init];
+    self.navigationController.navigationBar.tintColor = [UIColor whiteColor];
+    self.navigationController.navigationBar.barTintColor = [UIColor bawlRedColor];
+    self.navigationController.navigationBar.titleTextAttributes = @{NSForegroundColorAttributeName : [UIColor whiteColor]};
+    self.navigationController.navigationBar.barStyle = UIBarStyleBlack;
     [self checkCurrentUser];
     self.scrollViewLeadingConstraint.constant = CGRectGetWidth(self.mapView.bounds);
     self.tabBarController.delegate = self;
@@ -159,20 +164,20 @@ static double const MAP_REFRESHING_INTERVAL = 120.0;
                 self.title = [NSString stringWithFormat:@"Bowl"];
                 self.navigationItem.rightBarButtonItem.title = @"Log In";
                 self.currentUser=nil;
-                UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Attention!"
-                                                                message:@"You loged out successfully! (or something like this)"
+                UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Log Out"
+                                                                message:@"You loged out successfully!"
                                                                delegate:nil
-                                                      cancelButtonTitle:@"I understood"
+                                                      cancelButtonTitle:@"OK"
                                                       otherButtonTitles:nil];
                 [alert show];
             }
             else
             {
                 // alert - bad
-                UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Attention!"
+                UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Log Out"
                                                                 message:[@"Something has gone wrong! (server answer: )" stringByAppendingString:stringAnswer]
                                                                delegate:nil
-                                                      cancelButtonTitle:@"I understood"
+                                                      cancelButtonTitle:@"OK"
                                                       otherButtonTitles:nil];
                 [alert show];
 
@@ -180,10 +185,10 @@ static double const MAP_REFRESHING_INTERVAL = 120.0;
             });
         } andErrorHandler:^(NSError *error) {
             // alert - bad
-            UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Attention!"
-                                                            message:@"troubles with connection! (error in session data task obj)"
+            UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Log Out"
+                                                            message:@"Problem with internet connection"
                                                            delegate:nil
-                                                  cancelButtonTitle:@"I understood"
+                                                  cancelButtonTitle:@"OK"
                                                   otherButtonTitles:nil];
             [alert show];
 
@@ -229,7 +234,9 @@ static double const MAP_REFRESHING_INTERVAL = 120.0;
                                                     [self.mapView clear];
                                                     
                                                     for (Issue *issue in issuesClassArray) {
-                                                        if ([issue.status isEqualToString:@"TO_RESOLVE"] || [issue.status isEqualToString:@"APPROVED"]){
+                                                        if ([issue.status isEqualToString:@"TO_RESOLVE"] || [issue.status isEqualToString:@"APPROVED"]
+                                                            || (self.currentUser.role==ADMIN || self.currentUser.role==MANAGER)
+                                                            ){
                                                             GMSMarker *marker = [[GMSMarker alloc] init];
                                                             marker.position = CLLocationCoordinate2DMake(issue.getLatitude, issue.getLongitude);
                                                             marker.userData = issue;
@@ -243,7 +250,7 @@ static double const MAP_REFRESHING_INTERVAL = 120.0;
                                                 UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Attention!"
                                                                                                 message:@"Troubles with connection!"
                                                                                                delegate:nil
-                                                                                      cancelButtonTitle:@"I understood"
+                                                                                      cancelButtonTitle:@"OK"
                                                                                       otherButtonTitles:nil];
                                                 [alert show];
                                             }
@@ -405,15 +412,15 @@ static double const MAP_REFRESHING_INTERVAL = 120.0;
     
     [tabBarItemLocation setTitleTextAttributes:@{ NSForegroundColorAttributeName : [UIColor colorWithRed:0.78 green:0.784 blue:0.784 alpha:1] /*#c7c8c8*/}
                                              forState:UIControlStateNormal];
-    [tabBarItemLocation setTitleTextAttributes:@{ NSForegroundColorAttributeName : [UIColor colorWithRed:0.914 green:0.31 blue:0.408 alpha:1] /*#e94f68*/ }
+    [tabBarItemLocation setTitleTextAttributes:@{ NSForegroundColorAttributeName : [UIColor bawlRedColor] /*#e94f68*/ }
                                              forState:UIControlStateSelected];
     [tabBarItemDescription setTitleTextAttributes:@{ NSForegroundColorAttributeName : [UIColor colorWithRed:0.78 green:0.784 blue:0.784 alpha:1] /*#c7c8c8*/}
                                forState:UIControlStateNormal];
-    [tabBarItemDescription setTitleTextAttributes:@{ NSForegroundColorAttributeName : [UIColor colorWithRed:0.914 green:0.31 blue:0.408 alpha:1] /*#e94f68*/}
+    [tabBarItemDescription setTitleTextAttributes:@{ NSForegroundColorAttributeName : [UIColor bawlRedColor] /*#e94f68*/}
                                forState:UIControlStateSelected];
     [tabBarItemHistory setTitleTextAttributes:@{ NSForegroundColorAttributeName : [UIColor colorWithRed:0.78 green:0.784 blue:0.784 alpha:1] /*#c7c8c8*/}
                                forState:UIControlStateNormal];
-    [tabBarItemHistory setTitleTextAttributes:@{ NSForegroundColorAttributeName : [UIColor colorWithRed:0.914 green:0.31 blue:0.408 alpha:1] /*#e94f68*/ }
+    [tabBarItemHistory setTitleTextAttributes:@{ NSForegroundColorAttributeName : [UIColor bawlRedColor] /*#e94f68*/ }
                                forState:UIControlStateSelected];
 }
 
@@ -484,13 +491,13 @@ static double const MAP_REFRESHING_INTERVAL = 120.0;
 
 -(void)addBorderColor
 {
-    [self.descriptionTextView.layer setBorderColor:[[[UIColor redColor] colorWithAlphaComponent:0.5] CGColor]];
+    [self.descriptionTextView.layer setBorderColor:[[UIColor bawlRedColor05alpha] CGColor]];
     [self.descriptionTextView.layer setBorderWidth:1.0];
-    [self.nameTextField.layer setBorderColor:[[[UIColor redColor] colorWithAlphaComponent:0.5] CGColor]];
+    [self.nameTextField.layer setBorderColor:[[UIColor bawlRedColor05alpha] CGColor]];
     [self.nameTextField.layer setBorderWidth:1.0];
-    [self.categoryPicker.layer setBorderColor:[[[UIColor redColor] colorWithAlphaComponent:0.5] CGColor]];
+    [self.categoryPicker.layer setBorderColor:[[UIColor bawlRedColor05alpha] CGColor]];
     [self.categoryPicker.layer setBorderWidth:1.0];
-    [self.attachmentTextField.layer setBorderColor:[[[UIColor redColor] colorWithAlphaComponent:0.5] CGColor]];
+    [self.attachmentTextField.layer setBorderColor:[[UIColor bawlRedColor05alpha] CGColor]];
     [self.attachmentTextField.layer setBorderWidth:1.0];
 }
 

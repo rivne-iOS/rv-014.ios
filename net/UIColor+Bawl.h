@@ -12,6 +12,7 @@
 
 +(UIColor*)bawlRedColor;
 +(UIColor*)bawlRedColor03alpha;
++(UIColor*)bawlRedColor05alpha;
 +(UIColor*)bawlRedColorWithAlpha:(CGFloat)alpha;
 
 @end

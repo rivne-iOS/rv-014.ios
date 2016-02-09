@@ -29,6 +29,8 @@
 
 @property (strong,nonatomic) id <DataSorceProtocol> dataSorce;
 @property (strong, nonatomic) TextFieldValidation *textFieldValidator;
+@property (weak, nonatomic) IBOutlet UIButton *signupButton;
+@property (weak, nonatomic) IBOutlet UIButton *backButton;
 
 @end
 
@@ -49,8 +51,9 @@
         
         NSMutableAttributedString *attrStr = [[NSMutableAttributedString alloc] initWithString:textField.restorationIdentifier
                                                                                     attributes:@{NSForegroundColorAttributeName : [UIColor bawlRedColorWithAlpha:0.3]}];
-       textField.attributedPlaceholder = attrStr;
-
+        textField.attributedPlaceholder = attrStr;
+        self.signupButton.backgroundColor = [UIColor bawlRedColor];
+        self.backButton.backgroundColor = [UIColor bawlRedColor];
     }
 }
 
@@ -230,10 +233,10 @@
             NSLog(@"fail!!!!");
             dispatch_async(dispatch_get_main_queue(), ^
                            {
-                               UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Attention!"
-                                                                               message:@"Fail to sing Up!"
+                               UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Sign Up"
+                                                                               message:@"Fail to sign Up!"
                                                                               delegate:nil
-                                                                     cancelButtonTitle:@"I understood"
+                                                                     cancelButtonTitle:@"OK"
                                                                      otherButtonTitles:nil];
                                [alert show];
                            });
@@ -253,8 +256,8 @@
         
     
     } andErrorHandler:^(NSError *error) {
-        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Attention!"
-                                                        message:@"some system problem!"
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Sign Up!"
+                                                        message:@"Fail to Sign Up (problem with internet connection)!"
                                                        delegate:nil
                                               cancelButtonTitle:@"I understood"
                                               otherButtonTitles:nil];

@@ -31,7 +31,7 @@
         NSArray *approvedForUser = @[@"TO_RESOLVE"];
         NSDictionary *dicForUser = @{@"APPROVED" : approvedForUser};
        
-        _changingDic = @{@"USER" : dicForUser,  @"MANAGER": dicForManager};
+        _changingDic = @{@"USER" : dicForUser,  @"MANAGER": dicForManager, @"ADMIN" : dicForManager};
     }
         
     return _changingDic;
@@ -48,7 +48,7 @@
         NSArray *approvedForUser = @[@"Mark as resolved"];
         NSDictionary *dicForUser = @{@"APPROVED" : approvedForUser};
         
-        _changingDic = @{@"USER" : dicForUser,  @"MANAGER": dicForManager};
+        _changingDic = @{@"USER" : dicForUser,  @"MANAGER": dicForManager, @"ADMIN" : dicForManager};
     }
     
     return _changingDic;
@@ -71,11 +71,19 @@
     else if([newStatus isEqualToString:@"CANCELED"])
         return @"Disaprove issue";
     else if([newStatus isEqualToString:@"TO_RESOLVE"])
-        return @"Mark as resolved";
+        return @"Mark issue as resolved";
     else if([newStatus isEqualToString:@"RESOLVED"])
         return @"Conmirm resolving issue";
-    return nil;
+    else return nil;
 }
+
+-(NSString*)labelAdditionalTextForNewStatus:(NSString*)newStatus
+{
+    if([newStatus isEqualToString:@"TO_RESOLVE"])
+        return @"(needs manager confirmation)";
+    else return nil;
+}
+
 
 
 @end

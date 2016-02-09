@@ -49,6 +49,25 @@
 
 }
 
+-(void)requestImage:(void (^)(UIImage *image))viewControllerHandler withErrorHandler:(void(^)(NSError *error)) errorHandler
+{
+    HTTPConnector *connector = [[HTTPConnector alloc] init];
+    [connector requestImage:^(NSData *data, NSError *error) {
+        if (data.length > 0 && error==nil)
+        {
+            UIImage *image = [[UIImage alloc] initWithData:data];
+            viewControllerHandler(image);
+        }
+        else if(error != nil)
+        {
+            errorHandler(error);
+        }
+        
+    }];
+
+}
+
+
 -(void)requestSignOutWithHandler:(void (^)(NSString * stringAnswer))viewControllerHandler andErrorHandler:(void(^)(NSError *error)) errorHandler
 {
     HTTPConnector *wizard = [[HTTPConnector alloc] init];

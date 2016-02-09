@@ -18,6 +18,7 @@
 @property(strong, nonatomic)NSString *changeIssueStatusToResolve;
 @property(strong, nonatomic)NSString *changeIssueStatusToApproveCancel;
 @property(strong, nonatomic)NSString *allCategories;
+@property(strong, nonatomic)NSString *image;
 
 -(void)postRequest:(NSData*) postData
              toURL:(NSString*) textUrl
@@ -49,6 +50,7 @@
         _changeIssueStatusToResolve = @"issue/issueIDNumber/resolve";
         _changeIssueStatusToApproveCancel = @"issue";
         _allCategories = @"categories/all";
+        _image = @"image/no_attach.png";
         
     }
     return self;
@@ -64,7 +66,10 @@
 {
     [self getRequestBlankToUrl:[self.globalURL stringByAppendingString:self.allCategories] andHandler:dataSorceHandler];
 }
-
+-(void)requestImage:(void(^)(NSData *data, NSError *error))dataSorceHandler
+{
+    [self getRequestBlankToUrl:[self.globalURL stringByAppendingString:self.image] andHandler:dataSorceHandler];
+}
 
 -(void)requestSignOutWithHandler:(void (^)(NSData *data, NSError *error))dataSorceHandler
 {

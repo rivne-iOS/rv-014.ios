@@ -31,6 +31,17 @@
     });
     return bawlRedColor;
 }
++(UIColor*)bawlRedColor05alpha
+{
+    static UIColor *bawlRedColor = nil;
+    static dispatch_once_t pred;
+    
+    dispatch_once(&pred, ^{
+        bawlRedColor = [UIColor bawlRedColorWithAlpha:0.5];
+    });
+    return bawlRedColor;
+}
+
 
 +(UIColor*)bawlRedColorWithAlpha:(CGFloat)alpha
 {

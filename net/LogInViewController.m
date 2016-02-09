@@ -27,6 +27,8 @@
 @property (strong,nonatomic) id <DataSorceProtocol> dataSorce;
 @property(strong, nonatomic) TextFieldValidation *textFieldValidator;
 
+@property (weak, nonatomic) IBOutlet UIButton *loginButton;
+@property (weak, nonatomic) IBOutlet UIButton *signupButton;
 @end
 
 @implementation LogInViewController
@@ -49,6 +51,8 @@
                                                                                     attributes:@{NSForegroundColorAttributeName : [UIColor bawlRedColor03alpha]}];
         textField.attributedPlaceholder = attrStr;
     }
+    self.loginButton.backgroundColor = [UIColor bawlRedColor];
+    self.signupButton.backgroundColor = [UIColor bawlRedColor];
 }
 
 - (void)viewWillAppear:(BOOL)animated
@@ -200,10 +204,10 @@
             NSLog(@"fail!!!!");
             dispatch_async(dispatch_get_main_queue(), ^
                            {
-            UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Attention!"
+            UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Log In"
                                                             message:@"Fail to log in!"
                                                            delegate:nil
-                                                  cancelButtonTitle:@"I understood"
+                                                  cancelButtonTitle:@"OK"
                                                   otherButtonTitles:nil];
             [alert show];
                            });
@@ -221,10 +225,10 @@
                        });
         }
     } andErrorHandler:^(NSError *error) {
-        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Attention!"
-                                                        message:@"some system problem!"
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Log In"
+                                                        message:@"Fail yo log in (problem with internet conection)!"
                                                        delegate:nil
-                                              cancelButtonTitle:@"I understood"
+                                              cancelButtonTitle:@"OK"
                                               otherButtonTitles:nil];
         [alert show];
 
