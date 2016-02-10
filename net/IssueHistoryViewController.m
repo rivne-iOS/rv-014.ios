@@ -8,12 +8,14 @@
 
 #import "IssueHistoryViewController.h"
 #import "UIColor+Bawl.h"
+#import "ProfileViewController.h"
+#import "IssueHistory.h"
 
 static NSString * const kSimpleTableIdentifier = @"SampleTableCell";
 
 @interface IssueHistoryViewController ()
 @property (weak, nonatomic) IBOutlet UITableView *issueTable;
-//@property (strong, nonatomic) UIRefreshControl *refreshControl;
+@property NSUInteger userID;
 
 @end
 
@@ -42,7 +44,7 @@ static NSString * const kSimpleTableIdentifier = @"SampleTableCell";
                                             for (NSDictionary *issue in issuesDictionaryArray) {
                                                 
                                                 NSAttributedString *date = [[NSAttributedString alloc] initWithString:[NSString stringWithFormat:@"%@: ",issue[@"DATE"]] attributes:attrs];
-                                                NSAttributedString *user = [[NSAttributedString alloc] initWithString:[NSString stringWithFormat:@"%@ ", issue[@"USER"]]];
+                                                NSAttributedString *user = [[NSAttributedString alloc] initWithString:[NSString stringWithFormat:@"%@ ", issue[@"USER"]] attributes:attrs];
                                                 NSAttributedString *action =[[NSAttributedString alloc] initWithString:issue[@"ACTION"]];
                                                 
                                                 NSMutableDictionary *oneCell = [[NSMutableDictionary alloc] init];
@@ -156,15 +158,23 @@ static NSString * const kSimpleTableIdentifier = @"SampleTableCell";
     return 0;
 }
 
-
-/*
-#pragma mark - Navigation
-
-// In a storyboard-based application, you will often want to do a little preparation before navigation
-- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
-    // Get the new view controller using [segue destinationViewController].
-    // Pass the selected object to the new view controller.
+-(void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
+    NSArray *history = self.issue.history;
+    
+    NSDictionary *currentHistory = history[indexPath.row];
+    
+    self.userID = [currentHistory[@"ID"] integerValue];
+    
+    [self performSegueWithIdentifier:@"showProfile" sender:self];
 }
-*/
 
+-(void) prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
+    if ([[segue identifier] isEqualToString:@"showProfile"]) {
+        if([segue.destinationViewController isKindOfClass:[ProfileViewController class]])
+        {
+            ProfileViewController *profileViewController = (ProfileViewController*)segue.destinationViewController;
+            profileViewController.userID = self.userID;
+        }
+    }
+}
 @end

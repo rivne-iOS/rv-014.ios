@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="9531" systemVersion="14F27" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="U7z-LT-7dR">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="9531" systemVersion="14F1509" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="U7z-LT-7dR">
     <dependencies>
         <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="9529"/>
@@ -945,11 +945,55 @@
                     <connections>
                         <outlet property="issueTable" destination="MXw-ZY-6pf" id="qRY-Lf-9Yr"/>
                         <outlet property="issueTitle" destination="O1M-dI-1Ze" id="f0w-lf-7EM"/>
+                        <segue destination="7ZL-qH-qc6" kind="show" identifier="showProfile" id="Chd-uL-rSV"/>
                     </connections>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="wkA-eu-Srp" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="449" y="1209"/>
+        </scene>
+        <!--Bawl-->
+        <scene sceneID="kBc-FR-lwf">
+            <objects>
+                <viewController id="7ZL-qH-qc6" customClass="ProfileViewController" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="dZi-FD-tKC"/>
+                        <viewControllerLayoutGuide type="bottom" id="3bh-09-NxF"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="1BX-SU-cWz">
+                        <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="UlB-Xp-V2j">
+                                <rect key="frame" x="210" y="104" width="180" height="180"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="180" id="TU5-NU-fVd"/>
+                                    <constraint firstAttribute="width" constant="180" id="iZU-W5-d49"/>
+                                </constraints>
+                            </imageView>
+                            <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" text="Default Text" textAlignment="center" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="WMZ-fM-I4X">
+                                <rect key="frame" x="20" y="304" width="560" height="24"/>
+                                <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="20"/>
+                                <textInputTraits key="textInputTraits"/>
+                            </textField>
+                        </subviews>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <constraints>
+                            <constraint firstItem="UlB-Xp-V2j" firstAttribute="top" secondItem="dZi-FD-tKC" secondAttribute="bottom" constant="40" id="Qcx-ZV-S2S"/>
+                            <constraint firstItem="WMZ-fM-I4X" firstAttribute="leading" secondItem="1BX-SU-cWz" secondAttribute="leadingMargin" id="TLg-5g-6ci"/>
+                            <constraint firstItem="UlB-Xp-V2j" firstAttribute="centerX" secondItem="1BX-SU-cWz" secondAttribute="centerX" id="bee-ED-lbI"/>
+                            <constraint firstAttribute="trailingMargin" secondItem="WMZ-fM-I4X" secondAttribute="trailing" id="iGj-SP-ut0"/>
+                            <constraint firstItem="WMZ-fM-I4X" firstAttribute="top" secondItem="UlB-Xp-V2j" secondAttribute="bottom" constant="20" id="inh-zm-yIs"/>
+                        </constraints>
+                    </view>
+                    <navigationItem key="navigationItem" title="Bawl" id="8T7-SA-7gQ">
+                        <barButtonItem key="rightBarButtonItem" title="Item" id="Bqf-Ox-f82"/>
+                    </navigationItem>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="Wbz-p1-FN3" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="1128" y="1209"/>
         </scene>
         <!--description-->
         <scene sceneID="94d-3r-Fnu">

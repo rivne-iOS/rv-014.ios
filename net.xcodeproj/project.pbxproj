@@ -8,8 +8,8 @@
 
 /* Begin PBXBuildFile section */
 		100D5E94A39CA00BFE42E1A3 /* libPods.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 3F322957FCEB450D078EB0DF /* libPods.a */; };
-		841429551C5FEEDE0092C0C5 /* Reachability.m in Sources */ = {isa = PBXBuildFile; fileRef = 841429541C5FEEDE0092C0C5 /* Reachability.m */; };
 		84114C691C61503B0092F507 /* UIColor+Bawl.m in Sources */ = {isa = PBXBuildFile; fileRef = 84114C681C61503B0092F507 /* UIColor+Bawl.m */; };
+		841429551C5FEEDE0092C0C5 /* Reachability.m in Sources */ = {isa = PBXBuildFile; fileRef = 841429541C5FEEDE0092C0C5 /* Reachability.m */; };
 		845245A71C4E5923000755AC /* DescriptionViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 845245A61C4E5923000755AC /* DescriptionViewController.m */; };
 		8459C76F1C6505C700F7F595 /* ChangerBox.m in Sources */ = {isa = PBXBuildFile; fileRef = 8459C76E1C6505C700F7F595 /* ChangerBox.m */; };
 		8460F9701C3C531E00ECB3A4 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 8460F96F1C3C531E00ECB3A4 /* main.m */; };
@@ -25,12 +25,13 @@
 		8460F99F1C3C651500ECB3A4 /* HTTPConnector.m in Sources */ = {isa = PBXBuildFile; fileRef = 8460F99E1C3C651500ECB3A4 /* HTTPConnector.m */; };
 		8460F9A21C3C666100ECB3A4 /* Parser.m in Sources */ = {isa = PBXBuildFile; fileRef = 8460F9A11C3C666100ECB3A4 /* Parser.m */; };
 		847595461C455C0F00E1BF87 /* Podfile in Resources */ = {isa = PBXBuildFile; fileRef = 847595451C455C0F00E1BF87 /* Podfile */; };
-		84D93FC91C5A245800D4E96D /* IssueChangeStatus.m in Sources */ = {isa = PBXBuildFile; fileRef = 84D93FC81C5A245800D4E96D /* IssueChangeStatus.m */; };
 		849930A01C5915E100EDBF5E /* IssueCategory.m in Sources */ = {isa = PBXBuildFile; fileRef = 8499309F1C5915E100EDBF5E /* IssueCategory.m */; };
+		84D93FC91C5A245800D4E96D /* IssueChangeStatus.m in Sources */ = {isa = PBXBuildFile; fileRef = 84D93FC81C5A245800D4E96D /* IssueChangeStatus.m */; };
 		84E19B211C4C131E00AABD7D /* TextFieldValidation.m in Sources */ = {isa = PBXBuildFile; fileRef = 84E19B201C4C131E00AABD7D /* TextFieldValidation.m */; };
 		84E3347F1C4435E800BEE6BA /* MapViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 84E3347E1C4435E800BEE6BA /* MapViewController.m */; };
 		84E334821C4436B200BEE6BA /* SingUpViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 84E334811C4436B200BEE6BA /* SingUpViewController.m */; };
 		84E7BF461C430AA600E66585 /* NetworkDataSorce.m in Sources */ = {isa = PBXBuildFile; fileRef = 84E7BF451C430AA600E66585 /* NetworkDataSorce.m */; };
+		CE8BAD001C6B39B4006951D7 /* ProfileViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = CE8BACFF1C6B39B4006951D7 /* ProfileViewController.m */; };
 		CEC6F6301C5B6FA2002321AA /* IssueHistoryViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = CEC6F62F1C5B6FA2002321AA /* IssueHistoryViewController.m */; };
 		CEC6F6351C5B6FB6002321AA /* CustomTableCell.m in Sources */ = {isa = PBXBuildFile; fileRef = CEC6F6331C5B6FB6002321AA /* CustomTableCell.m */; };
 		CEC6F6361C5B6FB6002321AA /* CustomTableCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = CEC6F6341C5B6FB6002321AA /* CustomTableCell.xib */; };
@@ -49,10 +50,10 @@
 /* Begin PBXFileReference section */
 		08867A3C0D2FEEC4E51F31EC /* Pods.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.debug.xcconfig; path = "Pods/Target Support Files/Pods/Pods.debug.xcconfig"; sourceTree = "<group>"; };
 		3F322957FCEB450D078EB0DF /* libPods.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libPods.a; sourceTree = BUILT_PRODUCTS_DIR; };
-		841429531C5FEEDE0092C0C5 /* Reachability.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Reachability.h; path = model/Reachability.h; sourceTree = "<group>"; };
-		841429541C5FEEDE0092C0C5 /* Reachability.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = Reachability.m; path = model/Reachability.m; sourceTree = "<group>"; };
 		84114C671C61503B0092F507 /* UIColor+Bawl.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIColor+Bawl.h"; sourceTree = "<group>"; };
 		84114C681C61503B0092F507 /* UIColor+Bawl.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIColor+Bawl.m"; sourceTree = "<group>"; };
+		841429531C5FEEDE0092C0C5 /* Reachability.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Reachability.h; path = model/Reachability.h; sourceTree = "<group>"; };
+		841429541C5FEEDE0092C0C5 /* Reachability.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = Reachability.m; path = model/Reachability.m; sourceTree = "<group>"; };
 		845245A51C4E5923000755AC /* DescriptionViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DescriptionViewController.h; sourceTree = "<group>"; };
 		845245A61C4E5923000755AC /* DescriptionViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DescriptionViewController.m; sourceTree = "<group>"; };
 		8459C76D1C6505C700F7F595 /* ChangerBox.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ChangerBox.h; path = model/ChangerBox.h; sourceTree = "<group>"; };
@@ -81,10 +82,10 @@
 		8460F9A01C3C666100ECB3A4 /* Parser.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Parser.h; path = model/Parser.h; sourceTree = "<group>"; };
 		8460F9A11C3C666100ECB3A4 /* Parser.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = Parser.m; path = model/Parser.m; sourceTree = "<group>"; };
 		847595451C455C0F00E1BF87 /* Podfile */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = Podfile; sourceTree = "<group>"; };
-		84D93FC71C5A245800D4E96D /* IssueChangeStatus.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = IssueChangeStatus.h; path = model/IssueChangeStatus.h; sourceTree = "<group>"; };
-		84D93FC81C5A245800D4E96D /* IssueChangeStatus.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = IssueChangeStatus.m; path = model/IssueChangeStatus.m; sourceTree = "<group>"; };
 		8499309E1C5915E100EDBF5E /* IssueCategory.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = IssueCategory.h; path = model/IssueCategory.h; sourceTree = "<group>"; };
 		8499309F1C5915E100EDBF5E /* IssueCategory.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = IssueCategory.m; path = model/IssueCategory.m; sourceTree = "<group>"; };
+		84D93FC71C5A245800D4E96D /* IssueChangeStatus.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = IssueChangeStatus.h; path = model/IssueChangeStatus.h; sourceTree = "<group>"; };
+		84D93FC81C5A245800D4E96D /* IssueChangeStatus.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = IssueChangeStatus.m; path = model/IssueChangeStatus.m; sourceTree = "<group>"; };
 		84E19B1F1C4C131E00AABD7D /* TextFieldValidation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TextFieldValidation.h; path = model/TextFieldValidation.h; sourceTree = "<group>"; };
 		84E19B201C4C131E00AABD7D /* TextFieldValidation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = TextFieldValidation.m; path = model/TextFieldValidation.m; sourceTree = "<group>"; };
 		84E3347D1C4435E800BEE6BA /* MapViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MapViewController.h; sourceTree = "<group>"; };
@@ -94,6 +95,8 @@
 		84E7BF431C430A3700E66585 /* DataSorceProtocol.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = DataSorceProtocol.h; path = model/DataSorceProtocol.h; sourceTree = "<group>"; };
 		84E7BF441C430AA600E66585 /* NetworkDataSorce.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = NetworkDataSorce.h; path = model/NetworkDataSorce.h; sourceTree = "<group>"; };
 		84E7BF451C430AA600E66585 /* NetworkDataSorce.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = NetworkDataSorce.m; path = model/NetworkDataSorce.m; sourceTree = "<group>"; };
+		CE8BACFE1C6B39B4006951D7 /* ProfileViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ProfileViewController.h; sourceTree = "<group>"; };
+		CE8BACFF1C6B39B4006951D7 /* ProfileViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ProfileViewController.m; sourceTree = "<group>"; };
 		CEC6F62E1C5B6FA2002321AA /* IssueHistoryViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = IssueHistoryViewController.h; sourceTree = "<group>"; };
 		CEC6F62F1C5B6FA2002321AA /* IssueHistoryViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = IssueHistoryViewController.m; sourceTree = "<group>"; };
 		CEC6F6321C5B6FB6002321AA /* CustomTableCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CustomTableCell.h; sourceTree = "<group>"; };
@@ -154,6 +157,7 @@
 		8460F96C1C3C531E00ECB3A4 /* net */ = {
 			isa = PBXGroup;
 			children = (
+				CE8BACFD1C6B38C2006951D7 /* Profile */,
 				CEC6F62D1C5B6F46002321AA /* Issue History */,
 				8460F9961C3C5C0000ECB3A4 /* model */,
 				8460F9741C3C531E00ECB3A4 /* LogInViewController.h */,
@@ -238,6 +242,15 @@
 				3F322957FCEB450D078EB0DF /* libPods.a */,
 			);
 			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		CE8BACFD1C6B38C2006951D7 /* Profile */ = {
+			isa = PBXGroup;
+			children = (
+				CE8BACFE1C6B39B4006951D7 /* ProfileViewController.h */,
+				CE8BACFF1C6B39B4006951D7 /* ProfileViewController.m */,
+			);
+			name = Profile;
 			sourceTree = "<group>";
 		};
 		CEC6F62D1C5B6F46002321AA /* Issue History */ = {
@@ -417,6 +430,7 @@
 				8460F9761C3C531E00ECB3A4 /* LogInViewController.m in Sources */,
 				8460F99C1C3C5E1A00ECB3A4 /* IssueHistory.m in Sources */,
 				84E7BF461C430AA600E66585 /* NetworkDataSorce.m in Sources */,
+				CE8BAD001C6B39B4006951D7 /* ProfileViewController.m in Sources */,
 				84D93FC91C5A245800D4E96D /* IssueChangeStatus.m in Sources */,
 				84114C691C61503B0092F507 /* UIColor+Bawl.m in Sources */,
 				8460F99F1C3C651500ECB3A4 /* HTTPConnector.m in Sources */,
