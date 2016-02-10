@@ -36,6 +36,7 @@
 
 - (IBAction)buttonBackPressed:(id)sender;
 - (IBAction)buttonAddPressed:(id)sender;
+- (IBAction)buttonLoadPressed:(id)sender;
 - (void)renewMapWithNSTimer:(NSTimer *)timer;
 -(void)renewMap;
 

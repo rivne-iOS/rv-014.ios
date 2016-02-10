@@ -512,6 +512,7 @@ static double const MAP_REFRESHING_INTERVAL = 120.0;
 
 - (IBAction)buttonAddPressed:(id)sender
 {
+    //
     [self requestAddingNewIssue:[self getJsonFromAddingNewIssueView]];
     [[self navigationController] setNavigationBarHidden:NO animated:NO];
     [UIView animateWithDuration:0.5 animations:^(void){
@@ -588,6 +589,47 @@ static double const MAP_REFRESHING_INTERVAL = 120.0;
     }
 }
 
+-(void)requestAddingAttachmentToIssue:(NSDictionary *)jsonDictionary
+{
+    // 1
+    NSURL *url = [NSURL URLWithString:DOMAIN_NAME_ADD_ISSUE];
+    NSURLSessionConfiguration *config = [NSURLSessionConfiguration defaultSessionConfiguration];
+    NSURLSession *session = [NSURLSession sessionWithConfiguration:config];
+    
+    // 2
+    NSMutableURLRequest *request = [[NSMutableURLRequest alloc] initWithURL:url];
+    request.HTTPMethod = @"POST";
+    [request setValue:@"application/json" forHTTPHeaderField:@"Content-Type"];
+    
+    // 3
+    NSError *error = nil;
+    NSData *data = [NSJSONSerialization dataWithJSONObject:jsonDictionary
+                                                   options:kNilOptions error:&error];
+    
+    if (!error) {
+        // 4
+        NSURLSessionUploadTask *uploadTask = [session uploadTaskWithRequest:request
+                                                                   fromData:data completionHandler:^(NSData *data,NSURLResponse *response,NSError *error) {
+                                                                       NSHTTPURLResponse *httpResponse = (NSHTTPURLResponse *) response;
+                                                                       if ([httpResponse statusCode] != HTTP_RESPONSE_CODE_OK){
+                                                                           UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Attention!"
+                                                                                                                           message:@"Something has gone wrong! (we have ansswer from server, but it's incorrect)"
+                                                                                                                          delegate:nil
+                                                                                                                 cancelButtonTitle:@"I understood"
+                                                                                                                 otherButtonTitles:nil];
+                                                                           [alert show];
+                                                                       } else {
+                                                                           dispatch_async(dispatch_get_main_queue(), ^{
+                                                                               [self renewMap];
+                                                                           });
+                                                                       }
+                                                                   }];
+        
+        // 5
+        [uploadTask resume];
+    }
+}
+
 -(void)renewMap
 {
     [self requestIssues];
@@ -618,7 +660,7 @@ static double const MAP_REFRESHING_INTERVAL = 120.0;
     {
         // Update the UI on the main thread
         dispatch_async(dispatch_get_main_queue(), ^{
-            NSLog(@"Someone broke the internet :(");
+//            NSLog(@"Someone broke the internet :(");
         });
     };
     
@@ -634,6 +676,31 @@ static double const MAP_REFRESHING_INTERVAL = 120.0;
     }
     
     return [GMSMarker markerImageWithColor:[UIColor redColor]];
+}
+
+-(void)initializeImagePickerController
+{
+    UIImagePickerController *imagePickerController = [[UIImagePickerController alloc] init];
+    imagePickerController.sourceType = UIImagePickerControllerSourceTypePhotoLibrary;
+    imagePickerController.delegate = self;
+    [self presentViewController:imagePickerController animated:YES completion:nil];
+}
+
+// This method is called when an image has been chosen from the library or taken from the camera.
+- (void)imagePickerController:(UIImagePickerController *)picker didFinishPickingMediaWithInfo:(NSDictionary *)info
+{
+    //You can retrieve the actual UIImage
+    UIImage *image = [info valueForKey:UIImagePickerControllerOriginalImage];
+    //Or you can get the image url from AssetsLibrary
+//    NSURL *path = [info valueForKey:UIImagePickerControllerReferenceURL];
+    
+    [picker dismissViewControllerAnimated:YES completion:^{
+    }];
+}
+
+-(IBAction)buttonLoadPressed:(id)sender
+{
+    [self initializeImagePickerController];
 }
 
 @end
