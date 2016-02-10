@@ -23,6 +23,7 @@ static NSString * const DOMAIN_NAME_ALL_ISSUES = @"https://bawl-rivne.rhcloud.co
 static NSString * const DOMAIN_NAME_GOOGLE_PLACE_INFO = @"https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=%f,%f&radius=%d&key=%@";
 static NSString * const DOMAIN_NAME_ALL_CATEGORIES = @"https://bawl-rivne.rhcloud.com/categories/all";
 static NSString * const DOMAIN_NAME_ADD_ISSUE = @"https://bawl-rivne.rhcloud.com/issue";
+static NSString * const DOMAIN_NAME_ADD_ATTACHMENT = @"https://bawl-rivne.rhcloud.com/image/add/issue";
 
 static NSInteger const HTTP_RESPONSE_CODE_OK = 200;
 static double const MAP_REFRESHING_INTERVAL = 120.0;
@@ -35,6 +36,7 @@ static double const MAP_REFRESHING_INTERVAL = 120.0;
 @property (strong, nonatomic) GMSMarker *currentMarker;
 @property (assign, nonatomic) CLLocationCoordinate2D currentLocation;
 @property (nonatomic) BOOL userLogined;
+@property (strong, nonatomic) UIImage *attachmentImage;
 
 @end
 
@@ -211,7 +213,7 @@ static double const MAP_REFRESHING_INTERVAL = 120.0;
 //    [self requestIssues];
 }
 
-
+#pragma mark Requests
 -(void)requestIssues
 {
         [self testInternetConnection:DOMAIN_NAME_ALL_ISSUES];
@@ -285,7 +287,7 @@ static double const MAP_REFRESHING_INTERVAL = 120.0;
 -(void)mapView:(GMSMapView *)mapView didLongPressAtCoordinate:(CLLocationCoordinate2D)coordinate
 {
     self.mapView.selectedMarker = nil;
-    [[self navigationController] setNavigationBarHidden:YES animated:NO];
+//    [[self navigationController] setNavigationBarHidden:YES animated:NO];
     [self requestGoogleApiPlace:coordinate];
     [self requestCategories];
     [self addBorderColor];
@@ -501,6 +503,7 @@ static double const MAP_REFRESHING_INTERVAL = 120.0;
     [self.attachmentTextField.layer setBorderWidth:1.0];
 }
 
+#pragma mark Button events
 - (IBAction)buttonBackPressed:(id)sender
 {
     [[self navigationController] setNavigationBarHidden:NO animated:NO];
@@ -512,8 +515,12 @@ static double const MAP_REFRESHING_INTERVAL = 120.0;
 
 - (IBAction)buttonAddPressed:(id)sender
 {
-    //
-    [self requestAddingNewIssue:[self getJsonFromAddingNewIssueView]];
+    if (![self checkFields]){
+        [self showAlert:@"Validation error" withMessage:@"Fill all fields!"];
+        return;
+    }
+    [self requestAddingAttachmentToIssue];
+//    [self requestAddingNewIssue:[self getJsonFromAddingNewIssueView]];
     [[self navigationController] setNavigationBarHidden:NO animated:NO];
     [UIView animateWithDuration:0.5 animations:^(void){
         self.scrollViewLeadingConstraint.constant = CGRectGetWidth(self.mapView.bounds);
@@ -589,22 +596,21 @@ static double const MAP_REFRESHING_INTERVAL = 120.0;
     }
 }
 
--(void)requestAddingAttachmentToIssue:(NSDictionary *)jsonDictionary
+-(void)requestAddingAttachmentToIssue
 {
     // 1
-    NSURL *url = [NSURL URLWithString:DOMAIN_NAME_ADD_ISSUE];
+    NSURL *url = [NSURL URLWithString:DOMAIN_NAME_ADD_ATTACHMENT];
     NSURLSessionConfiguration *config = [NSURLSessionConfiguration defaultSessionConfiguration];
     NSURLSession *session = [NSURLSession sessionWithConfiguration:config];
     
     // 2
     NSMutableURLRequest *request = [[NSMutableURLRequest alloc] initWithURL:url];
     request.HTTPMethod = @"POST";
-    [request setValue:@"application/json" forHTTPHeaderField:@"Content-Type"];
     
     // 3
     NSError *error = nil;
-    NSData *data = [NSJSONSerialization dataWithJSONObject:jsonDictionary
-                                                   options:kNilOptions error:&error];
+    NSData *data = UIImagePNGRepresentation(self.attachmentImage);
+//    [request setHTTPBody:data];
     
     if (!error) {
         // 4
@@ -613,14 +619,14 @@ static double const MAP_REFRESHING_INTERVAL = 120.0;
                                                                        NSHTTPURLResponse *httpResponse = (NSHTTPURLResponse *) response;
                                                                        if ([httpResponse statusCode] != HTTP_RESPONSE_CODE_OK){
                                                                            UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Attention!"
-                                                                                                                           message:@"Something has gone wrong! (we have ansswer from server, but it's incorrect)"
+                                                                                                                           message:@"Something has gone wrong! (we have answer from server, but it's incorrect)"
                                                                                                                           delegate:nil
-                                                                                                                 cancelButtonTitle:@"I understood"
+                                                                                                                 cancelButtonTitle:@"Ok"
                                                                                                                  otherButtonTitles:nil];
                                                                            [alert show];
                                                                        } else {
                                                                            dispatch_async(dispatch_get_main_queue(), ^{
-                                                                               [self renewMap];
+                                                                               [self requestAddingNewIssue:[self getJsonFromAddingNewIssueView]];
                                                                            });
                                                                        }
                                                                    }];
@@ -680,6 +686,11 @@ static double const MAP_REFRESHING_INTERVAL = 120.0;
 
 -(void)initializeImagePickerController
 {
+//    UIActivityIndicatorView *indicator = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleWhiteLarge];
+//    indicator.center = CGPointMake(self.mapView.bounds.size.width / 2 , (self.mapView.bounds.size.height) /2);
+//    [self.addingIssueView addSubview:indicator];
+//    [indicator startAnimating];
+    
     UIImagePickerController *imagePickerController = [[UIImagePickerController alloc] init];
     imagePickerController.sourceType = UIImagePickerControllerSourceTypePhotoLibrary;
     imagePickerController.delegate = self;
@@ -690,9 +701,10 @@ static double const MAP_REFRESHING_INTERVAL = 120.0;
 - (void)imagePickerController:(UIImagePickerController *)picker didFinishPickingMediaWithInfo:(NSDictionary *)info
 {
     //You can retrieve the actual UIImage
-    UIImage *image = [info valueForKey:UIImagePickerControllerOriginalImage];
+    self.attachmentImage = [info valueForKey:UIImagePickerControllerOriginalImage];
+    
     //Or you can get the image url from AssetsLibrary
-//    NSURL *path = [info valueForKey:UIImagePickerControllerReferenceURL];
+//    self.pathToImage = [info valueForKey:UIImagePickerControllerReferenceURL];
     
     [picker dismissViewControllerAnimated:YES completion:^{
     }];
@@ -701,6 +713,26 @@ static double const MAP_REFRESHING_INTERVAL = 120.0;
 -(IBAction)buttonLoadPressed:(id)sender
 {
     [self initializeImagePickerController];
+}
+
+-(BOOL)checkFields
+{
+    if ([self.nameTextField.text isEqualToString:@""] |
+        [self.descriptionTextView.text isEqualToString:@""] |
+        self.attachmentImage == nil)
+        return NO;
+    else
+        return YES;
+}
+
+-(void)showAlert:(NSString *)title withMessage:(NSString *)message
+{
+    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:title
+                                                    message:message
+                                                   delegate:nil
+                                          cancelButtonTitle:@"OK"
+                                          otherButtonTitles:nil];
+    [alert show];
 }
 
 @end
