@@ -39,7 +39,7 @@ static double const MAP_REFRESHING_INTERVAL = 120.0;
 @property (strong, nonatomic) GMSMarker *currentMarker;
 @property (assign, nonatomic) CLLocationCoordinate2D currentLocation;
 @property (nonatomic) BOOL userLogined;
-@property (strong, nonatomic) NSURL *pathToImage;
+@property (strong, nonatomic) NSURL *attachmentImage;
 
 @end
 
@@ -574,7 +574,6 @@ static double const MAP_REFRESHING_INTERVAL = 120.0;
     NSError *error = nil;
     NSData *data = [NSJSONSerialization dataWithJSONObject:jsonDictionary
                                                    options:kNilOptions error:&error];
-    
     if (!error) {
         // 4
         NSURLSessionUploadTask *uploadTask = [session uploadTaskWithRequest:request
@@ -651,7 +650,7 @@ static double const MAP_REFRESHING_INTERVAL = 120.0;
     
     // create body
     
-    NSData *httpBody = [self createBodyWithBoundary:boundary path:[self.pathToImage absoluteString] fieldName:@"file"];
+    NSData *httpBody = [self createBodyWithBoundary:boundary imageUrl:self.attachmentImage fieldName:@"file"];
     
     request.HTTPBody = httpBody;
     
@@ -680,28 +679,28 @@ static double const MAP_REFRESHING_INTERVAL = 120.0;
 // Checks if we have an internet connection or not
 - (void)testInternetConnection:(NSString *)hostName
 {
-    Reachability *internetReachableFoo = [Reachability reachabilityWithHostname:hostName];
-    
-    // Internet is reachable
-//    internetReachableFoo.reachableBlock = ^(Reachability*reach)
+//    Reachability *internetReachableFoo = [Reachability reachabilityWithHostname:hostName];
+//    
+//    // Internet is reachable
+////    internetReachableFoo.reachableBlock = ^(Reachability*reach)
+////    {
+////        // Update the UI on the main thread
+////        dispatch_async(dispatch_get_main_queue(), ^{
+////            NSLog(@"Yayyy, we have the interwebs!");
+////        });
+////        reachInternet = YES;
+////    };
+//    
+//    // Internet is not reachable
+//    internetReachableFoo.unreachableBlock = ^(Reachability*reach)
 //    {
 //        // Update the UI on the main thread
 //        dispatch_async(dispatch_get_main_queue(), ^{
-//            NSLog(@"Yayyy, we have the interwebs!");
+////            NSLog(@"Someone broke the internet :(");
 //        });
-//        reachInternet = YES;
 //    };
-    
-    // Internet is not reachable
-    internetReachableFoo.unreachableBlock = ^(Reachability*reach)
-    {
-        // Update the UI on the main thread
-        dispatch_async(dispatch_get_main_queue(), ^{
-//            NSLog(@"Someone broke the internet :(");
-        });
-    };
-    
-    [internetReachableFoo startNotifier];
+//    
+//    [internetReachableFoo startNotifier];
 }
 
 -(UIImage *)changeIconColor:(Issue *)issue
@@ -752,10 +751,14 @@ static double const MAP_REFRESHING_INTERVAL = 120.0;
 - (void)imagePickerController:(UIImagePickerController *)picker didFinishPickingMediaWithInfo:(NSDictionary *)info
 {
     //You can retrieve the actual UIImage
-    //self.attachmentImage = info[UIImagePickerControllerOriginalImage];
+    self.attachmentImage = info[UIImagePickerControllerOriginalImage];
     
     //Or you can get the image url from AssetsLibrary
-    self.pathToImage = [info valueForKey:UIImagePickerControllerReferenceURL];
+//    NSURL *urlToImage = info[UIImagePickerControllerReferenceURL];
+//    
+//    NSString *str=[[NSBundle mainBundle] pathForResource:@"classes" ofType:@"json"];
+//    NSData *fileData = [NSData dataWithContentsOfFile:str];
+//    self.pathToImage = [info valueForKey:UIImagePickerControllerReferenceURL];
 
     [self.indicator stopAnimating];
     self.addingIssueView.userInteractionEnabled = YES;
@@ -775,7 +778,7 @@ static double const MAP_REFRESHING_INTERVAL = 120.0;
 {
     if ([self.nameTextField.text isEqualToString:@""] |
         [self.descriptionTextView.text isEqualToString:@""] |
-        self.pathToImage == nil)
+        self.attachmentImage == nil)
         return NO;
     else
         return YES;
@@ -792,7 +795,7 @@ static double const MAP_REFRESHING_INTERVAL = 120.0;
 }
 
 -(NSData *)createBodyWithBoundary:(NSString *)boundary
-                            path:(NSString *)path
+                            imageUrl:(NSURL *)imageUrl
                         fieldName:(NSString *)fieldName
 {
     NSMutableData *httpBody = [NSMutableData data];
@@ -806,13 +809,14 @@ static double const MAP_REFRESHING_INTERVAL = 120.0;
 //    }];
     
     // add image data
-    
-        NSString *filename  = [path lastPathComponent];
-        NSData   *data      = [NSData dataWithContentsOfFile:path];
+    NSError *error = nil;
+//        NSString *filename  = [path lastPathComponent];
+//    NSData   *data      = UIImagePNGRepresentation(image);
+    NSData *data = [NSData dataWithContentsOfURL:imageUrl options:0 error:&error];
 //        NSString *mimetype  = [self mimeTypeForPath:path];
     
         [httpBody appendData:[[NSString stringWithFormat:@"--%@\r\n", boundary] dataUsingEncoding:NSUTF8StringEncoding]];
-        [httpBody appendData:[[NSString stringWithFormat:@"Content-Disposition: form-data; name=\"%@\"; filename=\"%@\"\r\n", fieldName, filename] dataUsingEncoding:NSUTF8StringEncoding]];
+        [httpBody appendData:[[NSString stringWithFormat:@"Content-Disposition: form-data; name=\"%@\"; filename=\"%@\"\r\n", fieldName, @"image_name"] dataUsingEncoding:NSUTF8StringEncoding]];
         [httpBody appendData:[[NSString stringWithFormat:@"Content-Type: %@\r\n\r\n", @"image\\jpeg"] dataUsingEncoding:NSUTF8StringEncoding]];
         [httpBody appendData:data];
         [httpBody appendData:[@"\r\n" dataUsingEncoding:NSUTF8StringEncoding]];
