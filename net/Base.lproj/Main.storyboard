@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="9531" systemVersion="14F27" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="U7z-LT-7dR">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="9531" systemVersion="14F1509" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="U7z-LT-7dR">
     <dependencies>
         <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="9529"/>
@@ -708,6 +708,14 @@
                                                 <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                                                 <nil key="highlightedColor"/>
                                             </label>
+                                            <activityIndicatorView hidden="YES" opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" hidesWhenStopped="YES" style="gray" translatesAutoresizingMaskIntoConstraints="NO" id="nJs-Dt-hcU">
+                                                <rect key="frame" x="280" y="255" width="40" height="40"/>
+                                                <constraints>
+                                                    <constraint firstAttribute="width" constant="40" id="H0V-Vp-lxY"/>
+                                                    <constraint firstAttribute="height" constant="40" id="csj-hA-3a9"/>
+                                                </constraints>
+                                                <color key="color" white="0.33333333333333331" alpha="1" colorSpace="calibratedWhite"/>
+                                            </activityIndicatorView>
                                         </subviews>
                                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                         <constraints>
@@ -724,11 +732,13 @@
                                             <constraint firstAttribute="height" constant="550" id="Ojg-SO-Vyx"/>
                                             <constraint firstItem="Yfl-g3-YHX" firstAttribute="top" secondItem="Seo-CW-BkQ" secondAttribute="bottom" constant="19" id="PWb-dS-5xd"/>
                                             <constraint firstItem="Yul-Ee-TTn" firstAttribute="leading" secondItem="Dor-qQ-OyS" secondAttribute="leading" id="QkY-Ij-yo7"/>
+                                            <constraint firstItem="nJs-Dt-hcU" firstAttribute="centerY" secondItem="Yqo-zb-mFR" secondAttribute="centerY" id="TND-05-0PP"/>
                                             <constraint firstAttribute="trailing" secondItem="Yfl-g3-YHX" secondAttribute="trailing" constant="25" id="ZHi-Kb-jHu"/>
                                             <constraint firstItem="Yul-Ee-TTn" firstAttribute="width" secondItem="Dor-qQ-OyS" secondAttribute="width" id="c6O-6u-lBf"/>
                                             <constraint firstItem="s0f-YW-Ng6" firstAttribute="top" secondItem="Yfl-g3-YHX" secondAttribute="bottom" constant="8" id="cYa-0i-SFm"/>
                                             <constraint firstItem="sVJ-Vt-6P0" firstAttribute="trailing" secondItem="VQ1-HP-R8K" secondAttribute="trailing" id="d5J-FT-RWo"/>
                                             <constraint firstItem="Seo-CW-BkQ" firstAttribute="top" secondItem="vkK-dD-ver" secondAttribute="bottom" constant="25" id="ewB-u6-BGF"/>
+                                            <constraint firstItem="nJs-Dt-hcU" firstAttribute="centerX" secondItem="Yqo-zb-mFR" secondAttribute="centerX" id="hC0-Nn-EO7"/>
                                             <constraint firstItem="s0f-YW-Ng6" firstAttribute="leading" secondItem="Yfl-g3-YHX" secondAttribute="leading" id="hgd-HF-xE7"/>
                                             <constraint firstItem="VQ1-HP-R8K" firstAttribute="leading" secondItem="Ved-ZM-JBP" secondAttribute="leading" id="icA-6Z-c5X"/>
                                             <constraint firstItem="VQ1-HP-R8K" firstAttribute="top" secondItem="Yul-Ee-TTn" secondAttribute="bottom" constant="10" id="o7Y-zI-bOa"/>
@@ -757,8 +767,8 @@
                             <constraint firstItem="K9v-RP-I0I" firstAttribute="leading" secondItem="A24-z5-pzn" secondAttribute="leading" id="M0T-hk-bhC"/>
                             <constraint firstAttribute="bottomMargin" secondItem="K9v-RP-I0I" secondAttribute="bottom" id="Mec-KS-p0x"/>
                             <constraint firstItem="NYS-ZF-PWz" firstAttribute="leading" secondItem="A24-z5-pzn" secondAttribute="leading" id="VMc-ez-U8k"/>
-                            <constraint firstAttribute="trailing" secondItem="NYS-ZF-PWz" secondAttribute="trailing" id="bR1-3R-tNy"/>
                             <constraint firstItem="NYS-ZF-PWz" firstAttribute="bottom" secondItem="A24-z5-pzn" secondAttribute="bottomMargin" id="epB-wT-ePI"/>
+                            <constraint firstItem="NYS-ZF-PWz" firstAttribute="width" secondItem="A24-z5-pzn" secondAttribute="width" id="gMJ-Xo-KHq"/>
                             <constraint firstItem="mxJ-z8-iEP" firstAttribute="top" secondItem="Mm0-xY-FEs" secondAttribute="bottom" constant="-120" id="jTX-PT-rWC"/>
                             <constraint firstAttribute="trailing" secondItem="Mm0-xY-FEs" secondAttribute="trailing" id="lsS-Ie-51J"/>
                             <constraint firstItem="NYS-ZF-PWz" firstAttribute="top" secondItem="A24-z5-pzn" secondAttribute="top" id="ou7-sX-yyR"/>
@@ -790,6 +800,7 @@
                         <outlet property="descriptionButton" destination="KjE-Sg-4CH" id="UZT-4m-6Eu"/>
                         <outlet property="descriptionTextView" destination="Dor-qQ-OyS" id="DxR-fx-OM4"/>
                         <outlet property="historyButton" destination="pYb-he-n0v" id="hYy-dP-LTL"/>
+                        <outlet property="indicator" destination="nJs-Dt-hcU" id="yac-rI-QlN"/>
                         <outlet property="locationButton" destination="kLF-3I-Iln" id="5Wk-BZ-jwp"/>
                         <outlet property="mapView" destination="K9v-RP-I0I" id="S8A-K6-3hM"/>
                         <outlet property="moreButton" destination="bEb-G0-MTV" id="3Cn-PF-ZMg"/>

@@ -17,6 +17,7 @@
 #import "DescriptionViewController.h"
 #import "UIColor+Bawl.h"
 @import GoogleMaps;
+@import MobileCoreServices;
 
 static NSString * const GOOGLE_WEB_API_KEY = @"AIzaSyB7InJ3J2AoxlHjsYtde9BNawMINCaHykg";
 static NSString * const DOMAIN_NAME_ALL_ISSUES = @"https://bawl-rivne.rhcloud.com/issue/all";
@@ -28,15 +29,17 @@ static NSString * const DOMAIN_NAME_ADD_ATTACHMENT = @"https://bawl-rivne.rhclou
 static NSInteger const HTTP_RESPONSE_CODE_OK = 200;
 static double const MAP_REFRESHING_INTERVAL = 120.0;
 
-@interface MapViewController () <GMSMapViewDelegate, UITabBarControllerDelegate>
+@interface MapViewController () <GMSMapViewDelegate, UITabBarControllerDelegate, UIImagePickerControllerDelegate, UINavigationControllerDelegate>
 
-@property(strong,nonatomic) NSArray *arrayOfPoints;
-@property (strong, nonatomic) id <DataSorceProtocol> dataSorce;
 @property (weak, nonatomic) IBOutlet GMSMapView *mapView;
+@property (weak, nonatomic) IBOutlet UIActivityIndicatorView *indicator;
+
+@property (strong,nonatomic) NSArray *arrayOfPoints;
+@property (strong, nonatomic) id <DataSorceProtocol> dataSorce;
 @property (strong, nonatomic) GMSMarker *currentMarker;
 @property (assign, nonatomic) CLLocationCoordinate2D currentLocation;
 @property (nonatomic) BOOL userLogined;
-@property (strong, nonatomic) UIImage *attachmentImage;
+@property (strong, nonatomic) NSURL *pathToImage;
 
 @end
 
@@ -598,42 +601,70 @@ static double const MAP_REFRESHING_INTERVAL = 120.0;
 
 -(void)requestAddingAttachmentToIssue
 {
-    // 1
+//    // 1
     NSURL *url = [NSURL URLWithString:DOMAIN_NAME_ADD_ATTACHMENT];
     NSURLSessionConfiguration *config = [NSURLSessionConfiguration defaultSessionConfiguration];
     NSURLSession *session = [NSURLSession sessionWithConfiguration:config];
+//
+//    // 2
+//    NSMutableURLRequest *request = [[NSMutableURLRequest alloc] initWithURL:url];
+//    request.HTTPMethod = @"POST";
+//    
+//    // 3
+//    NSError *error = nil;
+//    NSData *data = UIImagePNGRepresentation(self.attachmentImage);
+////    [request setHTTPBody:data];
+//    
+//    if (!error) {
+//        // 4
+//        NSURLSessionUploadTask *uploadTask = [session uploadTaskWithRequest:request
+//                                                                   fromData:data completionHandler:^(NSData *data,NSURLResponse *response,NSError *error) {
+//                                                                       NSHTTPURLResponse *httpResponse = (NSHTTPURLResponse *) response;
+//                                                                       if ([httpResponse statusCode] != HTTP_RESPONSE_CODE_OK){
+//                                                                           UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Attention!"
+//                                                                                                                           message:@"Something has gone wrong! (we have answer from server, but it's incorrect)"
+//                                                                                                                          delegate:nil
+//                                                                                                                 cancelButtonTitle:@"Ok"
+//                                                                                                                 otherButtonTitles:nil];
+//                                                                           [alert show];
+//                                                                       } else {
+//                                                                           dispatch_async(dispatch_get_main_queue(), ^{
+//                                                                               [self requestAddingNewIssue:[self getJsonFromAddingNewIssueView]];
+//                                                                           });
+//                                                                       }
+//                                                                   }];
+//        
+//        // 5
+//        [uploadTask resume];
+//    }
+    NSString *boundary = [self generateBoundaryString];
     
-    // 2
+    // configure the request
+    
     NSMutableURLRequest *request = [[NSMutableURLRequest alloc] initWithURL:url];
-    request.HTTPMethod = @"POST";
+    [request setHTTPMethod:@"POST"];
     
-    // 3
-    NSError *error = nil;
-    NSData *data = UIImagePNGRepresentation(self.attachmentImage);
-//    [request setHTTPBody:data];
+    // set content type
     
-    if (!error) {
-        // 4
-        NSURLSessionUploadTask *uploadTask = [session uploadTaskWithRequest:request
-                                                                   fromData:data completionHandler:^(NSData *data,NSURLResponse *response,NSError *error) {
-                                                                       NSHTTPURLResponse *httpResponse = (NSHTTPURLResponse *) response;
-                                                                       if ([httpResponse statusCode] != HTTP_RESPONSE_CODE_OK){
-                                                                           UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Attention!"
-                                                                                                                           message:@"Something has gone wrong! (we have answer from server, but it's incorrect)"
-                                                                                                                          delegate:nil
-                                                                                                                 cancelButtonTitle:@"Ok"
-                                                                                                                 otherButtonTitles:nil];
-                                                                           [alert show];
-                                                                       } else {
-                                                                           dispatch_async(dispatch_get_main_queue(), ^{
-                                                                               [self requestAddingNewIssue:[self getJsonFromAddingNewIssueView]];
-                                                                           });
-                                                                       }
-                                                                   }];
+    NSString *contentType = [NSString stringWithFormat:@"multipart/form-data; boundary=%@", boundary];
+    [request setValue:contentType forHTTPHeaderField: @"Content-Type"];
+    
+    // create body
+    
+    NSData *httpBody = [self createBodyWithBoundary:boundary path:[self.pathToImage absoluteString] fieldName:@"file"];
+    
+    request.HTTPBody = httpBody;
+    
+    NSURLSessionTask *task = [session dataTaskWithRequest:request completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
+        if (error) {
+            NSLog(@"error = %@", error);
+            return;
+        }
         
-        // 5
-        [uploadTask resume];
-    }
+        NSString *result = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
+        NSLog(@"result = %@", result);
+    }];
+    [task resume];
 }
 
 -(void)renewMap
@@ -687,9 +718,29 @@ static double const MAP_REFRESHING_INTERVAL = 120.0;
 -(void)initializeImagePickerController
 {
 //    UIActivityIndicatorView *indicator = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleWhiteLarge];
-//    indicator.center = CGPointMake(self.mapView.bounds.size.width / 2 , (self.mapView.bounds.size.height) /2);
 //    [self.addingIssueView addSubview:indicator];
-//    [indicator startAnimating];
+//    indicator.translatesAutoresizingMaskIntoConstraints = NO;
+//    [self.addingIssueView addConstraint:[NSLayoutConstraint constraintWithItem:indicator
+//                                                                     attribute:NSLayoutAttributeCenterX
+//                                                                     relatedBy:NSLayoutRelationEqual
+//                                                                        toItem:self.addingIssueView
+//                                                                     attribute:NSLayoutAttributeCenterX
+//                                                                    multiplier:1.0
+//                                                                      constant:0.0]];
+//    [self.addingIssueView addConstraint:[NSLayoutConstraint constraintWithItem:indicator
+//                                                                     attribute:NSLayoutAttributeCenterY
+//                                                                     relatedBy:NSLayoutRelationEqual
+//                                                                        toItem:self.addingIssueView
+//                                                                     attribute:NSLayoutAttributeCenterY
+//                                                                    multiplier:1.0
+//                                                                      constant:0.0]];
+//    indicator.color = [UIColor blackColor];
+//    [self.addingIssueView layoutIfNeeded];
+//    [self.view bringSubviewToFront:indicator];
+    
+    self.addingIssueView.userInteractionEnabled = NO;
+    
+    [self.indicator startAnimating];
     
     UIImagePickerController *imagePickerController = [[UIImagePickerController alloc] init];
     imagePickerController.sourceType = UIImagePickerControllerSourceTypePhotoLibrary;
@@ -701,12 +752,17 @@ static double const MAP_REFRESHING_INTERVAL = 120.0;
 - (void)imagePickerController:(UIImagePickerController *)picker didFinishPickingMediaWithInfo:(NSDictionary *)info
 {
     //You can retrieve the actual UIImage
-    self.attachmentImage = [info valueForKey:UIImagePickerControllerOriginalImage];
+    //self.attachmentImage = info[UIImagePickerControllerOriginalImage];
     
     //Or you can get the image url from AssetsLibrary
-//    self.pathToImage = [info valueForKey:UIImagePickerControllerReferenceURL];
+    self.pathToImage = [info valueForKey:UIImagePickerControllerReferenceURL];
+
+    [self.indicator stopAnimating];
+    self.addingIssueView.userInteractionEnabled = YES;
     
     [picker dismissViewControllerAnimated:YES completion:^{
+//        [self.indicator stopAnimating];
+//        self.addingIssueView.userInteractionEnabled = YES;
     }];
 }
 
@@ -719,7 +775,7 @@ static double const MAP_REFRESHING_INTERVAL = 120.0;
 {
     if ([self.nameTextField.text isEqualToString:@""] |
         [self.descriptionTextView.text isEqualToString:@""] |
-        self.attachmentImage == nil)
+        self.pathToImage == nil)
         return NO;
     else
         return YES;
@@ -733,6 +789,61 @@ static double const MAP_REFRESHING_INTERVAL = 120.0;
                                           cancelButtonTitle:@"OK"
                                           otherButtonTitles:nil];
     [alert show];
+}
+
+-(NSData *)createBodyWithBoundary:(NSString *)boundary
+                            path:(NSString *)path
+                        fieldName:(NSString *)fieldName
+{
+    NSMutableData *httpBody = [NSMutableData data];
+    
+    // add params (all params are strings)
+    
+//    [parameters enumerateKeysAndObjectsUsingBlock:^(NSString *parameterKey, NSString *parameterValue, BOOL *stop) {
+//        [httpBody appendData:[[NSString stringWithFormat:@"--%@\r\n", boundary] dataUsingEncoding:NSUTF8StringEncoding]];
+//        [httpBody appendData:[[NSString stringWithFormat:@"Content-Disposition: form-data; name=\"%@\"\r\n\r\n", parameterKey] dataUsingEncoding:NSUTF8StringEncoding]];
+//        [httpBody appendData:[[NSString stringWithFormat:@"%@\r\n", parameterValue] dataUsingEncoding:NSUTF8StringEncoding]];
+//    }];
+    
+    // add image data
+    
+        NSString *filename  = [path lastPathComponent];
+        NSData   *data      = [NSData dataWithContentsOfFile:path];
+//        NSString *mimetype  = [self mimeTypeForPath:path];
+    
+        [httpBody appendData:[[NSString stringWithFormat:@"--%@\r\n", boundary] dataUsingEncoding:NSUTF8StringEncoding]];
+        [httpBody appendData:[[NSString stringWithFormat:@"Content-Disposition: form-data; name=\"%@\"; filename=\"%@\"\r\n", fieldName, filename] dataUsingEncoding:NSUTF8StringEncoding]];
+        [httpBody appendData:[[NSString stringWithFormat:@"Content-Type: %@\r\n\r\n", @"image\\jpeg"] dataUsingEncoding:NSUTF8StringEncoding]];
+        [httpBody appendData:data];
+        [httpBody appendData:[@"\r\n" dataUsingEncoding:NSUTF8StringEncoding]];
+    
+    [httpBody appendData:[[NSString stringWithFormat:@"--%@--\r\n", boundary] dataUsingEncoding:NSUTF8StringEncoding]];
+    
+    return httpBody;
+}
+
+- (NSString *)mimeTypeForPath:(NSString *)path
+{
+    // get a mime type for an extension using MobileCoreServices.framework
+    // Get the UTI from the file's extension:
+    
+    CFStringRef pathExtension = (__bridge_retained CFStringRef)[path pathExtension];
+    CFStringRef type = UTTypeCreatePreferredIdentifierForTag(kUTTagClassFilenameExtension, pathExtension, NULL);
+    CFRelease(pathExtension);
+    
+    // The UTI can be converted to a mime type:
+    
+    NSString *mimeType = (__bridge_transfer NSString *)UTTypeCopyPreferredTagWithClass(type, kUTTagClassMIMEType);
+    if (type != NULL)
+        CFRelease(type);
+    
+    return mimeType;
+}
+
+- (NSString *)generateBoundaryString
+{
+    return [NSString stringWithFormat:@"Boundary-%@", [[NSUUID UUID] UUIDString]];
+
 }
 
 @end
