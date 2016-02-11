@@ -39,7 +39,7 @@ static double const MAP_REFRESHING_INTERVAL = 120.0;
 @property (strong, nonatomic) GMSMarker *currentMarker;
 @property (assign, nonatomic) CLLocationCoordinate2D currentLocation;
 @property (nonatomic) BOOL userLogined;
-@property (strong, nonatomic) NSURL *attachmentImage;
+@property (strong, nonatomic) UIImage *attachmentImage;
 
 @end
 
@@ -650,7 +650,7 @@ static double const MAP_REFRESHING_INTERVAL = 120.0;
     
     // create body
     
-    NSData *httpBody = [self createBodyWithBoundary:boundary imageUrl:self.attachmentImage fieldName:@"file"];
+    NSData *httpBody = [self createBodyWithBoundary:boundary image:self.attachmentImage fieldName:@"file"];
     
     request.HTTPBody = httpBody;
     
@@ -795,7 +795,7 @@ static double const MAP_REFRESHING_INTERVAL = 120.0;
 }
 
 -(NSData *)createBodyWithBoundary:(NSString *)boundary
-                            imageUrl:(NSURL *)imageUrl
+                            image:(UIImage *)image
                         fieldName:(NSString *)fieldName
 {
     NSMutableData *httpBody = [NSMutableData data];
@@ -809,10 +809,11 @@ static double const MAP_REFRESHING_INTERVAL = 120.0;
 //    }];
     
     // add image data
-    NSError *error = nil;
+//    NSError *error = nil;
 //        NSString *filename  = [path lastPathComponent];
 //    NSData   *data      = UIImagePNGRepresentation(image);
-    NSData *data = [NSData dataWithContentsOfURL:imageUrl options:0 error:&error];
+    NSData *data = UIImagePNGRepresentation(image);
+//    NSData *data = [NSData dataWithContentsOfURL:image];
 //        NSString *mimetype  = [self mimeTypeForPath:path];
     
         [httpBody appendData:[[NSString stringWithFormat:@"--%@\r\n", boundary] dataUsingEncoding:NSUTF8StringEncoding]];
