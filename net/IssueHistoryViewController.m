@@ -163,7 +163,7 @@ static NSString * const kSimpleTableIdentifier = @"SampleTableCell";
     
     NSDictionary *currentHistory = history[indexPath.row];
     
-    self.userID = [currentHistory[@"ID"] integerValue];
+    self.userID = [currentHistory[@"USER_ID"] integerValue];
     
     [self performSegueWithIdentifier:@"showProfile" sender:self];
 }

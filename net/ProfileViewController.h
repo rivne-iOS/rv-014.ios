@@ -10,6 +10,17 @@
 
 @interface ProfileViewController : UIViewController
 
+@property (nonatomic, weak) IBOutlet UIButton *changeUserDetails;
+@property (nonatomic, weak) IBOutlet UIButton *changeAvatar;
+
+@property (nonatomic, weak) IBOutlet UITextField *userLogin;
+@property (nonatomic, weak) IBOutlet UITextField *userEmail;
+@property (nonatomic, weak) IBOutlet UITextField *systemRole;
+@property (nonatomic, weak) IBOutlet UITextField *userName;
+
+@property (nonatomic, weak) IBOutlet UIImageView *profileImage;
+@property (nonatomic, weak) IBOutlet UIActivityIndicatorView *activityIndicatorView;
+
 @property NSUInteger userID;
 
 @end
