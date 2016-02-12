@@ -18,6 +18,9 @@
 @property (nonatomic, weak) IBOutlet UILabel *labelSystemRole;
 @property (nonatomic, weak) IBOutlet UILabel *labelUserEmail;
 
+@property (strong, nonatomic) UIImage *avatarImage;
+@property (strong, nonatomic) NSString *avatarImageURL;
+
 @end
 
 @implementation ProfileViewController
@@ -25,12 +28,13 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     
-    [self.changeUserDetails setBackgroundColor:[UIColor bawlRedColor03alpha]];
-    [self.changeAvatar setBackgroundColor:[UIColor bawlRedColor03alpha]];
+    [self.changeUserDetails setBackgroundColor:[UIColor bawlRedColor]];
+    [self.changeAvatar setBackgroundColor:[UIColor bawlRedColor]];
     
     [self hideAllViews];
     
     self.navigationItem.rightBarButtonItem.title = @"Log In";
+    self.avatarImageURL = @"http://bawl-rivne.rhcloud.com/image/";
     // Do any additional setup after loading the view.
 }
 
@@ -51,7 +55,7 @@
         
         dispatch_async(dispatch_get_main_queue(), ^{
         
-            [self.userLogin setText:user.login];
+            [self.userLogin setText:[NSString stringWithFormat:@"@%@", user.login]];
             [self.userEmail setText:user.email];
             [self.userName setText:user.name];
             
@@ -121,6 +125,7 @@
                                             NSDictionary *userData = [NSJSONSerialization JSONObjectWithData:data
                                                                                                      options:0
                                                                                                        error:NULL];
+                                            [self.avatarImageURL stringByAppendingString:userData[@"AVATAR_URL"]];
                                             User *user = [[User alloc] initWitDictionary:userData];
                                             
                                             handler(user);
