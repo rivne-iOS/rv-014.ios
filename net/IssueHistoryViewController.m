@@ -105,6 +105,7 @@ static NSString * const kSimpleTableIdentifier = @"SampleTableCell";
     [self.tabBarController.tabBar.items objectAtIndex:2].title = @"History";
     [self.issueTitle setText:self.issue.issueDescription];
     [self requestIssueHistory];
+    [self.tabBarController.tabBar setHidden:NO];
 }
 
 
@@ -174,6 +175,9 @@ static NSString * const kSimpleTableIdentifier = @"SampleTableCell";
         {
             ProfileViewController *profileViewController = (ProfileViewController*)segue.destinationViewController;
             profileViewController.userID = self.userID;
+            profileViewController.isLogged = self.isLogged;
+            profileViewController.currentUser = self.currentUser;
+            profileViewController.dataSorce = self.dataSorce;
         }
     }
 }

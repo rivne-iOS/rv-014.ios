@@ -359,9 +359,13 @@ static double const MAP_REFRESHING_INTERVAL = 120.0;
     }
     else if ([viewController isKindOfClass:[UINavigationController class]] && [viewController.restorationIdentifier isEqualToString:@"history"]){
         UINavigationController *destController = (UINavigationController *)viewController;
+        [destController popToRootViewControllerAnimated:NO];
         IssueHistoryViewController *issueHistoryViewController = (IssueHistoryViewController *)destController.topViewController;
         issueHistoryViewController.issue = (Issue *)self.currentMarker.userData;
         issueHistoryViewController.title = self.title;
+        issueHistoryViewController.isLogged = self.userLogined;
+        issueHistoryViewController.currentUser = self.currentUser;
+        issueHistoryViewController.dataSorce = self.dataSorce;
     }
 //    [self animateTabsSwitching:viewController];
     return YES;

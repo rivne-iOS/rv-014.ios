@@ -9,11 +9,15 @@
 #import <UIKit/UIKit.h>
 #import "Issue.h"
 #import "CustomTableCell.h"
+#import "DataSorceProtocol.h"
 
 @interface IssueHistoryViewController : UITableViewController
 @property (strong, nonatomic) Issue *issue;
 @property (strong, nonatomic) NSMutableArray *issueHistory;
 
 @property (weak, nonatomic) IBOutlet UILabel *issueTitle;
+@property (strong, nonatomic) User *currentUser;
+@property (strong, nonatomic) id <DataSorceProtocol> dataSorce;
+@property BOOL isLogged;
 
 @end

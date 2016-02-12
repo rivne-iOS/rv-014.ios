@@ -952,10 +952,10 @@
             </objects>
             <point key="canvasLocation" x="449" y="1209"/>
         </scene>
-        <!--Bawl-->
+        <!--Profile-->
         <scene sceneID="kBc-FR-lwf">
             <objects>
-                <viewController id="7ZL-qH-qc6" customClass="ProfileViewController" sceneMemberID="viewController">
+                <viewController id="7ZL-qH-qc6" userLabel="Profile" customClass="ProfileViewController" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="dZi-FD-tKC"/>
                         <viewControllerLayoutGuide type="bottom" id="3bh-09-NxF"/>
@@ -964,7 +964,7 @@
                         <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="traffic_light_issue" translatesAutoresizingMaskIntoConstraints="NO" id="UlB-Xp-V2j">
+                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="traffic_light_issue" translatesAutoresizingMaskIntoConstraints="NO" id="UlB-Xp-V2j">
                                 <rect key="frame" x="210" y="104" width="180" height="180"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="180" id="TU5-NU-fVd"/>
@@ -1066,11 +1066,11 @@
                                 <fontDescription key="fontDescription" type="system" pointSize="20"/>
                                 <state key="normal" title="Change Avatar"/>
                             </button>
-                            <activityIndicatorView opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" style="gray" translatesAutoresizingMaskIntoConstraints="NO" id="ufl-1b-p4v">
-                                <rect key="frame" x="275" y="275" width="50" height="50"/>
+                            <activityIndicatorView hidden="YES" opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" hidesWhenStopped="YES" style="gray" translatesAutoresizingMaskIntoConstraints="NO" id="ufl-1b-p4v">
+                                <rect key="frame" x="280" y="280" width="40" height="40"/>
                                 <constraints>
-                                    <constraint firstAttribute="height" constant="50" id="S7G-Hz-X17"/>
-                                    <constraint firstAttribute="width" constant="50" id="Z2d-TM-AP4"/>
+                                    <constraint firstAttribute="width" constant="40" id="gen-7v-AVS"/>
+                                    <constraint firstAttribute="height" constant="40" id="pxT-6j-bWL"/>
                                 </constraints>
                                 <color key="color" red="0.8862745098" green="0.23529411759999999" blue="0.36078431370000003" alpha="1" colorSpace="calibratedRGB"/>
                             </activityIndicatorView>
@@ -1098,17 +1098,25 @@
                         </constraints>
                     </view>
                     <navigationItem key="navigationItem" title="Bawl" id="8T7-SA-7gQ">
-                        <barButtonItem key="rightBarButtonItem" title="Item" id="Bqf-Ox-f82"/>
+                        <barButtonItem key="rightBarButtonItem" title="Item" id="Bqf-Ox-f82">
+                            <connections>
+                                <action selector="sequeToLogInButton:" destination="7ZL-qH-qc6" id="TNT-FL-vja"/>
+                                <segue destination="Wyx-PR-bqC" kind="show" identifier="fromProfileToLogIn" id="TLl-qh-wdc"/>
+                            </connections>
+                        </barButtonItem>
                     </navigationItem>
                     <connections>
+                        <outlet property="activityIndicatorView" destination="ufl-1b-p4v" id="ys1-s6-f1q"/>
                         <outlet property="changeAvatar" destination="n9i-tw-ACZ" id="qHW-ed-Is9"/>
                         <outlet property="changeUserDetails" destination="Dhi-yJ-zyk" id="GZR-Ye-DV0"/>
+                        <outlet property="labelSystemRole" destination="DcK-KS-JhR" id="gxV-Hf-LWJ"/>
+                        <outlet property="labelUserEmail" destination="RPx-LO-u4F" id="Bx2-V8-o0v"/>
+                        <outlet property="labelUserLogin" destination="KKb-CB-dtL" id="VLD-gd-gBz"/>
                         <outlet property="profileImage" destination="UlB-Xp-V2j" id="PgG-Ib-id8"/>
                         <outlet property="systemRole" destination="s4J-7O-HLp" id="wmK-nk-tSQ"/>
                         <outlet property="userEmail" destination="gla-KH-e84" id="SXk-hi-Fhf"/>
                         <outlet property="userLogin" destination="7eR-wr-6Do" id="KLK-xD-Eyd"/>
                         <outlet property="userName" destination="WMZ-fM-I4X" id="RdR-bX-KdA"/>
-                        <outlet property="view" destination="ufl-1b-p4v" id="CvK-30-M7Z"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Wbz-p1-FN3" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -1163,4 +1171,7 @@
         <image name="tittle" width="284" height="152"/>
         <image name="traffic_light_issue" width="164" height="92"/>
     </resources>
+    <inferredMetricsTieBreakers>
+        <segue reference="TLl-qh-wdc"/>
+    </inferredMetricsTieBreakers>
 </document>
