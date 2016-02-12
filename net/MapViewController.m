@@ -40,6 +40,7 @@ static double const MAP_REFRESHING_INTERVAL = 120.0;
 @property (assign, nonatomic) CLLocationCoordinate2D currentLocation;
 @property (nonatomic) BOOL userLogined;
 @property (strong, nonatomic) UIImage *attachmentImage;
+@property (strong, nonatomic) NSString *attachmentFilename;
 
 @end
 
@@ -219,7 +220,6 @@ static double const MAP_REFRESHING_INTERVAL = 120.0;
 #pragma mark Requests
 -(void)requestIssues
 {
-        [self testInternetConnection:DOMAIN_NAME_ALL_ISSUES];
         NSURL *url = [NSURL URLWithString:DOMAIN_NAME_ALL_ISSUES];
         NSURLRequest *request = [NSURLRequest requestWithURL:url];
     
@@ -289,16 +289,18 @@ static double const MAP_REFRESHING_INTERVAL = 120.0;
 #pragma mark Tab Bar
 -(void)mapView:(GMSMapView *)mapView didLongPressAtCoordinate:(CLLocationCoordinate2D)coordinate
 {
-    self.mapView.selectedMarker = nil;
-//    [[self navigationController] setNavigationBarHidden:YES animated:NO];
-    [self requestGoogleApiPlace:coordinate];
-    [self requestCategories];
-    [self addBorderColor];
-    [UIView animateWithDuration:0.5 animations:^(void){
-        self.scrollViewLeadingConstraint.constant = 0;
-        [self hideTabBar];
-        [self.view layoutIfNeeded];
-    }];
+    // Only logged one can add new issue
+    if (self.currentUser != nil){
+        self.mapView.selectedMarker = nil;
+        [self requestGoogleApiPlace:coordinate];
+        [self requestCategories];
+        [self addBorderColor];
+        [UIView animateWithDuration:0.5 animations:^(void){
+            self.scrollViewLeadingConstraint.constant = 0;
+            [self hideTabBar];
+            [self.view layoutIfNeeded];
+        }];
+    }
 }
 
 -(void)requestGoogleApiPlace:(CLLocationCoordinate2D)coordinate
@@ -547,6 +549,7 @@ static double const MAP_REFRESHING_INTERVAL = 120.0;
                                [[NSString alloc] initWithFormat:@"LatLng(%f, %f)", self.currentLocation.latitude, self.currentLocation.longitude],
                                @"NEW",
                                [NSNumber numberWithInt:[self.categoryPicker selectedRowInComponent:0]],
+                               self.attachmentFilename,
                                nil];
     NSArray *addIssueKeys = [[NSArray alloc] initWithObjects:
                              @"name",
@@ -554,6 +557,7 @@ static double const MAP_REFRESHING_INTERVAL = 120.0;
                              @"point",
                              @"status",
                              @"category",
+                             @"attachments",
                              nil];
     return [[NSDictionary alloc] initWithObjects:addIssueValues forKeys:addIssueKeys];
 }
@@ -600,68 +604,37 @@ static double const MAP_REFRESHING_INTERVAL = 120.0;
 
 -(void)requestAddingAttachmentToIssue
 {
-//    // 1
     NSURL *url = [NSURL URLWithString:DOMAIN_NAME_ADD_ATTACHMENT];
     NSURLSessionConfiguration *config = [NSURLSessionConfiguration defaultSessionConfiguration];
     NSURLSession *session = [NSURLSession sessionWithConfiguration:config];
-//
-//    // 2
-//    NSMutableURLRequest *request = [[NSMutableURLRequest alloc] initWithURL:url];
-//    request.HTTPMethod = @"POST";
-//    
-//    // 3
-//    NSError *error = nil;
-//    NSData *data = UIImagePNGRepresentation(self.attachmentImage);
-////    [request setHTTPBody:data];
-//    
-//    if (!error) {
-//        // 4
-//        NSURLSessionUploadTask *uploadTask = [session uploadTaskWithRequest:request
-//                                                                   fromData:data completionHandler:^(NSData *data,NSURLResponse *response,NSError *error) {
-//                                                                       NSHTTPURLResponse *httpResponse = (NSHTTPURLResponse *) response;
-//                                                                       if ([httpResponse statusCode] != HTTP_RESPONSE_CODE_OK){
-//                                                                           UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Attention!"
-//                                                                                                                           message:@"Something has gone wrong! (we have answer from server, but it's incorrect)"
-//                                                                                                                          delegate:nil
-//                                                                                                                 cancelButtonTitle:@"Ok"
-//                                                                                                                 otherButtonTitles:nil];
-//                                                                           [alert show];
-//                                                                       } else {
-//                                                                           dispatch_async(dispatch_get_main_queue(), ^{
-//                                                                               [self requestAddingNewIssue:[self getJsonFromAddingNewIssueView]];
-//                                                                           });
-//                                                                       }
-//                                                                   }];
-//        
-//        // 5
-//        [uploadTask resume];
-//    }
+
     NSString *boundary = [self generateBoundaryString];
     
     // configure the request
-    
     NSMutableURLRequest *request = [[NSMutableURLRequest alloc] initWithURL:url];
     [request setHTTPMethod:@"POST"];
     
     // set content type
-    
     NSString *contentType = [NSString stringWithFormat:@"multipart/form-data; boundary=%@", boundary];
     [request setValue:contentType forHTTPHeaderField: @"Content-Type"];
     
     // create body
-    
     NSData *httpBody = [self createBodyWithBoundary:boundary image:self.attachmentImage fieldName:@"file"];
     
     request.HTTPBody = httpBody;
     
     NSURLSessionTask *task = [session dataTaskWithRequest:request completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
         if (error) {
-            NSLog(@"error = %@", error);
+            NSLog(@"Error = %@", error);
             return;
         }
         
-        NSString *result = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
-        NSLog(@"result = %@", result);
+        NSDictionary *attachmentServerResponse = [NSJSONSerialization JSONObjectWithData:data options:0                                                                                                   error:NULL];
+        self.attachmentFilename = attachmentServerResponse[@"filename"];
+        [self requestAddingNewIssue:[self getJsonFromAddingNewIssueView]];
+        
+//        NSString *result = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
+//        NSLog(@"result = %@", result);
     }];
     [task resume];
 }
@@ -674,33 +647,6 @@ static double const MAP_REFRESHING_INTERVAL = 120.0;
 -(void)renewMapWithNSTimer:(NSTimer *)timer
 {
     [self requestIssues];
-}
-
-// Checks if we have an internet connection or not
-- (void)testInternetConnection:(NSString *)hostName
-{
-//    Reachability *internetReachableFoo = [Reachability reachabilityWithHostname:hostName];
-//    
-//    // Internet is reachable
-////    internetReachableFoo.reachableBlock = ^(Reachability*reach)
-////    {
-////        // Update the UI on the main thread
-////        dispatch_async(dispatch_get_main_queue(), ^{
-////            NSLog(@"Yayyy, we have the interwebs!");
-////        });
-////        reachInternet = YES;
-////    };
-//    
-//    // Internet is not reachable
-//    internetReachableFoo.unreachableBlock = ^(Reachability*reach)
-//    {
-//        // Update the UI on the main thread
-//        dispatch_async(dispatch_get_main_queue(), ^{
-////            NSLog(@"Someone broke the internet :(");
-//        });
-//    };
-//    
-//    [internetReachableFoo startNotifier];
 }
 
 -(UIImage *)changeIconColor:(Issue *)issue
@@ -737,40 +683,28 @@ static double const MAP_REFRESHING_INTERVAL = 120.0;
 //    [self.addingIssueView layoutIfNeeded];
 //    [self.view bringSubviewToFront:indicator];
     
-    self.addingIssueView.userInteractionEnabled = NO;
-    
-    [self.indicator startAnimating];
-    
     UIImagePickerController *imagePickerController = [[UIImagePickerController alloc] init];
     imagePickerController.sourceType = UIImagePickerControllerSourceTypePhotoLibrary;
     imagePickerController.delegate = self;
     [self presentViewController:imagePickerController animated:YES completion:nil];
 }
 
-// This method is called when an image has been chosen from the library or taken from the camera.
 - (void)imagePickerController:(UIImagePickerController *)picker didFinishPickingMediaWithInfo:(NSDictionary *)info
 {
-    //You can retrieve the actual UIImage
     self.attachmentImage = info[UIImagePickerControllerOriginalImage];
-    
-    //Or you can get the image url from AssetsLibrary
-//    NSURL *urlToImage = info[UIImagePickerControllerReferenceURL];
-//    
-//    NSString *str=[[NSBundle mainBundle] pathForResource:@"classes" ofType:@"json"];
-//    NSData *fileData = [NSData dataWithContentsOfFile:str];
-//    self.pathToImage = [info valueForKey:UIImagePickerControllerReferenceURL];
 
     [self.indicator stopAnimating];
     self.addingIssueView.userInteractionEnabled = YES;
     
     [picker dismissViewControllerAnimated:YES completion:^{
-//        [self.indicator stopAnimating];
-//        self.addingIssueView.userInteractionEnabled = YES;
     }];
 }
 
 -(IBAction)buttonLoadPressed:(id)sender
 {
+    self.addingIssueView.userInteractionEnabled = NO;
+    [self.indicator startAnimating];
+
     [self initializeImagePickerController];
 }
 
@@ -808,41 +742,17 @@ static double const MAP_REFRESHING_INTERVAL = 120.0;
 //        [httpBody appendData:[[NSString stringWithFormat:@"%@\r\n", parameterValue] dataUsingEncoding:NSUTF8StringEncoding]];
 //    }];
     
-    // add image data
-//    NSError *error = nil;
-//        NSString *filename  = [path lastPathComponent];
-//    NSData   *data      = UIImagePNGRepresentation(image);
-    NSData *data = UIImagePNGRepresentation(image);
-//    NSData *data = [NSData dataWithContentsOfURL:image];
-//        NSString *mimetype  = [self mimeTypeForPath:path];
+    NSData *data = UIImageJPEGRepresentation(image, 1.0);
     
-        [httpBody appendData:[[NSString stringWithFormat:@"--%@\r\n", boundary] dataUsingEncoding:NSUTF8StringEncoding]];
-        [httpBody appendData:[[NSString stringWithFormat:@"Content-Disposition: form-data; name=\"%@\"; filename=\"%@\"\r\n", fieldName, @"image_name"] dataUsingEncoding:NSUTF8StringEncoding]];
-        [httpBody appendData:[[NSString stringWithFormat:@"Content-Type: %@\r\n\r\n", @"image\\jpeg"] dataUsingEncoding:NSUTF8StringEncoding]];
-        [httpBody appendData:data];
-        [httpBody appendData:[@"\r\n" dataUsingEncoding:NSUTF8StringEncoding]];
+    [httpBody appendData:[[NSString stringWithFormat:@"--%@\r\n", boundary] dataUsingEncoding:NSUTF8StringEncoding]];
+    [httpBody appendData:[[NSString stringWithFormat:@"Content-Disposition: form-data; name=\"%@\"; filename=\"%@\"\r\n", fieldName, @"image_name.jpg"] dataUsingEncoding:NSUTF8StringEncoding]];
+    [httpBody appendData:[[NSString stringWithFormat:@"Content-Type: %@\r\n\r\n", @"image/jpeg"] dataUsingEncoding:NSUTF8StringEncoding]];
+    [httpBody appendData:data];
+    [httpBody appendData:[@"\r\n" dataUsingEncoding:NSUTF8StringEncoding]];
     
     [httpBody appendData:[[NSString stringWithFormat:@"--%@--\r\n", boundary] dataUsingEncoding:NSUTF8StringEncoding]];
     
     return httpBody;
-}
-
-- (NSString *)mimeTypeForPath:(NSString *)path
-{
-    // get a mime type for an extension using MobileCoreServices.framework
-    // Get the UTI from the file's extension:
-    
-    CFStringRef pathExtension = (__bridge_retained CFStringRef)[path pathExtension];
-    CFStringRef type = UTTypeCreatePreferredIdentifierForTag(kUTTagClassFilenameExtension, pathExtension, NULL);
-    CFRelease(pathExtension);
-    
-    // The UTI can be converted to a mime type:
-    
-    NSString *mimeType = (__bridge_transfer NSString *)UTTypeCopyPreferredTagWithClass(type, kUTTagClassMIMEType);
-    if (type != NULL)
-        CFRelease(type);
-    
-    return mimeType;
 }
 
 - (NSString *)generateBoundaryString
