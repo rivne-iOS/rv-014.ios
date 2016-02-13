@@ -68,7 +68,9 @@
     [self prepareUIChangeStatusElements];
     [self.tabBarController.tabBar.items objectAtIndex:1].title = @"Description";
     
-    [self.dataSorce requestImage:^(UIImage *image) {
+    self.issueImageView.image = nil;
+    self.issueImageView.backgroundColor = [UIColor clearColor];
+    [self.dataSorce requestImageWithName:self.currentIssue.attachments andViewControllerHandler:^(UIImage *image) {
         dispatch_async(dispatch_get_main_queue(), ^{
             self.issueImageView.image = image;
         });
@@ -105,6 +107,7 @@
             if (self.currentIssue.categoryId.intValue ==  issueCategory.categoryId.intValue)
             {
                 [self makeCategoryLabelWithStringCategory:issueCategory.name];
+                break;
             }
         }
         
@@ -132,7 +135,10 @@
 
 -(void)prepareUIChangeStatusElements
 {
-    self.stringNewStatuses = [self.statusChanger newIssueStatusesForUser:[[User userStringRoles] objectAtIndex:self.currentUser.role] andCurretIssueStatus:self.currentIssue.status];
+    if (self.currentUser==nil)
+        self.stringNewStatuses = nil;
+    else
+        self.stringNewStatuses = [self.statusChanger newIssueStatusesForUser:[[User userStringRoles] objectAtIndex:self.currentUser.role] andCurretIssueStatus:self.currentIssue.status];
     
     // self.stringNewStatuses = @[@"111", @"222", @"333"];
     

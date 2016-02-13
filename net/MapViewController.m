@@ -63,7 +63,7 @@ static double const MAP_REFRESHING_INTERVAL = 120.0;
     NSDictionary *userDictionary = [[NSUserDefaults standardUserDefaults] objectForKey:@"userDictionary"];
     if(userDictionary!=nil)
     {
-        self.navigationItem.rightBarButtonItem.title = @"User check...";
+        self.navigationItem.rightBarButtonItem.title = @"Log in...";
         [self.dataSorce requestLogInWithUser:[userDictionary objectForKey:@"LOGIN"]
                                      andPass:[userDictionary objectForKey:@"PASSWORD"]
                     andViewControllerHandler:^(User *resUser)

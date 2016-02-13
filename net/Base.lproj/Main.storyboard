@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="9531" systemVersion="14F27" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="U7z-LT-7dR">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="9531" systemVersion="14F1509" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="U7z-LT-7dR">
     <dependencies>
         <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="9529"/>
@@ -862,6 +862,12 @@
                                 <rect key="frame" x="20" y="112" width="65" height="20"/>
                                 <fontDescription key="fontDescription" style="UICTFontTextStyleBody"/>
                             </label>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Loading Image..." textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="J7G-x0-v2X">
+                                <rect key="frame" x="237" y="236" width="127" height="21"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                                <nil key="highlightedColor"/>
+                            </label>
                             <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="HaZ-Nw-77m">
                                 <rect key="frame" x="175" y="171" width="250" height="150"/>
                                 <color key="backgroundColor" red="0.0" green="0.50196081400000003" blue="0.25098040700000002" alpha="1" colorSpace="calibratedRGB"/>
@@ -892,8 +898,10 @@
                             <constraint firstItem="qJt-r0-2GN" firstAttribute="centerX" secondItem="sig-UO-uJx" secondAttribute="centerX" id="JRl-Yr-CIt"/>
                             <constraint firstItem="h0H-4Q-hgP" firstAttribute="leading" secondItem="vh5-CI-qrZ" secondAttribute="leading" id="PWt-ra-x4H"/>
                             <constraint firstItem="DJe-BM-yk9" firstAttribute="leading" secondItem="sig-UO-uJx" secondAttribute="leadingMargin" id="TEk-un-Egk"/>
+                            <constraint firstItem="J7G-x0-v2X" firstAttribute="centerY" secondItem="HaZ-Nw-77m" secondAttribute="centerY" id="VKg-Mh-5Gb"/>
                             <constraint firstItem="vh5-CI-qrZ" firstAttribute="leading" secondItem="DJe-BM-yk9" secondAttribute="leading" id="exd-YY-Lqi"/>
                             <constraint firstItem="qJt-r0-2GN" firstAttribute="top" secondItem="7rX-L3-WUm" secondAttribute="bottom" id="nxu-aK-dbG"/>
+                            <constraint firstItem="J7G-x0-v2X" firstAttribute="centerX" secondItem="HaZ-Nw-77m" secondAttribute="centerX" id="s1E-qR-BIu"/>
                             <constraint firstItem="h0H-4Q-hgP" firstAttribute="top" secondItem="HaZ-Nw-77m" secondAttribute="bottom" constant="15" id="uV0-vb-rMp"/>
                             <constraint firstItem="HaZ-Nw-77m" firstAttribute="top" secondItem="vh5-CI-qrZ" secondAttribute="bottom" constant="8" id="ucJ-Of-XZc"/>
                         </constraints>

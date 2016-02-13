@@ -18,7 +18,7 @@
 
 
 -(void)requestCategories:(void (^)(NSArray<IssueCategory*> * issueCategories))viewControllerHandler withErrorHandler:(void(^)(NSError *error)) errorHandler;
--(void)requestImage:(void (^)(UIImage *image))viewControllerHandler withErrorHandler:(void(^)(NSError *error)) errorHandler;
+-(void)requestImageWithName:(NSString*)name andViewControllerHandler:(void (^)(UIImage *image))viewControllerHandler withErrorHandler:(void(^)(NSError *error)) errorHandler;
 
 -(void)requestLogInWithUser:(NSString*)user
                     andPass:(NSString*)pass
