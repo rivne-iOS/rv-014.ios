@@ -84,6 +84,9 @@ static double const MAP_REFRESHING_INTERVAL = 120.0;
 
 -(void)viewWillAppear:(BOOL)animated
 {
+    if(self.currentMarker!=nil)
+        self.tabBarController.tabBar.hidden=NO;
+    
     [self renewMap];
     
     [self.timerForMapRenew invalidate];
@@ -129,6 +132,7 @@ static double const MAP_REFRESHING_INTERVAL = 120.0;
     {
         if([segue.destinationViewController isKindOfClass:[LogInViewController class]])
         {
+            self.tabBarController.tabBar.hidden=YES;
             LogInViewController *logInVC = (LogInViewController*)segue.destinationViewController;
             logInVC.mapDelegate = self;
             
@@ -271,6 +275,7 @@ static double const MAP_REFRESHING_INTERVAL = 120.0;
 
 -(void)mapView:(GMSMapView *)mapView didTapAtCoordinate:(CLLocationCoordinate2D)coordinate
 {
+    self.currentMarker = nil;
     [UIView animateWithDuration:0.5 animations:^(void){
         [self hideTabBar];
         [self.view layoutIfNeeded];

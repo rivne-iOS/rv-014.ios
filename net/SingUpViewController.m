@@ -114,7 +114,10 @@
     CGFloat keyboardHeight = viewFrame.size.height;
     NSLog(@"keyboard height = %f", keyboardHeight);
     
-    [self scrollBottomConstraint].constant = keyboardHeight;
+    if (self.tabBarController.tabBar.hidden == YES)
+        [self scrollBottomConstraint].constant = keyboardHeight;
+    else
+        [self scrollBottomConstraint].constant = keyboardHeight - self.tabBarController.tabBar.frame.size.height;
     [self.view layoutIfNeeded];
     NSLog(@"-(void)keyboardDidShow, and self.currentTextField = %@", self.currentEditField.restorationIdentifier);
 
