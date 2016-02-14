@@ -593,6 +593,7 @@ static double const MAP_REFRESHING_INTERVAL = 120.0;
                                                                        } else {
                                                                            dispatch_async(dispatch_get_main_queue(), ^{
                                                                                [self renewMap];
+                                                                               [self clearAllFields];
                                                                            });
                                                                        }
                                                                    }];
@@ -759,6 +760,13 @@ static double const MAP_REFRESHING_INTERVAL = 120.0;
 {
     return [NSString stringWithFormat:@"Boundary-%@", [[NSUUID UUID] UUIDString]];
 
+}
+
+-(void)clearAllFields
+{
+    self.nameTextField.text = @"";
+    self.descriptionTextView.text = @"";
+    [self.categoryPicker selectRow:0 inComponent:0 animated:NO];
 }
 
 @end
