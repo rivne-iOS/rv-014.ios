@@ -13,11 +13,13 @@
 
 @interface DescriptionViewController : UIViewController
 
-@property (strong, nonatomic) Issue *currentIssue;
+// @property (strong, nonatomic) Issue *currentIssue;
 @property (strong, nonatomic) User *currentUser;
 
 @property (weak, nonatomic) IBOutlet UILabel *titleLabel;
 @property (weak, nonatomic) IBOutlet UILabel *descriptionLabel;
+@property (strong,nonatomic) UIImage *image;
+@property (nonatomic, getter=isActualImageView)BOOL actualImageView;
 
 @property (weak, nonatomic) MapViewController *mapViewControllerDelegate;
 

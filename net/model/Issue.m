@@ -44,6 +44,9 @@
             }
             // Instead of Loop method you can also use:
             // [self setValuesForKeysWithDictionary:JSONDictionary];
+        if ([self.attachments isEqual:[NSNull null]]) {
+            self.attachments = @"defaultIssue";
+        }
     }
     return self;
 }

@@ -39,22 +39,34 @@
         self.password = [dic objectForKey:@"PASSWORD"];
         self.userId = [[dic objectForKey:@"ID"] integerValue];
         self.role = [[User userStringRoles] indexOfObject:[dic objectForKey:@"ROLE_ID"]];
+        self.avatarUrl = [dic objectForKey:@"AVATAR_URL"];
+        if ([self.avatarUrl isEqual:[NSNull null]])
+        {
+            self.avatarUrl = @"defaultUser";
+        }
     }
     return self;
 }
 
-+(NSArray*)userStringRoles
++(NSArray <NSString*>*)userStringRoles
 {
-    return @[@"ADMIN", @"MANAGER", @"USER", @"SUBSCRIBER"];
+    static NSArray *stringRoles = nil;
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        stringRoles = @[@"ADMIN", @"MANAGER", @"USER", @"SUBSCRIBER"];
+    });
+    return stringRoles;
+}
+
+
+-(NSString*)stringRole
+{
+    return [[User userStringRoles] objectAtIndex:self.role];
 }
 
 
 
 
--(NSString*)description
-{
-    return [NSString stringWithFormat:@"I am %@, my name is %@, email - %@, role - %@", self.login, self.name, self.email, [[User userStringRoles] objectAtIndex:self.role]];
-}
 
 -(NSDictionary <NSString*, NSString*> *)puckToDictionary
 {
@@ -65,7 +77,7 @@
     [dic setObject:self.email forKey:@"EMAIL"];
     [dic setObject:self.password forKey:@"PASSWORD"];
     [dic setObject:[[User userStringRoles] objectAtIndex:self.role] forKey:@"ROLE_ID"];
-    [dic setObject:[NSString stringWithFormat:@"%lu", self.userId] forKey:@"ID"];
+    [dic setObject:[NSString stringWithFormat:@"%d", self.userId] forKey:@"ID"];
     return dic;
 }
 

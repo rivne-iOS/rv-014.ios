@@ -25,11 +25,12 @@ typedef enum : NSUInteger {
 @property(strong, nonatomic)NSString *name;
 @property(strong, nonatomic)NSString *email;
 @property(strong, nonatomic)NSString *password;
+@property(strong, nonatomic)NSString *avatarUrl;
+@property(strong, nonatomic, readonly)NSString *stringRole; // just getter! with no iVar
 
 @property(nonatomic) Role role;
 
 
-+(NSArray*)userStringRoles;
 
 -(instancetype)initWithName:(NSString*)name
                    andLogin:(NSString*)login
@@ -40,4 +41,5 @@ typedef enum : NSUInteger {
 
 -(NSDictionary <NSString*, NSString*> *)puckToDictionary;
 
+-(NSString*)stringRole;
 @end

@@ -49,7 +49,7 @@
 
 }
 
--(void)requestImageWithName:(NSString*)name andViewControllerHandler:(void (^)(UIImage *image))viewControllerHandler withErrorHandler:(void(^)(NSError *error)) errorHandler
+-(void)requestImageWithName:(NSString*)name andHandler:(void (^)(UIImage *image))viewControllerHandler withErrorHandler:(void(^)(NSError *error)) errorHandler
 {
     HTTPConnector *connector = [[HTTPConnector alloc] init];
     [connector requestImageWithName:name andDataSorceHandler:^(NSData *data, NSError *error) {

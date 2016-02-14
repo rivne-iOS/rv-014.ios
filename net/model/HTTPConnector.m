@@ -20,6 +20,7 @@
 @property(strong, nonatomic)NSString *allCategories;
 @property(strong, nonatomic)NSString *issueImage;
 @property(strong, nonatomic)NSString *defaultIssueImage;
+@property(strong, nonatomic)NSString *defaultUserImage;
 
 
 -(void)postRequest:(NSData*) postData
@@ -54,6 +55,7 @@
         _allCategories = @"categories/all";
         _issueImage = @"image/";
         _defaultIssueImage = @"no_attach.png";
+        _defaultUserImage = @"no_avatar.png";
         
     }
     return self;
@@ -73,7 +75,11 @@
 {
     if ([name isEqual:[NSNull null]])
         name = self.defaultIssueImage;
-    
+    else if ([name isEqualToString:@"defaultUser"])
+        name = self.defaultUserImage;
+    else if ([name isEqualToString:@"defaultIssue"])
+        name = self.defaultIssueImage;
+        
     [self getRequestBlankToUrl:[NSString stringWithFormat:@"%@%@%@", self.globalURL, self.issueImage, name] andHandler:dataSorceHandler];
 }
 

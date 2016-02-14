@@ -13,6 +13,7 @@
 #import "IssueCategory.h"
 #import "IssueHistoryViewController.h"
 #import "IssueCategory.h"
+#import "CurrentItems.h"
 
 #import "DescriptionViewController.h"
 #import "UIColor+Bawl.h"
@@ -135,14 +136,14 @@ static double const MAP_REFRESHING_INTERVAL = 120.0;
         }
     }
     
-    if([segue.identifier isEqualToString:@"fromMapToDescription"])
-    {
-        if([segue.destinationViewController isKindOfClass:[DescriptionViewController class]])
-        {
-            DescriptionViewController *DescriptionVC = (DescriptionViewController *)segue.destinationViewController;
-            DescriptionVC.currentIssue = self.currentMarker.userData;
-        }
-    }
+//    if([segue.identifier isEqualToString:@"fromMapToDescription"])
+//    {
+//        if([segue.destinationViewController isKindOfClass:[DescriptionViewController class]])
+//        {
+//            DescriptionViewController *DescriptionVC = (DescriptionViewController *)segue.destinationViewController;
+//            DescriptionVC.currentIssue = self.currentMarker.userData;
+//        }
+//    }
 }
 
 
@@ -224,7 +225,7 @@ static double const MAP_REFRESHING_INTERVAL = 120.0;
                                         
                                                 NSArray *issuesDictionaryArray = [NSJSONSerialization JSONObjectWithData:data options:0                                                                                                    error:NULL];
                                                 
-                                                NSMutableArray *issuesClassArray = [[NSMutableArray alloc] init];
+                                                NSMutableArray <Issue*> *issuesClassArray = [[NSMutableArray alloc] init];
                                                 for (NSDictionary *issue in issuesDictionaryArray) {
                                                     [issuesClassArray addObject:[[Issue alloc] initWithDictionary:issue]];
                                                 }
@@ -266,6 +267,27 @@ static double const MAP_REFRESHING_INTERVAL = 120.0;
         
     }];
     self.currentMarker = marker;
+    
+    DescriptionViewController *descriptionVC = nil;
+    for (UIViewController *viewController in self.tabBarController.viewControllers)
+    {
+        
+        if ([viewController isKindOfClass:[UINavigationController class]] && [viewController.restorationIdentifier isEqualToString:@"description"])
+        {
+            UINavigationController *destController = (UINavigationController *)viewController;
+            descriptionVC = (DescriptionViewController *)destController.topViewController;
+            break;
+        }
+    }
+    descriptionVC.image=nil;
+    descriptionVC.actualImageView = NO;
+    [[CurrentItems sharedItems] setIssue:marker.userData withChangingImageViewBloc:^{
+        dispatch_async(dispatch_get_main_queue(), ^{
+            descriptionVC.image = [CurrentItems sharedItems].issueImage;
+        });
+
+    }];
+    
     return NO;
 }
 
@@ -347,7 +369,7 @@ static double const MAP_REFRESHING_INTERVAL = 120.0;
     if ([viewController isKindOfClass:[UINavigationController class]] && [viewController.restorationIdentifier isEqualToString:@"description"]){
         UINavigationController *destController = (UINavigationController *)viewController;
         DescriptionViewController *descriptionVC = (DescriptionViewController *)destController.topViewController;
-        descriptionVC.currentIssue = self.currentMarker.userData;
+//        descriptionVC.currentIssue = self.currentMarker.userData;
         descriptionVC.currentUser = self.currentUser;
         descriptionVC.mapViewControllerDelegate = self;
         descriptionVC.title = self.title;
