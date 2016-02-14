@@ -28,7 +28,7 @@
 
 //dynamic items (for change ctatus)
 @property (strong, nonatomic) UIView *backGreyView;
-@property (strong, nonatomic) UIButton *changeButton;
+@property (strong, nonatomic) NSMutableArray <UIButton *> *changeButtons;
 @property (strong, nonatomic) NSMutableArray <ChangerBox*> *changerBoxArr;
 
 
@@ -144,27 +144,42 @@
     
     if (self.stringNewStatuses == nil)
         return;
-
-    UIButton *changeButton = [[UIButton alloc] init];
-    [changeButton setTitle:@"Change Status" forState:UIControlStateNormal];
-    [changeButton addTarget:self action:@selector(showNewStatuses) forControlEvents:UIControlEventTouchUpInside];
-    [changeButton setBackgroundColor:[UIColor bawlRedColor]];
-    [changeButton setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
-    [changeButton sizeToFit];
-    changeButton.translatesAutoresizingMaskIntoConstraints = NO;
     
-    [self.view addSubview:changeButton];
-    [changeButton.centerXAnchor constraintEqualToAnchor:self.view.centerXAnchor].active = YES;
-    [changeButton.topAnchor constraintEqualToAnchor:self.currentStatusLabel.bottomAnchor constant:10.0].active = YES;
-    [changeButton.heightAnchor constraintEqualToConstant:changeButton.frame.size.height].active = YES;
-    [changeButton.widthAnchor constraintEqualToConstant:changeButton.frame.size.width+40].active = YES;
-    self.changeButton = changeButton;
+    self.viewToConnectChangeButtons = self.currentStatusLabel;
+    [self.changeButtons removeAllObjects];
+    
+    CGFloat changeButtonsDistance = 5;
+    for (NSInteger a =0; a<self.stringNewStatuses.count; ++a)
+    {
+        NSString *strNewStatus = [self.stringNewStatuses objectAtIndex:a];
+        UIButton *changeButton = [[UIButton alloc] init];
+        changeButton.restorationIdentifier = strNewStatus;
+        [changeButton setTitle:strNewStatus forState:UIControlStateNormal];
+        [changeButton addTarget:self action:@selector(showNewStatuses) forControlEvents:UIControlEventTouchUpInside];
+        [changeButton setBackgroundColor:[UIColor bawlRedColor]];
+        [changeButton setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
+        [changeButton setTitleColor:[[UIColor whiteColor] colorWithAlphaComponent:0.3] forState:UIControlStateHighlighted];
+        [changeButton sizeToFit];
+        changeButton.translatesAutoresizingMaskIntoConstraints = NO;
+
+        [self.view addSubview:changeButton];
+        [changeButton.centerXAnchor constraintEqualToAnchor:self.view.centerXAnchor].active = YES;
+        [changeButton.topAnchor constraintEqualToAnchor:self.viewToConnectChangeButtons.bottomAnchor constant:changeButtonsDistance].active = YES;
+        changeButtonsDistance = 3;
+        [changeButton.heightAnchor constraintEqualToConstant:changeButton.frame.size.height].active = YES;
+        [changeButton.widthAnchor constraintEqualToConstant:changeButton.frame.size.width+40].active = YES;
+        [self.changeButtons addObject:changeButton];
+        
+        self.viewToConnectChangeButtons = changeButton;
+    }
+                                
+    
 
 }
 
 -(void)clearOldDynamicElements
 {
-    [self.changeButton removeFromSuperview];
+    [self.changeButtons makeObjectsPerformSelector:@selector(removeFromSuperview)];
     [self.backGreyView removeFromSuperview];
     
     for (ChangerBox *box in self.changerBoxArr)
