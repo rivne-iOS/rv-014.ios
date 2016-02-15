@@ -55,7 +55,14 @@ static double const MAP_REFRESHING_INTERVAL = 120.0;
     self.navigationController.navigationBar.titleTextAttributes = @{NSForegroundColorAttributeName : [UIColor whiteColor]};
     self.navigationController.navigationBar.barStyle = UIBarStyleBlack;
     [self checkCurrentUser];
+
     self.scrollViewLeadingConstraint.constant = CGRectGetWidth(self.mapView.bounds);
+    
+    CGRect screenRect = [[UIScreen mainScreen] bounds];
+//    CGFloat screenHeight = screenRect.size.height;
+    
+    self.addingIssueViewHeightConstraint.constant = screenRect.size.height;
+    
     self.tabBarController.delegate = self;
     [self hideTabBar];
     [self customizeTabBar];
@@ -557,7 +564,7 @@ static double const MAP_REFRESHING_INTERVAL = 120.0;
                              @"point",
                              @"status",
                              @"category",
-                             @"attachments",
+                             @"attach",
                              nil];
     return [[NSDictionary alloc] initWithObjects:addIssueValues forKeys:addIssueKeys];
 }
@@ -633,9 +640,6 @@ static double const MAP_REFRESHING_INTERVAL = 120.0;
         NSDictionary *attachmentServerResponse = [NSJSONSerialization JSONObjectWithData:data options:0                                                                                                   error:NULL];
         self.attachmentFilename = attachmentServerResponse[@"filename"];
         [self requestAddingNewIssue:[self getJsonFromAddingNewIssueView]];
-        
-//        NSString *result = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
-//        NSLog(@"result = %@", result);
     }];
     [task resume];
 }
@@ -735,14 +739,6 @@ static double const MAP_REFRESHING_INTERVAL = 120.0;
 {
     NSMutableData *httpBody = [NSMutableData data];
     
-    // add params (all params are strings)
-    
-//    [parameters enumerateKeysAndObjectsUsingBlock:^(NSString *parameterKey, NSString *parameterValue, BOOL *stop) {
-//        [httpBody appendData:[[NSString stringWithFormat:@"--%@\r\n", boundary] dataUsingEncoding:NSUTF8StringEncoding]];
-//        [httpBody appendData:[[NSString stringWithFormat:@"Content-Disposition: form-data; name=\"%@\"\r\n\r\n", parameterKey] dataUsingEncoding:NSUTF8StringEncoding]];
-//        [httpBody appendData:[[NSString stringWithFormat:@"%@\r\n", parameterValue] dataUsingEncoding:NSUTF8StringEncoding]];
-//    }];
-    
     NSData *data = UIImageJPEGRepresentation(image, 1.0);
     
     [httpBody appendData:[[NSString stringWithFormat:@"--%@\r\n", boundary] dataUsingEncoding:NSUTF8StringEncoding]];
@@ -767,6 +763,29 @@ static double const MAP_REFRESHING_INTERVAL = 120.0;
     self.nameTextField.text = @"";
     self.descriptionTextView.text = @"";
     [self.categoryPicker selectRow:0 inComponent:0 animated:NO];
+    self.attachmentImage = nil;
+    self.attachmentFilename = nil;
+}
+
+- (void)viewWillTransitionToSize:(CGSize)size withTransitionCoordinator:(id<UIViewControllerTransitionCoordinator>)coordinator
+{
+    [super viewWillTransitionToSize:size withTransitionCoordinator:coordinator];
+    
+    // Code here will execute before the rotation begins.
+    // Equivalent to placing it in the deprecated method -[willRotateToInterfaceOrientation:duration:]
+    self.scrollViewLeadingConstraint.constant = size.width;
+    
+    [coordinator animateAlongsideTransition:^(id<UIViewControllerTransitionCoordinatorContext> context) {
+        
+        // Place code here to perform animations during the rotation.
+        // You can pass nil or leave this block empty if not necessary.
+        
+    } completion:^(id<UIViewControllerTransitionCoordinatorContext> context) {
+        
+        // Code here will execute after the rotation has finished.
+        // Equivalent to placing it in the deprecated method -[didRotateFromInterfaceOrientation:]
+        
+    }];
 }
 
 @end

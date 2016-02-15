@@ -21,11 +21,13 @@
 @property (weak, nonatomic) IBOutlet UIView *addingIssueView;
 @property (weak, nonatomic) IBOutlet NSLayoutConstraint *bottomBarConstraint;
 @property (weak, nonatomic) IBOutlet NSLayoutConstraint *scrollViewLeadingConstraint;
+@property (weak, nonatomic) IBOutlet NSLayoutConstraint *addingIssueViewHeightConstraint;
 
 @property (weak, nonatomic) IBOutlet UILabel *tapLocationLabel;
 @property (strong, nonatomic) NSMutableArray *categoryClassArray;
 @property (weak, nonatomic) IBOutlet UIPickerView *categoryPicker;
 @property (weak, nonatomic) IBOutlet UIScrollView *scrollView;
+@property (weak, nonatomic) IBOutlet UIView *mainView;
 @property (weak, nonatomic) IBOutlet UITextView *descriptionTextView;
 @property (weak, nonatomic) IBOutlet UITextField *nameTextField;
 @property (weak, nonatomic) IBOutlet UITextField *attachmentTextField;
