@@ -5,7 +5,7 @@
 //  Created by user on 2/10/16.
 //  Copyright © 2016 Admin. All rights reserved.
 //
-
+#import "MapViewController.h"
 #import "ProfileViewController.h"
 #import "LogInViewController.h"
 #import "DataSorceProtocol.h"
@@ -41,7 +41,8 @@
 - (void)viewDidAppear:(BOOL)animated {
     [super viewDidAppear:animated];
     
-    [self.tabBarController.tabBar setHidden:YES];
+    [self.mapViewDelegate hideTabBar];
+    self.tabBarController.tabBar.hidden = YES;
     
     self.profileImage.layer.cornerRadius = self.profileImage.frame.size.width / 2.0f;
     self.profileImage.clipsToBounds = YES;
@@ -73,10 +74,7 @@
                     [self.systemRole setText:@"SUBSCRIBER"];
                     break;
             }
-            [self.activityIndicatorView stopAnimating];
-            self.activityIndicatorView.hidden = YES;
-            
-            [self revialAllViews];
+            [self requestAvatarWithUpdateScreenHandler:@selector(revealAllViews)];
         });
     }];
 }
@@ -99,7 +97,7 @@
     [self.changeAvatar setHidden:YES];
 }
 
-- (void) revialAllViews {
+- (void) revealAllViews {
     [self.profileImage setHidden:NO];
     [self.userName setHidden:NO];
     [self.labelUserLogin setHidden:NO];
@@ -110,6 +108,27 @@
     [self.systemRole setHidden:NO];
     [self.changeUserDetails setHidden:NO];
     [self.changeAvatar setHidden:NO];
+    
+    [self.activityIndicatorView stopAnimating];
+    self.activityIndicatorView.hidden = YES;
+}
+
+- (void) requestAvatarWithUpdateScreenHandler: (SEL) handler {
+    NSString *urlString = [NSString stringWithFormat:@"https://bawl-rivne.rhcloud.com/image/%@", self.avatarImageURL];
+    
+    NSURL *url = [NSURL URLWithString:urlString];
+    NSURLRequest *requset = [NSURLRequest requestWithURL:url];
+    
+    [[[NSURLSession sharedSession]   dataTaskWithRequest:requset
+                                      completionHandler:^(NSData * _Nullable data, NSURLResponse * _Nullable response, NSError * _Nullable connectionError){
+                                          if (data.length > 0 && connectionError == nil) {
+                                              UIImage *tmpImage = [UIImage imageWithData:data];
+                                              
+                                              self.profileImage.image = tmpImage;
+                                              
+                                          }
+                                          [self revealAllViews];
+    }] resume];
 }
 
 - (void) requestUserDetailsByID: (NSUInteger) ID updateScreenWithHandler:(void(^)(User *)) handler {
@@ -125,7 +144,7 @@
                                             NSDictionary *userData = [NSJSONSerialization JSONObjectWithData:data
                                                                                                      options:0
                                                                                                        error:NULL];
-                                            [self.avatarImageURL stringByAppendingString:userData[@"AVATAR_URL"]];
+                                            self.avatarImageURL = [NSString stringWithFormat:@"%@", userData[@"AVATAR"]];
                                             User *user = [[User alloc] initWitDictionary:userData];
                                             
                                             handler(user);

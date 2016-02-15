@@ -18,6 +18,7 @@
 @property (weak, nonatomic) IBOutlet UILabel *issueTitle;
 @property (strong, nonatomic) User *currentUser;
 @property (strong, nonatomic) id <DataSorceProtocol> dataSorce;
+@property (weak , nonatomic) MapViewController *mapDelegate;
 @property BOOL isLogged;
 
 @end

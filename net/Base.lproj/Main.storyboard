@@ -965,31 +965,23 @@
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                         <subviews>
                             <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="ibI-TV-PAc">
-                                <rect key="frame" x="0.0" y="64" width="600" height="487"/>
+                                <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
                                 <subviews>
                                     <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="traffic_light_issue" translatesAutoresizingMaskIntoConstraints="NO" id="lVY-SF-ay3">
-                                        <rect key="frame" x="230" y="-30" width="140" height="140"/>
+                                        <rect key="frame" x="230" y="20" width="140" height="140"/>
                                         <constraints>
                                             <constraint firstAttribute="height" constant="140" id="4q8-tH-LyT"/>
                                             <constraint firstAttribute="width" constant="140" id="SST-yP-5sn"/>
                                         </constraints>
                                     </imageView>
-                                    <activityIndicatorView opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" style="gray" translatesAutoresizingMaskIntoConstraints="NO" id="Oac-61-uEr">
-                                        <rect key="frame" x="280" y="224" width="40" height="40"/>
-                                        <constraints>
-                                            <constraint firstAttribute="height" constant="40" id="7mP-ri-95h"/>
-                                            <constraint firstAttribute="width" constant="40" id="U5j-jw-aH2"/>
-                                        </constraints>
-                                        <color key="color" red="0.8862745098" green="0.23529411759999999" blue="0.36078431370000003" alpha="1" colorSpace="calibratedRGB"/>
-                                    </activityIndicatorView>
                                     <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" text="Kris Evans" textAlignment="center" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="Cvb-45-iu3">
-                                        <rect key="frame" x="0.0" y="130" width="600" height="24"/>
+                                        <rect key="frame" x="0.0" y="180" width="600" height="24"/>
                                         <color key="textColor" red="0.83529411764705885" green="0.22352941176470589" blue="0.3411764705882353" alpha="1" colorSpace="calibratedRGB"/>
                                         <fontDescription key="fontDescription" type="system" pointSize="20"/>
                                         <textInputTraits key="textInputTraits"/>
                                     </textField>
                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="ICv-Sc-PHI" userLabel="User name placeholder">
-                                        <rect key="frame" x="230" y="174" width="141" height="30"/>
+                                        <rect key="frame" x="230" y="224" width="141" height="30"/>
                                         <subviews>
                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Username:" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="fXZ-Ug-hZD">
                                                 <rect key="frame" x="0.0" y="5" width="84" height="21"/>
@@ -1015,7 +1007,7 @@
                                         </constraints>
                                     </view>
                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="5mg-m6-GgF" userLabel="User email placeholder">
-                                        <rect key="frame" x="189" y="214" width="222" height="30"/>
+                                        <rect key="frame" x="189" y="264" width="222" height="30"/>
                                         <subviews>
                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="User email:" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="omW-d2-6Os">
                                                 <rect key="frame" x="0.0" y="5" width="86" height="21"/>
@@ -1041,7 +1033,7 @@
                                         </constraints>
                                     </view>
                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="fny-Oy-5Q6" userLabel="System Role placeholder">
-                                        <rect key="frame" x="218" y="254" width="163" height="30"/>
+                                        <rect key="frame" x="218" y="304" width="163" height="30"/>
                                         <subviews>
                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="System role:" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="93c-Zw-Qx2">
                                                 <rect key="frame" x="0.0" y="5" width="95" height="21"/>
@@ -1067,14 +1059,14 @@
                                         </constraints>
                                     </view>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="gLf-Px-Gmy">
-                                        <rect key="frame" x="208" y="324" width="184" height="36"/>
+                                        <rect key="frame" x="208" y="374" width="184" height="36"/>
                                         <fontDescription key="fontDescription" type="system" pointSize="20"/>
                                         <state key="normal" title="Change User Details">
                                             <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                         </state>
                                     </button>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Fk6-jn-N7K">
-                                        <rect key="frame" x="234" y="370" width="133" height="36"/>
+                                        <rect key="frame" x="208" y="420" width="184" height="36"/>
                                         <fontDescription key="fontDescription" type="system" pointSize="20"/>
                                         <state key="normal" title="Change Avatar">
                                             <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
@@ -1084,7 +1076,6 @@
                                 <constraints>
                                     <constraint firstItem="Fk6-jn-N7K" firstAttribute="centerX" secondItem="ibI-TV-PAc" secondAttribute="centerX" id="15E-hO-Xxf"/>
                                     <constraint firstItem="5mg-m6-GgF" firstAttribute="top" secondItem="ICv-Sc-PHI" secondAttribute="bottom" constant="10" id="4NY-yL-mwM"/>
-                                    <constraint firstItem="Oac-61-uEr" firstAttribute="centerX" secondItem="ibI-TV-PAc" secondAttribute="centerX" id="6YH-jc-y1c"/>
                                     <constraint firstItem="Cvb-45-iu3" firstAttribute="leading" secondItem="ibI-TV-PAc" secondAttribute="leading" id="Boe-bg-yGw"/>
                                     <constraint firstItem="Cvb-45-iu3" firstAttribute="top" secondItem="lVY-SF-ay3" secondAttribute="bottom" constant="20" id="BuY-mi-5pm"/>
                                     <constraint firstItem="Cvb-45-iu3" firstAttribute="centerX" secondItem="ibI-TV-PAc" secondAttribute="centerX" id="D7W-Tx-Paw"/>
@@ -1094,8 +1085,8 @@
                                     <constraint firstItem="ICv-Sc-PHI" firstAttribute="top" secondItem="Cvb-45-iu3" secondAttribute="bottom" constant="20" id="J6O-cJ-TNy"/>
                                     <constraint firstItem="Fk6-jn-N7K" firstAttribute="top" secondItem="gLf-Px-Gmy" secondAttribute="bottom" constant="10" id="Qyj-VV-PdF"/>
                                     <constraint firstAttribute="bottom" secondItem="Fk6-jn-N7K" secondAttribute="bottom" constant="10" id="RVK-is-u02"/>
-                                    <constraint firstItem="Oac-61-uEr" firstAttribute="centerY" secondItem="ibI-TV-PAc" secondAttribute="centerY" id="jPw-ex-4Ij"/>
-                                    <constraint firstItem="lVY-SF-ay3" firstAttribute="top" secondItem="ibI-TV-PAc" secondAttribute="top" constant="-30" id="kMF-0F-iuV"/>
+                                    <constraint firstItem="Fk6-jn-N7K" firstAttribute="width" secondItem="gLf-Px-Gmy" secondAttribute="width" id="a5r-Vv-wYh"/>
+                                    <constraint firstItem="lVY-SF-ay3" firstAttribute="top" secondItem="ibI-TV-PAc" secondAttribute="top" constant="20" id="kMF-0F-iuV"/>
                                     <constraint firstItem="ICv-Sc-PHI" firstAttribute="centerX" secondItem="ibI-TV-PAc" secondAttribute="centerX" id="rIp-zs-Pij"/>
                                     <constraint firstItem="fny-Oy-5Q6" firstAttribute="top" secondItem="5mg-m6-GgF" secondAttribute="bottom" constant="10" id="rc2-4p-h7C"/>
                                     <constraint firstItem="gLf-Px-Gmy" firstAttribute="top" secondItem="fny-Oy-5Q6" secondAttribute="bottom" constant="40" id="tBJ-oz-zUk"/>
@@ -1103,13 +1094,23 @@
                                     <constraint firstItem="5mg-m6-GgF" firstAttribute="centerX" secondItem="ibI-TV-PAc" secondAttribute="centerX" id="yoh-T4-ici"/>
                                 </constraints>
                             </scrollView>
+                            <activityIndicatorView opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" style="gray" translatesAutoresizingMaskIntoConstraints="NO" id="unj-J6-g7L">
+                                <rect key="frame" x="260" y="260" width="80" height="80"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="80" id="6fg-YS-T58"/>
+                                    <constraint firstAttribute="width" constant="80" id="bt5-J2-q1S"/>
+                                </constraints>
+                                <color key="color" red="0.76470588235294112" green="0.20784313725490197" blue="0.31372549019607843" alpha="1" colorSpace="calibratedRGB"/>
+                            </activityIndicatorView>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <constraints>
                             <constraint firstItem="ibI-TV-PAc" firstAttribute="leading" secondItem="qEL-Qk-28G" secondAttribute="leading" id="0on-rc-kpk"/>
+                            <constraint firstItem="unj-J6-g7L" firstAttribute="centerY" secondItem="qEL-Qk-28G" secondAttribute="centerY" id="Dqd-Eh-gQr"/>
                             <constraint firstAttribute="trailing" secondItem="ibI-TV-PAc" secondAttribute="trailing" id="cYv-tx-DAb"/>
-                            <constraint firstItem="ibI-TV-PAc" firstAttribute="bottom" secondItem="kn0-Zs-DAw" secondAttribute="top" id="mCk-ng-sK3"/>
-                            <constraint firstItem="ibI-TV-PAc" firstAttribute="top" secondItem="doM-0f-oCQ" secondAttribute="bottom" id="yg6-3N-Ovj"/>
+                            <constraint firstItem="unj-J6-g7L" firstAttribute="centerX" secondItem="qEL-Qk-28G" secondAttribute="centerX" id="qVq-eH-f3b"/>
+                            <constraint firstItem="ibI-TV-PAc" firstAttribute="top" secondItem="qEL-Qk-28G" secondAttribute="topMargin" id="td2-mv-vpH"/>
+                            <constraint firstAttribute="bottomMargin" secondItem="ibI-TV-PAc" secondAttribute="bottom" id="wGF-Iv-G3D"/>
                         </constraints>
                     </view>
                     <navigationItem key="navigationItem" title="Bawl" id="8T7-SA-7gQ">
@@ -1121,7 +1122,7 @@
                         </barButtonItem>
                     </navigationItem>
                     <connections>
-                        <outlet property="activityIndicatorView" destination="Oac-61-uEr" id="1k0-uZ-7eq"/>
+                        <outlet property="activityIndicatorView" destination="unj-J6-g7L" id="tnI-5y-Fl0"/>
                         <outlet property="changeAvatar" destination="Fk6-jn-N7K" id="aRg-5M-7Ju"/>
                         <outlet property="changeUserDetails" destination="gLf-Px-Gmy" id="ezH-Dr-mft"/>
                         <outlet property="labelSystemRole" destination="93c-Zw-Qx2" id="ADC-DS-bHk"/>
@@ -1187,6 +1188,6 @@
         <image name="traffic_light_issue" width="164" height="92"/>
     </resources>
     <inferredMetricsTieBreakers>
-        <segue reference="TLl-qh-wdc"/>
+        <segue reference="JER-bu-PYI"/>
     </inferredMetricsTieBreakers>
 </document>

@@ -39,4 +39,7 @@
 - (void)renewMapWithNSTimer:(NSTimer *)timer;
 -(void)renewMap;
 
+- (void) hideTabBar;
+- (void) showTabBar;
+
 @end

@@ -366,6 +366,7 @@ static double const MAP_REFRESHING_INTERVAL = 120.0;
         issueHistoryViewController.isLogged = self.userLogined;
         issueHistoryViewController.currentUser = self.currentUser;
         issueHistoryViewController.dataSorce = self.dataSorce;
+        issueHistoryViewController.mapDelegate = self;
     }
 //    [self animateTabsSwitching:viewController];
     return YES;

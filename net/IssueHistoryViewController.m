@@ -5,7 +5,7 @@
 //  Created by user on 1/19/16.
 //  Copyright © 2016 Admin. All rights reserved.
 //
-
+#import "MapViewController.h"
 #import "IssueHistoryViewController.h"
 #import "UIColor+Bawl.h"
 #import "ProfileViewController.h"
@@ -105,7 +105,8 @@ static NSString * const kSimpleTableIdentifier = @"SampleTableCell";
     [self.tabBarController.tabBar.items objectAtIndex:2].title = @"History";
     [self.issueTitle setText:self.issue.issueDescription];
     [self requestIssueHistory];
-    [self.tabBarController.tabBar setHidden:NO];
+    [self.mapDelegate showTabBar];
+    self.tabBarController.tabBar.hidden = NO;
 }
 
 
@@ -178,6 +179,7 @@ static NSString * const kSimpleTableIdentifier = @"SampleTableCell";
             profileViewController.isLogged = self.isLogged;
             profileViewController.currentUser = self.currentUser;
             profileViewController.dataSorce = self.dataSorce;
+            profileViewController.mapViewDelegate = self.mapDelegate;
         }
     }
 }
