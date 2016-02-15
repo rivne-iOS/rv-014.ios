@@ -298,6 +298,7 @@ static double const MAP_REFRESHING_INTERVAL = 120.0;
 
 -(void)mapView:(GMSMapView *)mapView didTapAtCoordinate:(CLLocationCoordinate2D)coordinate
 {
+    self.currentMarker = nil;
     [UIView animateWithDuration:0.5 animations:^(void){
         [self hideTabBar];
         [self.view layoutIfNeeded];
