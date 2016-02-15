@@ -89,6 +89,10 @@ static double const MAP_REFRESHING_INTERVAL = 120.0;
     {
         self.currentUser = [CurrentItems sharedItems].user;
     }
+    
+    if(self.currentMarker!=nil)
+        self.tabBarController.tabBar.hidden = NO;
+    
     [self renewMap];
     
     [self.timerForMapRenew invalidate];
