@@ -18,6 +18,14 @@
 
 @implementation CurrentItems
 
+-(id<DataSorceProtocol>)dataSorce
+{
+    if(_dataSorce==nil)
+        _dataSorce = [[NetworkDataSorce alloc] init];
+    return _dataSorce;
+}
+
+
 +(instancetype)sharedItems
 {
     static CurrentItems *sharedItems_ = nil;
@@ -36,17 +44,30 @@
 }
 
 
+-(void)setUser:(User *)user
+{
+    _user = user;
+    NSString *unchangedName = self.user.avatar;
+    [self.dataSorce requestImageWithName:self.user.avatar andHandler:^(UIImage *image) {
+        if ([unchangedName isEqualToString:self.user.avatar])
+        {
+            self.userImage = image;
+            [self.delegates makeObjectsPerformSelector:@selector(userImageDidLoad)];
+        }
+    } withErrorHandler:^(NSError *error) {
+        // handle error
+    }];
+
+    
+}
+
 -(void)setUser:(User *)user withChangingImageViewBloc:(void(^)()) changinImageView
 {
     self.user = user;
     
-    //    NSString *av = self.user.avatarUrl;
-    //    NSString * __strong * avatar = &av;
-    NSString *unchangedName = self.user.avatarUrl;
-    __block NSString *changedName = self.user.avatarUrl;
-    
-    [self.dataSorce requestImageWithName:self.user.avatarUrl andHandler:^(UIImage *image) {
-        if ([unchangedName isEqualToString:changedName])
+    NSString *unchangedName = self.user.avatar;
+    [self.dataSorce requestImageWithName:self.user.avatar andHandler:^(UIImage *image) {
+        if ([unchangedName isEqualToString:self.user.avatar])
         {
             self.userImage = image;
             changinImageView();
@@ -58,17 +79,28 @@
     
 }
 
+-(void)setIssue:(Issue *)issue
+{
+    self.issue = issue;
+    NSString *unchangedName = self.issue.attachments;
+    [self.dataSorce requestImageWithName:self.issue.attachments andHandler:^(UIImage *image) {
+        if ([unchangedName isEqualToString:self.issue.attachments])
+        {
+            self.issueImage = image;
+            [self.delegates makeObjectsPerformSelector:@selector(issueImageDidLoad)];
+        }
+    } withErrorHandler:^(NSError *error) {
+        // handle error
+    }];
+}
+
 -(void)setIssue:(Issue *)issue withChangingImageViewBloc:(void(^)()) changinImageView
 {
     self.issue = issue;
     
-    //    NSString *av = self.user.avatarUrl;
-    //    NSString * __strong * avatar = &av;
     NSString *unchangedName = self.issue.attachments;
-    __block NSString *changedName = self.issue.attachments;
-    
     [self.dataSorce requestImageWithName:self.issue.attachments andHandler:^(UIImage *image) {
-        if ([unchangedName isEqualToString:changedName])
+        if ([unchangedName isEqualToString:self.issue.attachments])
         {
             self.issueImage = image;
             changinImageView();
@@ -81,11 +113,7 @@
 }
 
 
--(id<DataSorceProtocol>)dataSorce
-{
-    if(_dataSorce==nil)
-        _dataSorce = [[NetworkDataSorce alloc] init];
-    return _dataSorce;
-}
+
+
 
 @end

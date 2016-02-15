@@ -12,6 +12,7 @@
 #import "NetworkDataSorce.h"
 #import "SingUpViewController.h"
 #import "TextFieldValidation.h"
+#import "CurrentItems.h"
 
 
 
@@ -217,11 +218,10 @@
         {
             NSLog(@"good!!!!");
             
-            __weak LogInViewController *weakSelf = self;
             dispatch_async(dispatch_get_main_queue(), ^
                        {
-                           weakSelf.mapDelegate.currentUser = resUser;
-                           [weakSelf.navigationController popViewControllerAnimated:YES];
+                           [CurrentItems sharedItems].user = resUser;
+                           [self.navigationController popViewControllerAnimated:YES];
                        });
         }
     } andErrorHandler:^(NSError *error) {
@@ -236,19 +236,19 @@
 }
 
 
-#pragma mark - Navigation
--(void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
-{
-    if([segue.identifier isEqualToString:@"fromLogInToSingUp"])
-    {
-        if([segue.destinationViewController isKindOfClass:[SingUpViewController class]])
-        {
-            SingUpViewController *logInVC = (SingUpViewController*)segue.destinationViewController;
-            logInVC.mapDelegate = self.mapDelegate;
-            
-        }
-    }
-}
+//#pragma mark - Navigation
+//-(void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
+//{
+//    if([segue.identifier isEqualToString:@"fromLogInToSingUp"])
+//    {
+//        if([segue.destinationViewController isKindOfClass:[SingUpViewController class]])
+//        {
+//            SingUpViewController *logInVC = (SingUpViewController*)segue.destinationViewController;
+//            logInVC.mapDelegate = self.mapDelegate;
+//            
+//        }
+//    }
+//}
 
 
 

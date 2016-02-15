@@ -71,6 +71,7 @@ static double const MAP_REFRESHING_INTERVAL = 120.0;
          {
                  dispatch_async(dispatch_get_main_queue(), ^ {
                      self.currentUser = resUser;
+                     [CurrentItems sharedItems].user = resUser;
                  });
          } andErrorHandler:^(NSError *error) {
              // error!
@@ -78,13 +79,16 @@ static double const MAP_REFRESHING_INTERVAL = 120.0;
     }
     else
     {
-        self.currentUser = nil;
-        
+        self.currentUser = nil; // sharedItems.user is already nil;
     }
 }
 
 -(void)viewWillAppear:(BOOL)animated
 {
+    if(self.currentUser==nil)
+    {
+        self.currentUser = [CurrentItems sharedItems].user;
+    }
     [self renewMap];
     
     [self.timerForMapRenew invalidate];
@@ -124,18 +128,18 @@ static double const MAP_REFRESHING_INTERVAL = 120.0;
 }
 
 #pragma mark - Navigation
--(void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
-{
-    if([segue.identifier isEqualToString:@"fromMapToLogIn"]) 
-    {
-        if([segue.destinationViewController isKindOfClass:[LogInViewController class]])
-        {
-            LogInViewController *logInVC = (LogInViewController*)segue.destinationViewController;
-            logInVC.mapDelegate = self;
-            
-        }
-    }
-    
+//-(void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
+//{
+//    if([segue.identifier isEqualToString:@"fromMapToLogIn"]) 
+//    {
+//        if([segue.destinationViewController isKindOfClass:[LogInViewController class]])
+//        {
+//            LogInViewController *logInVC = (LogInViewController*)segue.destinationViewController;
+//            logInVC.mapDelegate = self;
+//            
+//        }
+//    }
+
 //    if([segue.identifier isEqualToString:@"fromMapToDescription"])
 //    {
 //        if([segue.destinationViewController isKindOfClass:[DescriptionViewController class]])
@@ -144,7 +148,7 @@ static double const MAP_REFRESHING_INTERVAL = 120.0;
 //            DescriptionVC.currentIssue = self.currentMarker.userData;
 //        }
 //    }
-}
+//}
 
 
 - (IBAction)sequeToLogInButton:(UIBarButtonItem *)sender {
@@ -165,6 +169,7 @@ static double const MAP_REFRESHING_INTERVAL = 120.0;
                 self.title = [NSString stringWithFormat:@"Bowl"];
                 self.navigationItem.rightBarButtonItem.title = @"Log In";
                 self.currentUser=nil;
+                [[NSUserDefaults standardUserDefaults] objectForKey:@"userDictionary"];
                 UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Log Out"
                                                                 message:@"You loged out successfully!"
                                                                delegate:nil

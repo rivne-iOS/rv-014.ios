@@ -9,6 +9,7 @@
 #import <UIKit/UIKit.h>
 #import "User.h"
 #import "Issue.h"
+#import "CurrentItemsDelegate.h"
 
 
 @interface CurrentItems : NSObject
@@ -18,6 +19,7 @@
 @property(strong, nonatomic) NSArray <NSDictionary*> *issueHistroy;
 @property(strong, nonatomic) UIImage *userImage;
 @property(strong, nonatomic) UIImage *issueImage;
+@property(strong, nonatomic) NSArray<id<CurrentItemsDelegate>> *delegates;
 
 
 
@@ -30,5 +32,9 @@
 
 -(void)setUser:(User *)user withChangingImageViewBloc:(void(^)()) changinImageView;
 -(void)setIssue:(Issue *)issue withChangingImageViewBloc:(void(^)()) changinImageView;
+
+-(void)setUser:(User *)user;
+-(void)setIssue:(Issue *)issue;
+
 
 @end

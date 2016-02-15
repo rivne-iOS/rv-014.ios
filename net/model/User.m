@@ -39,10 +39,10 @@
         self.password = [dic objectForKey:@"PASSWORD"];
         self.userId = [[dic objectForKey:@"ID"] integerValue];
         self.role = [[User userStringRoles] indexOfObject:[dic objectForKey:@"ROLE_ID"]];
-        self.avatarUrl = [dic objectForKey:@"AVATAR_URL"];
-        if ([self.avatarUrl isEqual:[NSNull null]])
+        self.avatar = [dic objectForKey:@"AVATAR"];
+        if ([self.avatar isEqual:[NSNull null]])
         {
-            self.avatarUrl = @"defaultUser";
+            self.avatar = @"defaultUser";
         }
     }
     return self;
@@ -76,8 +76,9 @@
     [dic setObject:self.name forKey:@"NAME"];
     [dic setObject:self.email forKey:@"EMAIL"];
     [dic setObject:self.password forKey:@"PASSWORD"];
-    [dic setObject:[[User userStringRoles] objectAtIndex:self.role] forKey:@"ROLE_ID"];
-    [dic setObject:[NSString stringWithFormat:@"%d", self.userId] forKey:@"ID"];
+// we don't need these fields for sign up request
+//     [dic setObject:[[User userStringRoles] objectAtIndex:self.role] forKey:@"ROLE_ID"];
+//    [dic setObject:[NSString stringWithFormat:@"%d", self.userId] forKey:@"ID"];
     return dic;
 }
 

@@ -148,6 +148,14 @@
                              [[NSUserDefaults standardUserDefaults] setObject:userDic forKey:@"userDictionary"];
                              user = [[User alloc] initWitDictionary:userDic];
                          }
+                         else
+                         {
+                             NSLog(@"Error with sign up! \n\n");
+                             for(NSString *str in [userDic allKeys])
+                             {
+                                 NSLog(@"%@ - %@", str, [userDic objectForKey:str]);
+                             }
+                         }
                          viewControllerHandler(user);
                      }
                      else if (error!=nil)

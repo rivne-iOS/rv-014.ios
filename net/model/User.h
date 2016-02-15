@@ -25,7 +25,7 @@ typedef enum : NSUInteger {
 @property(strong, nonatomic)NSString *name;
 @property(strong, nonatomic)NSString *email;
 @property(strong, nonatomic)NSString *password;
-@property(strong, nonatomic)NSString *avatarUrl;
+@property(strong, nonatomic)NSString *avatar;
 @property(strong, nonatomic, readonly)NSString *stringRole; // just getter! with no iVar
 
 @property(nonatomic) Role role;
