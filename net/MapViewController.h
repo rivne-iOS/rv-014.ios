@@ -8,7 +8,8 @@
 
 #import <UIKit/UIKit.h>
 #import "User.h"
-#import "Reachability.h"
+#import "AFNetworking.h"
+#import "YLProgressBar.h"
 
 @interface MapViewController : UIViewController <UIPickerViewDataSource, UIPickerViewDelegate>
 
@@ -31,6 +32,8 @@
 @property (weak, nonatomic) IBOutlet UITextView *descriptionTextView;
 @property (weak, nonatomic) IBOutlet UITextField *nameTextField;
 @property (weak, nonatomic) IBOutlet UITextField *attachmentTextField;
+@property (weak, nonatomic) IBOutlet YLProgressBar *attachmentProgressView;
+
 
 @property (strong, nonatomic) NSTimer *timerForMapRenew;
 

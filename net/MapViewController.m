@@ -13,6 +13,7 @@
 #import "IssueCategory.h"
 #import "IssueHistoryViewController.h"
 #import "IssueCategory.h"
+//@import AFNetworking;
 
 #import "DescriptionViewController.h"
 #import "UIColor+Bawl.h"
@@ -302,6 +303,9 @@ static double const MAP_REFRESHING_INTERVAL = 120.0;
         [self requestGoogleApiPlace:coordinate];
         [self requestCategories];
         [self addBorderColor];
+//        [[YLProgressBar appearance] setType:YLProgressBarTypeFlat];
+//        YLProgressBar *progressBar = (YLProgressBar *)self.attachmentProgressView;
+        [self customiseProgressBarView];
         [UIView animateWithDuration:0.5 animations:^(void){
             self.scrollViewLeadingConstraint.constant = 0;
             [self hideTabBar];
@@ -531,7 +535,7 @@ static double const MAP_REFRESHING_INTERVAL = 120.0;
         [self showAlert:@"Validation error" withMessage:@"Fill all fields!"];
         return;
     }
-    [self requestAddingAttachmentToIssue];
+    [self requestAddingNewIssue:[self getJsonFromAddingNewIssueView]];
 //    [self requestAddingNewIssue:[self getJsonFromAddingNewIssueView]];
     [[self navigationController] setNavigationBarHidden:NO animated:NO];
     [UIView animateWithDuration:0.5 animations:^(void){
@@ -701,6 +705,8 @@ static double const MAP_REFRESHING_INTERVAL = 120.0;
     [self.indicator stopAnimating];
     self.addingIssueView.userInteractionEnabled = YES;
     
+    [self requestAddingAttachmentToIssueByAfnetworking:self.attachmentImage fieldName:@"file" mimeType:@"image/jpeg" fileName:@"picture_name.jpg"];
+    
     [picker dismissViewControllerAnimated:YES completion:^{
     }];
 }
@@ -765,6 +771,7 @@ static double const MAP_REFRESHING_INTERVAL = 120.0;
     [self.categoryPicker selectRow:0 inComponent:0 animated:NO];
     self.attachmentImage = nil;
     self.attachmentFilename = nil;
+    [self.attachmentProgressView setProgress:0.0];
 }
 
 - (void)viewWillTransitionToSize:(CGSize)size withTransitionCoordinator:(id<UIViewControllerTransitionCoordinator>)coordinator
@@ -786,6 +793,69 @@ static double const MAP_REFRESHING_INTERVAL = 120.0;
         // Equivalent to placing it in the deprecated method -[didRotateFromInterfaceOrientation:]
         
     }];
+}
+
+//+ (NSSet *)acceptableContentTypes;
+//{
+//    return [NSSet setWithObjects:@"application/json", @"text/json", @"text/javascript", @"text/plain", nil];
+//}
+
+-(void)requestAddingAttachmentToIssueByAfnetworking:(UIImage *)image
+                                          fieldName:(NSString *)fieldName
+                                           mimeType:(NSString *)mimeType
+                                           fileName:(NSString *)fileName
+{
+    NSData *data = UIImageJPEGRepresentation(image, 1.0);
+    
+    NSMutableURLRequest *request = [[AFHTTPRequestSerializer serializer] multipartFormRequestWithMethod:@"POST" URLString:DOMAIN_NAME_ADD_ATTACHMENT parameters:nil constructingBodyWithBlock:^(id<AFMultipartFormData> formData) {
+        [formData appendPartWithFileData:data name:fieldName fileName:fileName mimeType:mimeType];
+    } error:nil];
+    
+    AFURLSessionManager *manager = [[AFURLSessionManager alloc] initWithSessionConfiguration:[NSURLSessionConfiguration defaultSessionConfiguration]];
+    
+    NSURLSessionUploadTask *uploadTask;
+    uploadTask = [manager
+                  uploadTaskWithStreamedRequest:request
+                  progress:^(NSProgress * _Nonnull uploadProgress) {
+                      dispatch_async(dispatch_get_main_queue(), ^{
+                          //Update the progress view
+                          [self.attachmentProgressView setProgress:uploadProgress.fractionCompleted animated:YES];
+                      });
+                  }
+                  completionHandler:^(NSURLResponse * _Nonnull response, id  _Nullable responseObject, NSError * _Nullable error) {
+                      if (error) {
+                          NSLog(@"Error: %@", error);
+                      } else {
+                          NSLog(@"%@ %@", response, responseObject);
+                          self.attachmentFilename = responseObject[@"filename"];
+                      }
+                  }];
+    
+    [uploadTask resume];
+}
+
+- (void)imagePickerControllerDidCancel:(UIImagePickerController *)picker
+{
+    [self.indicator stopAnimating];
+    self.addingIssueView.userInteractionEnabled = YES;
+    [self dismissViewControllerAnimated:YES completion:NULL];
+}
+
+-(void)customiseProgressBarView
+{
+    NSArray *grayColors = @[[UIColor grayColor], [UIColor grayColor]];
+    
+    self.attachmentProgressView.type = YLProgressBarTypeFlat;
+    self.attachmentProgressView.progressTintColors = grayColors;
+    self.attachmentProgressView.trackTintColor = [UIColor whiteColor];
+    self.attachmentProgressView.hideStripes = YES;
+    self.attachmentProgressView.progressStretch = NO;
+    [self.attachmentProgressView setProgress:0.0f animated:NO];
+
+    CGFloat borderWidth = 1.0f;
+    self.attachmentProgressView.frame = CGRectInset(self.attachmentProgressView.frame, -borderWidth, -borderWidth);
+    self.attachmentProgressView.layer.borderColor = [UIColor grayColor].CGColor;
+    self.attachmentProgressView.layer.borderWidth = borderWidth;
 }
 
 @end
