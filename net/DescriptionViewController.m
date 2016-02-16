@@ -11,7 +11,7 @@
 #import "IssueChangeStatus.h"
 #import "NetworkDataSorce.h"
 #import "ChangerBox.h"
-
+#import "CurrentItems.h"
 
 
 
@@ -68,16 +68,47 @@
     [self prepareUIChangeStatusElements];
     [self.tabBarController.tabBar.items objectAtIndex:1].title = @"Description";
     
-    self.issueImageView.image = nil;
-    self.issueImageView.backgroundColor = [UIColor clearColor];
-    [self.dataSorce requestImageWithName:self.currentIssue.attachments andViewControllerHandler:^(UIImage *image) {
-        dispatch_async(dispatch_get_main_queue(), ^{
-            self.issueImageView.image = image;
-        });
-    } withErrorHandler:^(NSError *error) {
-        // error
-    }];
+    
+    if (![self isActualImageView])
+    {
+        if(self.image==nil)
+        {
+            self.issueImageView.image = nil;
+            self.issueImageView.backgroundColor = [UIColor clearColor];
+        }
+        else
+        {
+            self.issueImageView.image=self.image;
+            self.actualImageView = YES;
+        }
+    }
+//    [self.dataSorce requestImageWithName:self.currentIssue.attachments andViewControllerHandler:^(UIImage *image) {
+//        dispatch_async(dispatch_get_main_queue(), ^{
+//            self.issueImageView.image = image;
+//        });
+//    } withErrorHandler:^(NSError *error) {
+//        // error
+//    }];
 
+}
+
+//-(void)viewDidAppear:(BOOL)animated
+//{
+//
+//
+//}
+
+-(void)setImage:(UIImage *)image
+{
+    _image = image;
+
+    if(self.issueImageView !=nil)
+    {
+        self.issueImageView.image = image;
+        self.actualImageView = YES;
+    }
+
+    
 }
 
 -(void)viewDidLoad
@@ -90,12 +121,12 @@
 
 -(void)setDataToView
 {
-    self.titleLabel.text = self.currentIssue.name;
+    self.titleLabel.text = [CurrentItems sharedItems].issue.name;
     self.titleLabel.textColor = [UIColor bawlRedColor];
-    self.descriptionLabel.text = self.currentIssue.issueDescription;
+    self.descriptionLabel.text = [CurrentItems sharedItems].issue.issueDescription;
     
     NSString *firstPart = @"Issue status: ";
-    NSMutableAttributedString *aStr = [[NSMutableAttributedString alloc] initWithString:[firstPart stringByAppendingString:self.currentIssue.status]];
+    NSMutableAttributedString *aStr = [[NSMutableAttributedString alloc] initWithString:[firstPart stringByAppendingString:[CurrentItems sharedItems].issue.status]];
     [aStr addAttribute:NSForegroundColorAttributeName value:[UIColor blueColor] range:NSMakeRange(firstPart.length, [aStr string].length - firstPart.length)];
     self.currentStatusLabel.attributedText = aStr;
     
@@ -104,7 +135,7 @@
         for (IssueCategory *issueCategory in issueCategories)
         {
             
-            if (self.currentIssue.categoryId.intValue ==  issueCategory.categoryId.intValue)
+            if ([CurrentItems sharedItems].issue.categoryId.intValue ==  issueCategory.categoryId.intValue)
             {
                 [self makeCategoryLabelWithStringCategory:issueCategory.name];
                 break;
@@ -114,6 +145,7 @@
     } withErrorHandler:^(NSError *error) {
         // TODO: handle error
     }];
+    
     
     
 }
@@ -138,7 +170,7 @@
     if (self.currentUser==nil)
         self.stringNewStatuses = nil;
     else
-        self.stringNewStatuses = [self.statusChanger newIssueStatusesForUser:[[User userStringRoles] objectAtIndex:self.currentUser.role] andCurretIssueStatus:self.currentIssue.status];
+        self.stringNewStatuses = [self.statusChanger newIssueStatusesForUser:self.currentUser.stringRole andCurretIssueStatus:[CurrentItems sharedItems].issue.status];
     
     // self.stringNewStatuses = @[@"111", @"222", @"333"];
     
@@ -339,7 +371,7 @@
     if ([sender.restorationIdentifier isEqualToString:@"cancel"])
         return;
     
-    [self.dataSorce requestChangeStatusWithID:self.currentIssue.issueId
+    [self.dataSorce requestChangeStatusWithID:[CurrentItems sharedItems].issue.issueId
                                      toStatus:sender.restorationIdentifier
                      andViewControllerHandler:^(NSString *stringAnswer, Issue *issue) {
                          dispatch_async(dispatch_get_main_queue(), ^ {
@@ -352,7 +384,7 @@
                                                                        cancelButtonTitle:@"OK"
                                                                        otherButtonTitles:nil];
                                  [alert show];
-                                 self.currentIssue = issue;
+                                 [CurrentItems sharedItems].issue = issue;
                                  [self.mapViewControllerDelegate renewMap];
                                  [self setDataToView];
                                  [self clearOldDynamicElements];

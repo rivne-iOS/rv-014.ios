@@ -11,7 +11,7 @@
 
 
 @interface LogInViewController : UIViewController
-@property (weak, nonatomic) MapViewController *mapDelegate;
+// @property (weak, nonatomic) MapViewController *mapDelegate;
 
 
 @end

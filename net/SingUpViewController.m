@@ -12,6 +12,7 @@
 #import "SingUpViewController.h"
 #import "User.h"
 #import "TextFieldValidation.h"
+#import "CurrentItems.h"
 
 
 
@@ -245,12 +246,10 @@
         else
         {
             NSLog(@"good!!!!");
-            
-            __weak SingUpViewController *weakSelf = self;
             dispatch_async(dispatch_get_main_queue(), ^
                            {
-                               weakSelf.mapDelegate.currentUser = resUser;
-                               [weakSelf.navigationController popToViewController:weakSelf.mapDelegate animated:YES];
+                               [CurrentItems sharedItems].user = resUser;
+                               [self.navigationController popToRootViewControllerAnimated:YES];
                            });
         }
         
