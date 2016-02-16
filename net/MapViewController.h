@@ -33,7 +33,8 @@
 @property (weak, nonatomic) IBOutlet UITextField *nameTextField;
 @property (weak, nonatomic) IBOutlet UITextField *attachmentTextField;
 @property (weak, nonatomic) IBOutlet YLProgressBar *attachmentProgressView;
-
+@property (weak, nonatomic) IBOutlet UILabel *attachmentSuccessfullLabel;
+@property (weak, nonatomic) IBOutlet UIButton *attachmentLoadButton;
 
 @property (strong, nonatomic) NSTimer *timerForMapRenew;
 

@@ -58,10 +58,7 @@ static double const MAP_REFRESHING_INTERVAL = 120.0;
     [self checkCurrentUser];
 
     self.scrollViewLeadingConstraint.constant = CGRectGetWidth(self.mapView.bounds);
-    
     CGRect screenRect = [[UIScreen mainScreen] bounds];
-//    CGFloat screenHeight = screenRect.size.height;
-    
     self.addingIssueViewHeightConstraint.constant = screenRect.size.height;
     
     self.tabBarController.delegate = self;
@@ -214,15 +211,15 @@ static double const MAP_REFRESHING_INTERVAL = 120.0;
 #pragma mark Map
 -(void)createAndShowMap
 {
-    GMSCameraPosition *camera = [GMSCameraPosition cameraWithLatitude:50.6283612
-                                                            longitude:26.2604453
-                                                                 zoom:14];
+//    50.619020, 26.252073
+    GMSCameraPosition *camera = [GMSCameraPosition cameraWithLatitude:50.619020
+                                                            longitude:26.252073
+                                                                 zoom:12];
     self.mapView.camera = camera;
     self.mapView.myLocationEnabled = YES;
     self.mapView.delegate = self;
     
     [self.tabBarController.tabBar setHidden:YES];
-//    [self requestIssues];
 }
 
 #pragma mark Requests
@@ -303,9 +300,11 @@ static double const MAP_REFRESHING_INTERVAL = 120.0;
         [self requestGoogleApiPlace:coordinate];
         [self requestCategories];
         [self addBorderColor];
-//        [[YLProgressBar appearance] setType:YLProgressBarTypeFlat];
-//        YLProgressBar *progressBar = (YLProgressBar *)self.attachmentProgressView;
         [self customiseProgressBarView];
+        
+        if (self.attachmentImage != nil)
+            [self.attachmentProgressView setProgress:1.0 animated:NO];
+        
         [UIView animateWithDuration:0.5 animations:^(void){
             self.scrollViewLeadingConstraint.constant = 0;
             [self hideTabBar];
@@ -466,19 +465,16 @@ static double const MAP_REFRESHING_INTERVAL = 120.0;
                         }];
 }
 
-// returns the number of 'columns' to display.
 - (NSInteger)numberOfComponentsInPickerView:(UIPickerView *)pickerView
 {
     return 1;
 }
 
-// returns the # of rows in each component..
 - (NSInteger)pickerView:(UIPickerView *)pickerView numberOfRowsInComponent:(NSInteger)component
 {
     return self.categoryClassArray.count;
 }
 
-// The data to return for the row and component (column) that's being passed in
 - (NSString*)pickerView:(UIPickerView *)pickerView titleForRow:(NSInteger)row forComponent:(NSInteger)component
 {
     return [self.categoryClassArray[row] name];
@@ -614,39 +610,39 @@ static double const MAP_REFRESHING_INTERVAL = 120.0;
     }
 }
 
--(void)requestAddingAttachmentToIssue
-{
-    NSURL *url = [NSURL URLWithString:DOMAIN_NAME_ADD_ATTACHMENT];
-    NSURLSessionConfiguration *config = [NSURLSessionConfiguration defaultSessionConfiguration];
-    NSURLSession *session = [NSURLSession sessionWithConfiguration:config];
-
-    NSString *boundary = [self generateBoundaryString];
-    
-    // configure the request
-    NSMutableURLRequest *request = [[NSMutableURLRequest alloc] initWithURL:url];
-    [request setHTTPMethod:@"POST"];
-    
-    // set content type
-    NSString *contentType = [NSString stringWithFormat:@"multipart/form-data; boundary=%@", boundary];
-    [request setValue:contentType forHTTPHeaderField: @"Content-Type"];
-    
-    // create body
-    NSData *httpBody = [self createBodyWithBoundary:boundary image:self.attachmentImage fieldName:@"file"];
-    
-    request.HTTPBody = httpBody;
-    
-    NSURLSessionTask *task = [session dataTaskWithRequest:request completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
-        if (error) {
-            NSLog(@"Error = %@", error);
-            return;
-        }
-        
-        NSDictionary *attachmentServerResponse = [NSJSONSerialization JSONObjectWithData:data options:0                                                                                                   error:NULL];
-        self.attachmentFilename = attachmentServerResponse[@"filename"];
-        [self requestAddingNewIssue:[self getJsonFromAddingNewIssueView]];
-    }];
-    [task resume];
-}
+//-(void)requestAddingAttachmentToIssue
+//{
+//    NSURL *url = [NSURL URLWithString:DOMAIN_NAME_ADD_ATTACHMENT];
+//    NSURLSessionConfiguration *config = [NSURLSessionConfiguration defaultSessionConfiguration];
+//    NSURLSession *session = [NSURLSession sessionWithConfiguration:config];
+//
+//    NSString *boundary = [self generateBoundaryString];
+//    
+//    // configure the request
+//    NSMutableURLRequest *request = [[NSMutableURLRequest alloc] initWithURL:url];
+//    [request setHTTPMethod:@"POST"];
+//    
+//    // set content type
+//    NSString *contentType = [NSString stringWithFormat:@"multipart/form-data; boundary=%@", boundary];
+//    [request setValue:contentType forHTTPHeaderField: @"Content-Type"];
+//    
+//    // create body
+//    NSData *httpBody = [self createBodyWithBoundary:boundary image:self.attachmentImage fieldName:@"file"];
+//    
+//    request.HTTPBody = httpBody;
+//    
+//    NSURLSessionTask *task = [session dataTaskWithRequest:request completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
+//        if (error) {
+//            NSLog(@"Error = %@", error);
+//            return;
+//        }
+//        
+//        NSDictionary *attachmentServerResponse = [NSJSONSerialization JSONObjectWithData:data options:0                                                                                                   error:NULL];
+//        self.attachmentFilename = attachmentServerResponse[@"filename"];
+//        [self requestAddingNewIssue:[self getJsonFromAddingNewIssueView]];
+//    }];
+//    [task resume];
+//}
 
 -(void)renewMap
 {
@@ -704,6 +700,11 @@ static double const MAP_REFRESHING_INTERVAL = 120.0;
 
     [self.indicator stopAnimating];
     self.addingIssueView.userInteractionEnabled = YES;
+    self.attachmentLoadButton.userInteractionEnabled = NO;
+    
+    [self.attachmentProgressView setProgress:0.0];
+    [self.attachmentProgressView setAlpha:1.0];
+    [self.attachmentSuccessfullLabel setAlpha:0.0];
     
     [self requestAddingAttachmentToIssueByAfnetworking:self.attachmentImage fieldName:@"file" mimeType:@"image/jpeg" fileName:@"picture_name.jpg"];
     
@@ -739,30 +740,30 @@ static double const MAP_REFRESHING_INTERVAL = 120.0;
     [alert show];
 }
 
--(NSData *)createBodyWithBoundary:(NSString *)boundary
-                            image:(UIImage *)image
-                        fieldName:(NSString *)fieldName
-{
-    NSMutableData *httpBody = [NSMutableData data];
-    
-    NSData *data = UIImageJPEGRepresentation(image, 1.0);
-    
-    [httpBody appendData:[[NSString stringWithFormat:@"--%@\r\n", boundary] dataUsingEncoding:NSUTF8StringEncoding]];
-    [httpBody appendData:[[NSString stringWithFormat:@"Content-Disposition: form-data; name=\"%@\"; filename=\"%@\"\r\n", fieldName, @"image_name.jpg"] dataUsingEncoding:NSUTF8StringEncoding]];
-    [httpBody appendData:[[NSString stringWithFormat:@"Content-Type: %@\r\n\r\n", @"image/jpeg"] dataUsingEncoding:NSUTF8StringEncoding]];
-    [httpBody appendData:data];
-    [httpBody appendData:[@"\r\n" dataUsingEncoding:NSUTF8StringEncoding]];
-    
-    [httpBody appendData:[[NSString stringWithFormat:@"--%@--\r\n", boundary] dataUsingEncoding:NSUTF8StringEncoding]];
-    
-    return httpBody;
-}
-
-- (NSString *)generateBoundaryString
-{
-    return [NSString stringWithFormat:@"Boundary-%@", [[NSUUID UUID] UUIDString]];
-
-}
+//-(NSData *)createBodyWithBoundary:(NSString *)boundary
+//                            image:(UIImage *)image
+//                        fieldName:(NSString *)fieldName
+//{
+//    NSMutableData *httpBody = [NSMutableData data];
+//    
+//    NSData *data = UIImageJPEGRepresentation(image, 1.0);
+//    
+//    [httpBody appendData:[[NSString stringWithFormat:@"--%@\r\n", boundary] dataUsingEncoding:NSUTF8StringEncoding]];
+//    [httpBody appendData:[[NSString stringWithFormat:@"Content-Disposition: form-data; name=\"%@\"; filename=\"%@\"\r\n", fieldName, @"image_name.jpg"] dataUsingEncoding:NSUTF8StringEncoding]];
+//    [httpBody appendData:[[NSString stringWithFormat:@"Content-Type: %@\r\n\r\n", @"image/jpeg"] dataUsingEncoding:NSUTF8StringEncoding]];
+//    [httpBody appendData:data];
+//    [httpBody appendData:[@"\r\n" dataUsingEncoding:NSUTF8StringEncoding]];
+//    
+//    [httpBody appendData:[[NSString stringWithFormat:@"--%@--\r\n", boundary] dataUsingEncoding:NSUTF8StringEncoding]];
+//    
+//    return httpBody;
+//}
+//
+//- (NSString *)generateBoundaryString
+//{
+//    return [NSString stringWithFormat:@"Boundary-%@", [[NSUUID UUID] UUIDString]];
+//
+//}
 
 -(void)clearAllFields
 {
@@ -772,33 +773,22 @@ static double const MAP_REFRESHING_INTERVAL = 120.0;
     self.attachmentImage = nil;
     self.attachmentFilename = nil;
     [self.attachmentProgressView setProgress:0.0];
+    [self.attachmentProgressView setAlpha:1.0];
+    [self.attachmentSuccessfullLabel setAlpha:0.0];
 }
 
 - (void)viewWillTransitionToSize:(CGSize)size withTransitionCoordinator:(id<UIViewControllerTransitionCoordinator>)coordinator
 {
     [super viewWillTransitionToSize:size withTransitionCoordinator:coordinator];
-    
-    // Code here will execute before the rotation begins.
-    // Equivalent to placing it in the deprecated method -[willRotateToInterfaceOrientation:duration:]
     self.scrollViewLeadingConstraint.constant = size.width;
     
     [coordinator animateAlongsideTransition:^(id<UIViewControllerTransitionCoordinatorContext> context) {
         
-        // Place code here to perform animations during the rotation.
-        // You can pass nil or leave this block empty if not necessary.
         
     } completion:^(id<UIViewControllerTransitionCoordinatorContext> context) {
         
-        // Code here will execute after the rotation has finished.
-        // Equivalent to placing it in the deprecated method -[didRotateFromInterfaceOrientation:]
-        
     }];
 }
-
-//+ (NSSet *)acceptableContentTypes;
-//{
-//    return [NSSet setWithObjects:@"application/json", @"text/json", @"text/javascript", @"text/plain", nil];
-//}
 
 -(void)requestAddingAttachmentToIssueByAfnetworking:(UIImage *)image
                                           fieldName:(NSString *)fieldName
@@ -820,6 +810,13 @@ static double const MAP_REFRESHING_INTERVAL = 120.0;
                       dispatch_async(dispatch_get_main_queue(), ^{
                           //Update the progress view
                           [self.attachmentProgressView setProgress:uploadProgress.fractionCompleted animated:YES];
+                          if (uploadProgress.fractionCompleted == 1.0) {
+                              [UIView animateWithDuration:1.0 animations:^(void) {
+                                  [self.attachmentProgressView setAlpha:0.0];
+                                  [self.attachmentSuccessfullLabel setAlpha:1.0];
+                              }];
+                              self.attachmentLoadButton.userInteractionEnabled = YES;
+                          }
                       });
                   }
                   completionHandler:^(NSURLResponse * _Nonnull response, id  _Nullable responseObject, NSError * _Nullable error) {
