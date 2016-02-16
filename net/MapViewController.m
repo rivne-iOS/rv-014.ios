@@ -74,13 +74,14 @@ static double const MAP_REFRESHING_INTERVAL = 120.0;
     NSDictionary *userDictionary = [[NSUserDefaults standardUserDefaults] objectForKey:@"userDictionary"];
     if(userDictionary!=nil)
     {
-        self.navigationItem.rightBarButtonItem.title = @"User check...";
+        self.navigationItem.rightBarButtonItem.title = @"Log in...";
         [self.dataSorce requestLogInWithUser:[userDictionary objectForKey:@"LOGIN"]
                                      andPass:[userDictionary objectForKey:@"PASSWORD"]
                     andViewControllerHandler:^(User *resUser)
          {
                  dispatch_async(dispatch_get_main_queue(), ^ {
                      self.currentUser = resUser;
+                     [CurrentItems sharedItems].user = resUser;
                  });
          } andErrorHandler:^(NSError *error) {
              // error!
@@ -88,13 +89,20 @@ static double const MAP_REFRESHING_INTERVAL = 120.0;
     }
     else
     {
-        self.currentUser = nil;
-        
+        self.currentUser = nil; // sharedItems.user is already nil;
     }
 }
 
 -(void)viewWillAppear:(BOOL)animated
 {
+    if(self.currentUser==nil)
+    {
+        self.currentUser = [CurrentItems sharedItems].user;
+    }
+    
+    if(self.currentMarker!=nil)
+        self.tabBarController.tabBar.hidden = NO;
+    
     [self renewMap];
     
     [self.timerForMapRenew invalidate];
@@ -134,27 +142,27 @@ static double const MAP_REFRESHING_INTERVAL = 120.0;
 }
 
 #pragma mark - Navigation
--(void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
-{
-    if([segue.identifier isEqualToString:@"fromMapToLogIn"]) 
-    {
-        if([segue.destinationViewController isKindOfClass:[LogInViewController class]])
-        {
-            LogInViewController *logInVC = (LogInViewController*)segue.destinationViewController;
-            logInVC.mapDelegate = self;
-            
-        }
-    }
-    
-    if([segue.identifier isEqualToString:@"fromMapToDescription"])
-    {
-        if([segue.destinationViewController isKindOfClass:[DescriptionViewController class]])
-        {
-            DescriptionViewController *DescriptionVC = (DescriptionViewController *)segue.destinationViewController;
-            DescriptionVC.currentIssue = self.currentMarker.userData;
-        }
-    }
-}
+//-(void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
+//{
+//    if([segue.identifier isEqualToString:@"fromMapToLogIn"]) 
+//    {
+//        if([segue.destinationViewController isKindOfClass:[LogInViewController class]])
+//        {
+//            LogInViewController *logInVC = (LogInViewController*)segue.destinationViewController;
+//            logInVC.mapDelegate = self;
+//            
+//        }
+//    }
+
+//    if([segue.identifier isEqualToString:@"fromMapToDescription"])
+//    {
+//        if([segue.destinationViewController isKindOfClass:[DescriptionViewController class]])
+//        {
+//            DescriptionViewController *DescriptionVC = (DescriptionViewController *)segue.destinationViewController;
+//            DescriptionVC.currentIssue = self.currentMarker.userData;
+//        }
+//    }
+//}
 
 
 - (IBAction)sequeToLogInButton:(UIBarButtonItem *)sender {
@@ -175,6 +183,7 @@ static double const MAP_REFRESHING_INTERVAL = 120.0;
                 self.title = [NSString stringWithFormat:@"Bowl"];
                 self.navigationItem.rightBarButtonItem.title = @"Log In";
                 self.currentUser=nil;
+                [[NSUserDefaults standardUserDefaults] objectForKey:@"userDictionary"];
                 UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Log Out"
                                                                 message:@"You loged out successfully!"
                                                                delegate:nil
@@ -234,7 +243,7 @@ static double const MAP_REFRESHING_INTERVAL = 120.0;
                                         
                                                 NSArray *issuesDictionaryArray = [NSJSONSerialization JSONObjectWithData:data options:0                                                                                                    error:NULL];
                                                 
-                                                NSMutableArray *issuesClassArray = [[NSMutableArray alloc] init];
+                                                NSMutableArray <Issue*> *issuesClassArray = [[NSMutableArray alloc] init];
                                                 for (NSDictionary *issue in issuesDictionaryArray) {
                                                     [issuesClassArray addObject:[[Issue alloc] initWithDictionary:issue]];
                                                 }
@@ -276,11 +285,33 @@ static double const MAP_REFRESHING_INTERVAL = 120.0;
         
     }];
     self.currentMarker = marker;
+    
+    DescriptionViewController *descriptionVC = nil;
+    for (UIViewController *viewController in self.tabBarController.viewControllers)
+    {
+        
+        if ([viewController isKindOfClass:[UINavigationController class]] && [viewController.restorationIdentifier isEqualToString:@"description"])
+        {
+            UINavigationController *destController = (UINavigationController *)viewController;
+            descriptionVC = (DescriptionViewController *)destController.topViewController;
+            break;
+        }
+    }
+    descriptionVC.image=nil;
+    descriptionVC.actualImageView = NO;
+    [[CurrentItems sharedItems] setIssue:marker.userData withChangingImageViewBloc:^{
+        dispatch_async(dispatch_get_main_queue(), ^{
+            descriptionVC.image = [CurrentItems sharedItems].issueImage;
+        });
+
+    }];
+    
     return NO;
 }
 
 -(void)mapView:(GMSMapView *)mapView didTapAtCoordinate:(CLLocationCoordinate2D)coordinate
 {
+    self.currentMarker = nil;
     [UIView animateWithDuration:0.5 animations:^(void){
         [self hideTabBar];
         [self.view layoutIfNeeded];
@@ -364,7 +395,7 @@ static double const MAP_REFRESHING_INTERVAL = 120.0;
     if ([viewController isKindOfClass:[UINavigationController class]] && [viewController.restorationIdentifier isEqualToString:@"description"]){
         UINavigationController *destController = (UINavigationController *)viewController;
         DescriptionViewController *descriptionVC = (DescriptionViewController *)destController.topViewController;
-        descriptionVC.currentIssue = self.currentMarker.userData;
+//        descriptionVC.currentIssue = self.currentMarker.userData;
         descriptionVC.currentUser = self.currentUser;
         descriptionVC.mapViewControllerDelegate = self;
         descriptionVC.title = self.title;
