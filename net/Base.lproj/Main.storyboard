@@ -421,21 +421,21 @@
                                         <variation key="default">
                                             <mask key="constraints">
                                                 <exclude reference="lcH-SJ-6ay"/>
-                                                <exclude reference="0aw-3C-3gz"/>
-                                                <exclude reference="6TX-pa-5Qf"/>
                                                 <exclude reference="J6V-d6-vjB"/>
                                                 <exclude reference="eiT-hI-msd"/>
                                                 <exclude reference="i5O-kB-fQK"/>
                                                 <exclude reference="iTg-ok-UgC"/>
                                                 <exclude reference="vyV-yT-TRI"/>
+                                                <exclude reference="0aw-3C-3gz"/>
+                                                <exclude reference="6TX-pa-5Qf"/>
                                             </mask>
                                         </variation>
                                         <variation key="heightClass=compact">
                                             <mask key="constraints">
-                                                <exclude reference="l3Y-Me-Iem"/>
                                                 <include reference="J6V-d6-vjB"/>
                                                 <exclude reference="RMF-uB-Cuu"/>
                                                 <include reference="i5O-kB-fQK"/>
+                                                <exclude reference="l3Y-Me-Iem"/>
                                             </mask>
                                         </variation>
                                     </view>
@@ -704,7 +704,7 @@
                                                 <color key="textColor" red="0.47593118686868674" green="0.47593118686868674" blue="0.47593118686868674" alpha="1" colorSpace="calibratedRGB"/>
                                                 <nil key="highlightedColor"/>
                                             </label>
-                                            <label opaque="NO" userInteractionEnabled="NO" alpha="0.0" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Successfully." textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="jFd-hq-Zfw">
+                                            <label opaque="NO" userInteractionEnabled="NO" alpha="0.0" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" text="Successfully." textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="jFd-hq-Zfw">
                                                 <rect key="frame" x="232" y="508" width="42" height="21"/>
                                                 <fontDescription key="fontDescription" type="system" pointSize="13"/>
                                                 <color key="textColor" red="0.47593118690000003" green="0.47593118690000003" blue="0.47593118690000003" alpha="1" colorSpace="calibratedRGB"/>

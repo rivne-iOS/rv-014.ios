@@ -81,7 +81,7 @@
 
 -(void)setIssue:(Issue *)issue
 {
-    self.issue = issue;
+    _issue = issue;
     NSString *unchangedName = self.issue.attachments;
     [self.dataSorce requestImageWithName:self.issue.attachments andHandler:^(UIImage *image) {
         if ([unchangedName isEqualToString:self.issue.attachments])
