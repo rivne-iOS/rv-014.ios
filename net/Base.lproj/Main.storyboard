@@ -421,21 +421,21 @@
                                         <variation key="default">
                                             <mask key="constraints">
                                                 <exclude reference="lcH-SJ-6ay"/>
-                                                <exclude reference="0aw-3C-3gz"/>
-                                                <exclude reference="6TX-pa-5Qf"/>
                                                 <exclude reference="J6V-d6-vjB"/>
                                                 <exclude reference="eiT-hI-msd"/>
                                                 <exclude reference="i5O-kB-fQK"/>
                                                 <exclude reference="iTg-ok-UgC"/>
                                                 <exclude reference="vyV-yT-TRI"/>
+                                                <exclude reference="0aw-3C-3gz"/>
+                                                <exclude reference="6TX-pa-5Qf"/>
                                             </mask>
                                         </variation>
                                         <variation key="heightClass=compact">
                                             <mask key="constraints">
-                                                <exclude reference="l3Y-Me-Iem"/>
                                                 <include reference="J6V-d6-vjB"/>
                                                 <exclude reference="RMF-uB-Cuu"/>
                                                 <include reference="i5O-kB-fQK"/>
+                                                <exclude reference="l3Y-Me-Iem"/>
                                             </mask>
                                         </variation>
                                     </view>
@@ -840,14 +840,6 @@
                                 <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                                 <nil key="highlightedColor"/>
                             </label>
-                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="HaZ-Nw-77m">
-                                <rect key="frame" x="175" y="171" width="250" height="150"/>
-                                <color key="backgroundColor" red="0.0" green="0.50196081400000003" blue="0.25098040700000002" alpha="1" colorSpace="calibratedRGB"/>
-                                <constraints>
-                                    <constraint firstAttribute="height" constant="150" id="iD5-JL-HQS"/>
-                                    <constraint firstAttribute="width" constant="250" id="wxH-os-HdO"/>
-                                </constraints>
-                            </imageView>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Text" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="vh5-CI-qrZ">
                                 <rect key="frame" x="20" y="147" width="560" height="16"/>
                                 <fontDescription key="fontDescription" name="HelveticaNeue" family="Helvetica Neue" pointSize="13"/>
@@ -860,6 +852,13 @@
                                 <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                                 <nil key="highlightedColor"/>
                             </label>
+                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="HaZ-Nw-77m">
+                                <rect key="frame" x="175" y="171" width="250" height="150"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="150" id="iD5-JL-HQS"/>
+                                    <constraint firstAttribute="width" constant="250" id="wxH-os-HdO"/>
+                                </constraints>
+                            </imageView>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <constraints>

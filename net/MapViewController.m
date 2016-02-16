@@ -33,7 +33,7 @@ static double const MAP_REFRESHING_INTERVAL = 120.0;
 @property(strong,nonatomic) NSArray *arrayOfPoints;
 @property (strong, nonatomic) id <DataSorceProtocol> dataSorce;
 @property (weak, nonatomic) IBOutlet GMSMapView *mapView;
-@property (strong, nonatomic) GMSMarker *currentMarker;
+@property (nonatomic)BOOL isMarkerSelected;
 @property (assign, nonatomic) CLLocationCoordinate2D currentLocation;
 @property (nonatomic) BOOL userLogined;
 
@@ -44,6 +44,7 @@ static double const MAP_REFRESHING_INTERVAL = 120.0;
 - (void)viewDidLoad {
     [super viewDidLoad];
     self.title = @"Bowl";
+    self.isMarkerSelected = NO;
     self.dataSorce = [[NetworkDataSorce alloc] init];
     self.navigationController.navigationBar.tintColor = [UIColor whiteColor];
     self.navigationController.navigationBar.barTintColor = [UIColor bawlRedColor];
@@ -90,7 +91,7 @@ static double const MAP_REFRESHING_INTERVAL = 120.0;
         self.currentUser = [CurrentItems sharedItems].user;
     }
     
-    if(self.currentMarker!=nil)
+    if([self isMarkerSelected])
         self.tabBarController.tabBar.hidden = NO;
     
     [self renewMap];
@@ -131,35 +132,12 @@ static double const MAP_REFRESHING_INTERVAL = 120.0;
     }
 }
 
-#pragma mark - Navigation
-//-(void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
-//{
-//    if([segue.identifier isEqualToString:@"fromMapToLogIn"]) 
-//    {
-//        if([segue.destinationViewController isKindOfClass:[LogInViewController class]])
-//        {
-//            LogInViewController *logInVC = (LogInViewController*)segue.destinationViewController;
-//            logInVC.mapDelegate = self;
-//            
-//        }
-//    }
-
-//    if([segue.identifier isEqualToString:@"fromMapToDescription"])
-//    {
-//        if([segue.destinationViewController isKindOfClass:[DescriptionViewController class]])
-//        {
-//            DescriptionViewController *DescriptionVC = (DescriptionViewController *)segue.destinationViewController;
-//            DescriptionVC.currentIssue = self.currentMarker.userData;
-//        }
-//    }
-//}
-
-
 - (IBAction)sequeToLogInButton:(UIBarButtonItem *)sender {
     
     
     if (!self.userLogined)
     {
+        self.tabBarController.tabBar.hidden = YES;
         [self performSegueWithIdentifier:@"fromMapToLogIn" sender:self];
     }
     else
@@ -218,7 +196,6 @@ static double const MAP_REFRESHING_INTERVAL = 120.0;
     self.mapView.delegate = self;
     
     [self.tabBarController.tabBar setHidden:YES];
-//    [self requestIssues];
 }
 
 
@@ -275,34 +252,40 @@ static double const MAP_REFRESHING_INTERVAL = 120.0;
         [self.view layoutIfNeeded];
         
     }];
-    self.currentMarker = marker;
+    self.isMarkerSelected = YES;
     
-    DescriptionViewController *descriptionVC = nil;
-    for (UIViewController *viewController in self.tabBarController.viewControllers)
-    {
-        
-        if ([viewController isKindOfClass:[UINavigationController class]] && [viewController.restorationIdentifier isEqualToString:@"description"])
-        {
-            UINavigationController *destController = (UINavigationController *)viewController;
-            descriptionVC = (DescriptionViewController *)destController.topViewController;
-            break;
-        }
-    }
-    descriptionVC.image=nil;
-    descriptionVC.actualImageView = NO;
-    [[CurrentItems sharedItems] setIssue:marker.userData withChangingImageViewBloc:^{
-        dispatch_async(dispatch_get_main_queue(), ^{
-            descriptionVC.image = [CurrentItems sharedItems].issueImage;
-        });
-
-    }];
+    CurrentItems *cItems = [CurrentItems sharedItems];
+    cItems.issueImage = nil;
+    cItems.issue = marker.userData;
+    
+    
+    
+//    DescriptionViewController *descriptionVC = nil;
+//    for (UIViewController *viewController in self.tabBarController.viewControllers)
+//    {
+//        
+//        if ([viewController isKindOfClass:[UINavigationController class]] && [viewController.restorationIdentifier isEqualToString:@"description"])
+//        {
+//            UINavigationController *destController = (UINavigationController *)viewController;
+//            descriptionVC = (DescriptionViewController *)destController.topViewController;
+//            break;
+//        }
+//    }
+//    descriptionVC.image=nil;
+//    descriptionVC.isActualImageView = NO;
+//    [[CurrentItems sharedItems] setIssue:marker.userData withChangingImageViewBloc:^{
+//        dispatch_async(dispatch_get_main_queue(), ^{
+//            descriptionVC.image = [CurrentItems sharedItems].issueImage;
+//        });
+//
+//    }];
     
     return NO;
 }
 
 -(void)mapView:(GMSMapView *)mapView didTapAtCoordinate:(CLLocationCoordinate2D)coordinate
 {
-    self.currentMarker = nil;
+    self.isMarkerSelected = NO;
     [UIView animateWithDuration:0.5 animations:^(void){
         [self hideTabBar];
         [self.view layoutIfNeeded];
@@ -379,23 +362,14 @@ static double const MAP_REFRESHING_INTERVAL = 120.0;
     if ([viewController isKindOfClass:[UINavigationController class]] && [viewController.restorationIdentifier isEqualToString:@"description"]){
         UINavigationController *destController = (UINavigationController *)viewController;
         DescriptionViewController *descriptionVC = (DescriptionViewController *)destController.topViewController;
-//        descriptionVC.currentIssue = self.currentMarker.userData;
-        descriptionVC.currentUser = self.currentUser;
         descriptionVC.mapViewControllerDelegate = self;
         descriptionVC.title = self.title;
-        //descriptionVC.view.frame;
-//        [descriptionVC setDataToView];
-//        [descriptionVC clearOldDynamicElements];
-//        [descriptionVC prepareUIChangeStatusElements];
-
     }
     else if ([viewController isKindOfClass:[UINavigationController class]] && [viewController.restorationIdentifier isEqualToString:@"history"]){
         UINavigationController *destController = (UINavigationController *)viewController;
         IssueHistoryViewController *issueHistoryViewController = (IssueHistoryViewController *)destController.topViewController;
-        issueHistoryViewController.issue = (Issue *)self.currentMarker.userData;
         issueHistoryViewController.title = self.title;
     }
-//    [self animateTabsSwitching:viewController];
     return YES;
 }
 
@@ -462,13 +436,6 @@ static double const MAP_REFRESHING_INTERVAL = 120.0;
     
     UIView *fromView = self.tabBarController.selectedViewController.view;
     UIView *toView = [viewController view];
-    //UIView *toView = [self.tabBarController.viewControllers[controllerIndex] view];
-//    if([viewController isKindOfClass:[DescriptionViewController class]])
-//    {
-//        DescriptionViewController *dVC = (DescriptionViewController*)viewController;
-//        [dVC setDataToView];
-//    }
-
     [UIView transitionFromView:fromView
                             toView:toView
                           duration:0.5

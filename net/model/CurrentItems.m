@@ -52,7 +52,7 @@
         if ([unchangedName isEqualToString:self.user.avatar])
         {
             self.userImage = image;
-            [self.delegates makeObjectsPerformSelector:@selector(userImageDidLoad)];
+            [self.userImageDelegates makeObjectsPerformSelector:@selector(userImageDidLoad)];
         }
     } withErrorHandler:^(NSError *error) {
         // handle error
@@ -81,13 +81,13 @@
 
 -(void)setIssue:(Issue *)issue
 {
-    self.issue = issue;
+    _issue = issue;
     NSString *unchangedName = self.issue.attachments;
     [self.dataSorce requestImageWithName:self.issue.attachments andHandler:^(UIImage *image) {
         if ([unchangedName isEqualToString:self.issue.attachments])
         {
             self.issueImage = image;
-            [self.delegates makeObjectsPerformSelector:@selector(issueImageDidLoad)];
+            [self.issueImageDelegates makeObjectsPerformSelector:@selector(issueImageDidLoad)];
         }
     } withErrorHandler:^(NSError *error) {
         // handle error
