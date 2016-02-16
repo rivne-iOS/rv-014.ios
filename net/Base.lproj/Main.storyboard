@@ -1071,6 +1071,9 @@
                                         <state key="normal" title="Change Avatar">
                                             <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                         </state>
+                                        <connections>
+                                            <action selector="changeAvatar:" destination="7ZL-qH-qc6" eventType="touchUpInside" id="bdq-ai-Lja"/>
+                                        </connections>
                                     </button>
                                 </subviews>
                                 <constraints>
@@ -1188,6 +1191,6 @@
         <image name="traffic_light_issue" width="164" height="92"/>
     </resources>
     <inferredMetricsTieBreakers>
-        <segue reference="JER-bu-PYI"/>
+        <segue reference="TLl-qh-wdc"/>
     </inferredMetricsTieBreakers>
 </document>

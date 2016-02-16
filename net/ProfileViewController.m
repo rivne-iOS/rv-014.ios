@@ -98,19 +98,21 @@
 }
 
 - (void) revealAllViews {
-    [self.profileImage setHidden:NO];
-    [self.userName setHidden:NO];
-    [self.labelUserLogin setHidden:NO];
-    [self.userLogin setHidden:NO];
-    [self.labelUserEmail setHidden:NO];
-    [self.userEmail setHidden:NO];
-    [self.labelSystemRole setHidden:NO];
-    [self.systemRole setHidden:NO];
-    [self.changeUserDetails setHidden:NO];
-    [self.changeAvatar setHidden:NO];
-    
-    [self.activityIndicatorView stopAnimating];
-    self.activityIndicatorView.hidden = YES;
+    dispatch_async(dispatch_get_main_queue(), ^{
+        [self.profileImage setHidden:NO];
+        [self.userName setHidden:NO];
+        [self.labelUserLogin setHidden:NO];
+        [self.userLogin setHidden:NO];
+        [self.labelUserEmail setHidden:NO];
+        [self.userEmail setHidden:NO];
+        [self.labelSystemRole setHidden:NO];
+        [self.systemRole setHidden:NO];
+        [self.changeUserDetails setHidden:NO];
+        [self.changeAvatar setHidden:NO];
+        
+        [self.activityIndicatorView stopAnimating];
+        self.activityIndicatorView.hidden = YES;
+    });
 }
 
 - (void) requestAvatarWithUpdateScreenHandler: (SEL) handler {
@@ -124,7 +126,9 @@
                                           if (data.length > 0 && connectionError == nil) {
                                               UIImage *tmpImage = [UIImage imageWithData:data];
                                               
-                                              self.profileImage.image = tmpImage;
+                                              dispatch_async(dispatch_get_main_queue(), ^{
+                                                  self.profileImage.image = tmpImage;
+                                              });
                                               
                                           }
                                           [self revealAllViews];
@@ -207,15 +211,38 @@
 #pragma mark - Navigation
 
 // In a storyboard-based application, you will often want to do a little preparation before navigation
-- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
-    if([segue.identifier isEqualToString:@"fromMapToLogIn"])
-    {
-        if([segue.destinationViewController isKindOfClass:[LogInViewController class]])
-        {
-            LogInViewController *logInVC = (LogInViewController*)segue.destinationViewController;
-        }
-    }
+//- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
+//    if([segue.identifier isEqualToString:@"fromMapToLogIn"])
+//    {
+//        if([segue.destinationViewController isKindOfClass:[LogInViewController class]])
+//        {
+//            LogInViewController *logInVC = (LogInViewController*)segue.destinationViewController;
+//        }
+//    }
+//}
+
+#pragma mark - Change Avatar
+
+- (IBAction)changeAvatar:(UIButton *)sender {
+    UIImagePickerController *picker = [[UIImagePickerController alloc] init];
+    
+    picker.delegate = self;
+    picker.allowsEditing = YES;
+    picker.sourceType = UIImagePickerControllerSourceTypePhotoLibrary;
+    
+    [self presentViewController:picker animated:YES completion:nil];
 }
 
+- (void) imagePickerController:(UIImagePickerController *)picker didFinishPickingMediaWithInfo:(NSDictionary<NSString *,id> *)info {
+    UIImage *pickedImage = info[UIImagePickerControllerEditedImage];
+    
+    self.profileImage.image = pickedImage;
+    
+    [picker dismissViewControllerAnimated:YES completion:nil];
+}
+
+- (void) imagePickerControllerDidCancel:(UIImagePickerController *)picker {
+    [picker dismissViewControllerAnimated:YES completion:nil];
+}
 
 @end
