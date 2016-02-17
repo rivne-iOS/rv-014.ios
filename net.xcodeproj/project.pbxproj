@@ -86,7 +86,6 @@
 		8499309F1C5915E100EDBF5E /* IssueCategory.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = IssueCategory.m; path = model/IssueCategory.m; sourceTree = "<group>"; };
 		849E9B191C709BB200DA527E /* CurrentItems.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CurrentItems.h; path = model/CurrentItems.h; sourceTree = "<group>"; };
 		849E9B1A1C709BB200DA527E /* CurrentItems.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = CurrentItems.m; path = model/CurrentItems.m; sourceTree = "<group>"; };
-		849E9B1C1C726B2E00DA527E /* CurrentItemsDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CurrentItemsDelegate.h; path = model/CurrentItemsDelegate.h; sourceTree = "<group>"; };
 		84D93FC71C5A245800D4E96D /* IssueChangeStatus.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = IssueChangeStatus.h; path = model/IssueChangeStatus.h; sourceTree = "<group>"; };
 		84D93FC81C5A245800D4E96D /* IssueChangeStatus.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = IssueChangeStatus.m; path = model/IssueChangeStatus.m; sourceTree = "<group>"; };
 		84E19B1F1C4C131E00AABD7D /* TextFieldValidation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TextFieldValidation.h; path = model/TextFieldValidation.h; sourceTree = "<group>"; };
@@ -234,7 +233,6 @@
 				8459C76E1C6505C700F7F595 /* ChangerBox.m */,
 				849E9B191C709BB200DA527E /* CurrentItems.h */,
 				849E9B1A1C709BB200DA527E /* CurrentItems.m */,
-				849E9B1C1C726B2E00DA527E /* CurrentItemsDelegate.h */,
 			);
 			name = model;
 			sourceTree = "<group>";

@@ -72,10 +72,10 @@
 {
     NSMutableDictionary <NSString*, NSString*> *dic = [[NSMutableDictionary alloc] init];
     
-    [dic setObject:self.login forKey:@"LOGIN"];
-    [dic setObject:self.name forKey:@"NAME"];
-    [dic setObject:self.email forKey:@"EMAIL"];
-    [dic setObject:self.password forKey:@"PASSWORD"];
+    [dic setObject:self.login forKey:@"login"];
+    [dic setObject:self.name forKey:@"name"];
+    [dic setObject:self.email forKey:@"email"];
+    [dic setObject:self.password forKey:@"password"];
 // we don't need these fields for sign up request
 //     [dic setObject:[[User userStringRoles] objectAtIndex:self.role] forKey:@"ROLE_ID"];
 //    [dic setObject:[NSString stringWithFormat:@"%d", self.userId] forKey:@"ID"];

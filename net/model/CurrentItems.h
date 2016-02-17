@@ -6,11 +6,22 @@
 //  Copyright © 2016 Admin. All rights reserved.
 //
 
+#import <Foundation/Foundation.h>
+@protocol UserImageDelegate <NSObject>
+
+-(void)userImageDidLoad;
+
+@end
+
+@protocol IssueImageDelegate <NSObject>
+
+-(void)issueImageDidLoad;
+
+@end
+
 #import <UIKit/UIKit.h>
 #import "User.h"
 #import "Issue.h"
-#import "CurrentItemsDelegate.h"
-
 
 @interface CurrentItems : NSObject
 
@@ -19,7 +30,8 @@
 @property(strong, nonatomic) NSArray <NSDictionary*> *issueHistroy;
 @property(strong, nonatomic) UIImage *userImage;
 @property(strong, nonatomic) UIImage *issueImage;
-@property(strong, nonatomic) NSArray<id<CurrentItemsDelegate>> *delegates;
+@property(strong, nonatomic) NSMutableArray<id<UserImageDelegate>> *userImageDelegates;
+@property(strong, nonatomic) NSMutableArray<id<IssueImageDelegate>> *issueImageDelegates;
 
 
 

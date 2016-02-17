@@ -218,11 +218,12 @@
         {
             NSLog(@"good!!!!");
             
+            __weak LogInViewController *weakSelf = self;
             dispatch_async(dispatch_get_main_queue(), ^
-                       {
-                           [CurrentItems sharedItems].user = resUser;
-                           [self.navigationController popViewControllerAnimated:YES];
-                       });
+            {
+               [CurrentItems sharedItems].user = resUser;
+               [weakSelf.navigationController popViewControllerAnimated:YES];
+           });
         }
     } andErrorHandler:^(NSError *error) {
         UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Log In"
@@ -234,22 +235,4 @@
 
     }];
 }
-
-
-//#pragma mark - Navigation
-//-(void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
-//{
-//    if([segue.identifier isEqualToString:@"fromLogInToSingUp"])
-//    {
-//        if([segue.destinationViewController isKindOfClass:[SingUpViewController class]])
-//        {
-//            SingUpViewController *logInVC = (SingUpViewController*)segue.destinationViewController;
-//            logInVC.mapDelegate = self.mapDelegate;
-//            
-//        }
-//    }
-//}
-
-
-
 @end

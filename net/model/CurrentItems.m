@@ -39,7 +39,11 @@
 
 -(instancetype)initSinleObject
 {
-    self = [super init];
+    if(self = [super init])
+    {
+        _userImageDelegates = [[NSMutableArray alloc] init];
+        _issueImageDelegates = [[NSMutableArray alloc] init];
+    }
     return self;
 }
 
@@ -52,7 +56,7 @@
         if ([unchangedName isEqualToString:self.user.avatar])
         {
             self.userImage = image;
-            [self.delegates makeObjectsPerformSelector:@selector(userImageDidLoad)];
+            [self.userImageDelegates makeObjectsPerformSelector:@selector(userImageDidLoad)];
         }
     } withErrorHandler:^(NSError *error) {
         // handle error
@@ -87,7 +91,9 @@
         if ([unchangedName isEqualToString:self.issue.attachments])
         {
             self.issueImage = image;
-            [self.delegates makeObjectsPerformSelector:@selector(issueImageDidLoad)];
+            NSLog(@"image downloaded and seted to current, fend issueImageDidLoad");
+            NSLog(@"issueImageDelegates: %@", self.issueImageDelegates);
+            [self.issueImageDelegates makeObjectsPerformSelector:@selector(issueImageDidLoad)];
         }
     } withErrorHandler:^(NSError *error) {
         // handle error
