@@ -75,7 +75,7 @@
     NSArray* matches = [regex matchesInString:searchedString options:0 range: searchedRange];
     for (NSTextCheckingResult* match in matches) {
         matchText = [searchedString substringWithRange:[match range]];
-        NSLog(@"match: %@", matchText);
+//        NSLog(@"match: %@", matchText);
         break;
     }
     return matchText;
