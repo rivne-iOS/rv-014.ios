@@ -9,14 +9,14 @@
 #import <Foundation/Foundation.h>
 @protocol UserImageDelegate <NSObject>
 
-@optional
 -(void)userImageDidLoad;
+
 @end
 
 @protocol IssueImageDelegate <NSObject>
 
-@optional
 -(void)issueImageDidLoad;
+
 @end
 
 #import <UIKit/UIKit.h>

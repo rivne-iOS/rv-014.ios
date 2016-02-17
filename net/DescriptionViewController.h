@@ -15,10 +15,6 @@
 
 @property (weak, nonatomic) IBOutlet UILabel *titleLabel;
 @property (weak, nonatomic) IBOutlet UILabel *descriptionLabel;
-//@property (strong,nonatomic) UIImage *image;
-
-@property (weak, nonatomic) MapViewController *mapViewControllerDelegate;
-
 
 -(void)setDataToView;
 -(void)prepareUIChangeStatusElements;

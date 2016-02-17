@@ -15,7 +15,7 @@
 
 
 
-@interface DescriptionViewController () <UserImageDelegate, IssueImageDelegate>
+@interface DescriptionViewController () <IssueImageDelegate>
 @property (weak, nonatomic) IBOutlet UILabel *currentCategoryLabel;
 @property (weak, nonatomic) IBOutlet UILabel *currentStatusLabel;
 @property (weak, nonatomic) IBOutlet UIImageView *issueImageView;
@@ -373,7 +373,8 @@
                                                                        otherButtonTitles:nil];
                                  [alert show];
                                  [CurrentItems sharedItems].issue = issue;
-                                 [self.mapViewControllerDelegate renewMap];
+                                 [[NSNotificationCenter defaultCenter] postNotificationName:@"renewMap" object:self];
+                                 
                                  [self setDataToView];
                                  [self clearOldDynamicElements];
                                  [self prepareUIChangeStatusElements];

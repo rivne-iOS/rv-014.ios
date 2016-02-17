@@ -50,6 +50,10 @@ static double const MAP_REFRESHING_INTERVAL = 120.0;
 
 - (void)viewDidLoad {
     [super viewDidLoad];
+    
+    // even if this controller is on back, it has to listen, and perform selector!
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(renewMap) name:@"renewMap" object:nil];
+    
     self.title = @"Bowl";
     self.isMarkerSelected = NO;
     self.dataSorce = [[NetworkDataSorce alloc] init];
@@ -105,7 +109,7 @@ static double const MAP_REFRESHING_INTERVAL = 120.0;
         self.currentUser = [CurrentItems sharedItems].user;
     }
     
-    if([self isMarkerSelected])
+    if(self.isMarkerSelected==YES)
         self.tabBarController.tabBar.hidden = NO;
     
     [self renewMap];
@@ -356,13 +360,7 @@ static double const MAP_REFRESHING_INTERVAL = 120.0;
 
 -(BOOL)tabBarController:(UITabBarController *)tabBarController shouldSelectViewController:(UIViewController *)viewController
 {
-    if ([viewController isKindOfClass:[UINavigationController class]] && [viewController.restorationIdentifier isEqualToString:@"description"]){
-        UINavigationController *destController = (UINavigationController *)viewController;
-        DescriptionViewController *descriptionVC = (DescriptionViewController *)destController.topViewController;
-        descriptionVC.mapViewControllerDelegate = self;
-        descriptionVC.title = self.title;
-    }
-    else if ([viewController isKindOfClass:[UINavigationController class]] && [viewController.restorationIdentifier isEqualToString:@"history"]){
+    if ([viewController isKindOfClass:[UINavigationController class]] && [viewController.restorationIdentifier isEqualToString:@"history"]){
         UINavigationController *destController = (UINavigationController *)viewController;
         IssueHistoryViewController *issueHistoryViewController = (IssueHistoryViewController *)destController.topViewController;
         issueHistoryViewController.title = self.title;
@@ -625,6 +623,7 @@ static double const MAP_REFRESHING_INTERVAL = 120.0;
 
 -(void)renewMap
 {
+    NSLog(@"renew Map");
     [self requestIssues];
 }
 
