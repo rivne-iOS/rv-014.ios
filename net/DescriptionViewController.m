@@ -97,7 +97,6 @@
 -(void)viewDidLoad
 {
     CurrentItems *cItems = [CurrentItems sharedItems];
-    [cItems.userImageDelegates addObject:self];
     [cItems.issueImageDelegates addObject:self];
     self.navigationController.navigationBar.tintColor = [UIColor whiteColor];
     self.navigationController.navigationBar.barTintColor = [UIColor bawlRedColor];
