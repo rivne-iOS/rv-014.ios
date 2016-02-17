@@ -30,8 +30,6 @@
 @property (strong, nonatomic) UIButton *changeButton;
 @property (strong, nonatomic) NSMutableArray <ChangerBox*> *changerBoxArr;
 
-@property (nonatomic)BOOL isActualImageView;
-
 @end
 
 @implementation DescriptionViewController
@@ -69,24 +67,24 @@
     [self.tabBarController.tabBar.items objectAtIndex:1].title = @"Description";
     
     CurrentItems *cItems = [CurrentItems sharedItems];
-    if (cItems.issueImage == nil)
+    if(cItems.issueImage==nil)
     {
-        // image is downloading
-        self.isActualImageView = NO; // so in delegate method it will be setted
+        NSLog(@"if(cItems.issueImage==nil) in description");
+        self.issueImageView.image = nil;
     }
-    else if(self.isActualImageView == NO)
+     else if( ![self.issueImageView.image isEqual:cItems.issueImage])
     {
-        // at the first start after viewDidLOad
-        self.isActualImageView = YES;
+        NSLog(@"view will appear: ![self.issueImageView.image isEqual:cItems.issueImage], set uotlet.");
         self.issueImageView.image = cItems.issueImage;
     }
 }
 
 -(void)issueImageDidLoad
 {
-    if (![self isActualImageView])
+    CurrentItems *cItems = [CurrentItems sharedItems];
+    if (![self.issueImageView.image isEqual:cItems.issueImage])
     {
-        self.isActualImageView = YES; // if method call before viewWillAppear
+        NSLog(@"in description issue did load: ![self.issueImageView.image isEqual:cItems.issueImage], setOutlet");
         dispatch_async(dispatch_get_main_queue(), ^{
            self.issueImageView.image = [CurrentItems sharedItems].issueImage; 
         });
@@ -101,7 +99,6 @@
     CurrentItems *cItems = [CurrentItems sharedItems];
     [cItems.userImageDelegates addObject:self];
     [cItems.issueImageDelegates addObject:self];
-    self.isActualImageView = NO;
     self.navigationController.navigationBar.tintColor = [UIColor whiteColor];
     self.navigationController.navigationBar.barTintColor = [UIColor bawlRedColor];
     self.navigationController.navigationBar.titleTextAttributes = @{NSForegroundColorAttributeName : [UIColor whiteColor]};

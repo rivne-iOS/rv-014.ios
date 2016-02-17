@@ -256,29 +256,8 @@ static double const MAP_REFRESHING_INTERVAL = 120.0;
     
     CurrentItems *cItems = [CurrentItems sharedItems];
     cItems.issueImage = nil;
+    NSLog(@"currents issue image is nil");
     cItems.issue = marker.userData;
-    
-    
-    
-//    DescriptionViewController *descriptionVC = nil;
-//    for (UIViewController *viewController in self.tabBarController.viewControllers)
-//    {
-//        
-//        if ([viewController isKindOfClass:[UINavigationController class]] && [viewController.restorationIdentifier isEqualToString:@"description"])
-//        {
-//            UINavigationController *destController = (UINavigationController *)viewController;
-//            descriptionVC = (DescriptionViewController *)destController.topViewController;
-//            break;
-//        }
-//    }
-//    descriptionVC.image=nil;
-//    descriptionVC.isActualImageView = NO;
-//    [[CurrentItems sharedItems] setIssue:marker.userData withChangingImageViewBloc:^{
-//        dispatch_async(dispatch_get_main_queue(), ^{
-//            descriptionVC.image = [CurrentItems sharedItems].issueImage;
-//        });
-//
-//    }];
     
     return NO;
 }
