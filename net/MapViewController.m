@@ -65,6 +65,9 @@ static double const MAP_REFRESHING_INTERVAL = 120.0;
     [self hideTabBar];
     [self customizeTabBar];
     [self createAndShowMap];
+    [self addBorderColor];
+    [self customiseProgressBarView];
+    [self requestCategories];
 }
 
 
@@ -329,9 +332,6 @@ static double const MAP_REFRESHING_INTERVAL = 120.0;
     if (self.currentUser != nil){
         self.mapView.selectedMarker = nil;
         [self requestGoogleApiPlace:coordinate];
-        [self requestCategories];
-        [self addBorderColor];
-        [self customiseProgressBarView];
         
         if (self.attachmentImage != nil)
             [self.attachmentProgressView setProgress:1.0 animated:NO];
