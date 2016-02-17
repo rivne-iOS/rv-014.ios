@@ -33,6 +33,11 @@ static double const MAP_REFRESHING_INTERVAL = 120.0;
 @interface MapViewController () <GMSMapViewDelegate, UITabBarControllerDelegate, UIImagePickerControllerDelegate, UINavigationControllerDelegate>
 
 @property (weak, nonatomic) IBOutlet GMSMapView *mapView;
+@property (weak, nonatomic) IBOutlet UIActivityIndicatorView *indicator;
+
+@property (strong,nonatomic) NSArray *arrayOfPoints;
+@property (strong, nonatomic) id <DataSorceProtocol> dataSorce;
+@property (strong, nonatomic) GMSMarker *currentMarker;
 @property (nonatomic)BOOL isMarkerSelected;
 @property (assign, nonatomic) CLLocationCoordinate2D currentLocation;
 @property (nonatomic) BOOL userLogined;

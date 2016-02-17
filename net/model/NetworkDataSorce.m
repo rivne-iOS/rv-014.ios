@@ -105,12 +105,15 @@
              andDataSorceHandler:^(NSData *data, NSError *error) {
         if(data.length >0 && error == nil)
         {
-            NSDictionary *userDic = [NSJSONSerialization JSONObjectWithData:data
-                                                                      options:0
-                                                                        error:NULL];
+            
+            NSMutableDictionary *userDic = [[NSJSONSerialization JSONObjectWithData:data
+                                                                            options:0
+                                                                              error:NULL] mutableCopy];
             User *tempUser = nil;
-            if ([userDic count] >1)
+            if([userDic count]>1)
             {
+                if ([[userDic objectForKey:@"AVATAR"] isEqual:[NSNull null]])
+                    [userDic setObject:@"defaultUser" forKey:@"AVATAR"];
                 [[NSUserDefaults standardUserDefaults] setObject:userDic forKey:@"userDictionary"];
                 tempUser = [[User alloc] initWitDictionary:userDic];
             }
