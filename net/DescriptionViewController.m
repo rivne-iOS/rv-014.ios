@@ -61,12 +61,13 @@
 
 - (void) viewWillAppear:(BOOL)animated
 {
+    CurrentItems *cItems = [CurrentItems sharedItems];
+    self.title = cItems.appTitle;
     [self setDataToView];
     [self clearOldDynamicElements];
     [self prepareUIChangeStatusElements];
     [self.tabBarController.tabBar.items objectAtIndex:1].title = @"Description";
     
-    CurrentItems *cItems = [CurrentItems sharedItems];
     if(cItems.issueImage==nil)
     {
         NSLog(@"if(cItems.issueImage==nil) in description");

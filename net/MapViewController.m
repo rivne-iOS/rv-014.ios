@@ -134,16 +134,17 @@ static double const MAP_REFRESHING_INTERVAL = 120.0;
 -(void)setCurrentUser:(User *) user
 {
     _currentUser = user;
+    CurrentItems * cItems = [CurrentItems sharedItems];
     if(user == nil)
     {
-        self.title = [NSString stringWithFormat:@"Bawl"];
+        cItems.appTitle = self.title = [NSString stringWithFormat:@"Bawl"];
         self.navigationItem.rightBarButtonItem.title = @"Log In";
         self.userLogined=NO;
 
     }
     else
     {
-        self.title = [NSString stringWithFormat:@"Bawl(%@)", user.name];
+        cItems.appTitle = self.title = [NSString stringWithFormat:@"Bawl(%@)", user.name];
         [self.tabBarController.tabBar.items objectAtIndex:0].title = @"Location";
         self.navigationItem.rightBarButtonItem.title = @"Sign Out";
         self.userLogined = YES;
