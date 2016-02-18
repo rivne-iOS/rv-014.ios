@@ -18,6 +18,10 @@
 
 
 -(void)requestCategories:(void (^)(NSArray<IssueCategory*> * issueCategories))viewControllerHandler withErrorHandler:(void(^)(NSError *error)) errorHandler;
+
+-(void)requestAllUsers:(void (^)(NSArray <NSDictionary <NSString*,NSString*> *> *userDictionaries))Handler withErrorHandler:(void(^)(NSError *error)) errorHandler;
+
+
 -(void)requestImageWithName:(NSString*)name andHandler:(void (^)(UIImage *image))viewControllerHandler withErrorHandler:(void(^)(NSError *error)) errorHandler;
 
 -(void)requestLogInWithUser:(NSString*)user

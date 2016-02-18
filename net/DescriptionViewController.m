@@ -20,6 +20,9 @@
 @property (weak, nonatomic) IBOutlet UIImageView *categoryImageView;
 @property (weak, nonatomic) IBOutlet UILabel *currentStatusLabel;
 @property (weak, nonatomic) IBOutlet UIImageView *issueImageView;
+@property (weak, nonatomic) IBOutlet UILabel *titleLabel;
+@property (weak, nonatomic) IBOutlet UILabel *descriptionLabel;
+
 
 @property (strong, nonatomic) IssueChangeStatus *statusChanger;
 @property (strong, nonatomic) id <DataSorceProtocol> dataSorce;
