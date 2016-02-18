@@ -26,6 +26,7 @@
 		8460F9A21C3C666100ECB3A4 /* Parser.m in Sources */ = {isa = PBXBuildFile; fileRef = 8460F9A11C3C666100ECB3A4 /* Parser.m */; };
 		847595461C455C0F00E1BF87 /* Podfile in Resources */ = {isa = PBXBuildFile; fileRef = 847595451C455C0F00E1BF87 /* Podfile */; };
 		849930A01C5915E100EDBF5E /* IssueCategory.m in Sources */ = {isa = PBXBuildFile; fileRef = 8499309F1C5915E100EDBF5E /* IssueCategory.m */; };
+		849E9B1B1C709BB200DA527E /* CurrentItems.m in Sources */ = {isa = PBXBuildFile; fileRef = 849E9B1A1C709BB200DA527E /* CurrentItems.m */; };
 		84D93FC91C5A245800D4E96D /* IssueChangeStatus.m in Sources */ = {isa = PBXBuildFile; fileRef = 84D93FC81C5A245800D4E96D /* IssueChangeStatus.m */; };
 		84E19B211C4C131E00AABD7D /* TextFieldValidation.m in Sources */ = {isa = PBXBuildFile; fileRef = 84E19B201C4C131E00AABD7D /* TextFieldValidation.m */; };
 		84E3347F1C4435E800BEE6BA /* MapViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 84E3347E1C4435E800BEE6BA /* MapViewController.m */; };
@@ -35,6 +36,7 @@
 		CEC6F6301C5B6FA2002321AA /* IssueHistoryViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = CEC6F62F1C5B6FA2002321AA /* IssueHistoryViewController.m */; };
 		CEC6F6351C5B6FB6002321AA /* CustomTableCell.m in Sources */ = {isa = PBXBuildFile; fileRef = CEC6F6331C5B6FB6002321AA /* CustomTableCell.m */; };
 		CEC6F6361C5B6FB6002321AA /* CustomTableCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = CEC6F6341C5B6FB6002321AA /* CustomTableCell.xib */; };
+		CEF2B61D1C74761000F4B2F5 /* UIView+Addition.m in Sources */ = {isa = PBXBuildFile; fileRef = CEF2B61C1C74761000F4B2F5 /* UIView+Addition.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -84,6 +86,9 @@
 		847595451C455C0F00E1BF87 /* Podfile */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = Podfile; sourceTree = "<group>"; };
 		8499309E1C5915E100EDBF5E /* IssueCategory.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = IssueCategory.h; path = model/IssueCategory.h; sourceTree = "<group>"; };
 		8499309F1C5915E100EDBF5E /* IssueCategory.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = IssueCategory.m; path = model/IssueCategory.m; sourceTree = "<group>"; };
+		849E9B191C709BB200DA527E /* CurrentItems.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CurrentItems.h; path = model/CurrentItems.h; sourceTree = "<group>"; };
+		849E9B1A1C709BB200DA527E /* CurrentItems.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = CurrentItems.m; path = model/CurrentItems.m; sourceTree = "<group>"; };
+		849E9B1C1C726B2E00DA527E /* CurrentItemsDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CurrentItemsDelegate.h; path = model/CurrentItemsDelegate.h; sourceTree = "<group>"; };
 		84D93FC71C5A245800D4E96D /* IssueChangeStatus.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = IssueChangeStatus.h; path = model/IssueChangeStatus.h; sourceTree = "<group>"; };
 		84D93FC81C5A245800D4E96D /* IssueChangeStatus.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = IssueChangeStatus.m; path = model/IssueChangeStatus.m; sourceTree = "<group>"; };
 		84E19B1F1C4C131E00AABD7D /* TextFieldValidation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TextFieldValidation.h; path = model/TextFieldValidation.h; sourceTree = "<group>"; };
@@ -102,6 +107,8 @@
 		CEC6F6321C5B6FB6002321AA /* CustomTableCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CustomTableCell.h; sourceTree = "<group>"; };
 		CEC6F6331C5B6FB6002321AA /* CustomTableCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CustomTableCell.m; sourceTree = "<group>"; };
 		CEC6F6341C5B6FB6002321AA /* CustomTableCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = CustomTableCell.xib; sourceTree = "<group>"; };
+		CEF2B61B1C74761000F4B2F5 /* UIView+Addition.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIView+Addition.h"; sourceTree = "<group>"; };
+		CEF2B61C1C74761000F4B2F5 /* UIView+Addition.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIView+Addition.m"; sourceTree = "<group>"; };
 		F4AC75DBD87C887E9CEC39A4 /* Pods.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.release.xcconfig; path = "Pods/Target Support Files/Pods/Pods.release.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -232,6 +239,11 @@
 				84114C681C61503B0092F507 /* UIColor+Bawl.m */,
 				8459C76D1C6505C700F7F595 /* ChangerBox.h */,
 				8459C76E1C6505C700F7F595 /* ChangerBox.m */,
+				849E9B191C709BB200DA527E /* CurrentItems.h */,
+				849E9B1A1C709BB200DA527E /* CurrentItems.m */,
+				849E9B1C1C726B2E00DA527E /* CurrentItemsDelegate.h */,
+				CEF2B61B1C74761000F4B2F5 /* UIView+Addition.h */,
+				CEF2B61C1C74761000F4B2F5 /* UIView+Addition.m */,
 			);
 			name = model;
 			sourceTree = "<group>";
@@ -427,6 +439,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				8459C76F1C6505C700F7F595 /* ChangerBox.m in Sources */,
+				849E9B1B1C709BB200DA527E /* CurrentItems.m in Sources */,
 				8460F9761C3C531E00ECB3A4 /* LogInViewController.m in Sources */,
 				8460F99C1C3C5E1A00ECB3A4 /* IssueHistory.m in Sources */,
 				84E7BF461C430AA600E66585 /* NetworkDataSorce.m in Sources */,
@@ -439,6 +452,7 @@
 				CEC6F6351C5B6FB6002321AA /* CustomTableCell.m in Sources */,
 				845245A71C4E5923000755AC /* DescriptionViewController.m in Sources */,
 				8460F9A21C3C666100ECB3A4 /* Parser.m in Sources */,
+				CEF2B61D1C74761000F4B2F5 /* UIView+Addition.m in Sources */,
 				84E334821C4436B200BEE6BA /* SingUpViewController.m in Sources */,
 				8460F9951C3C537900ECB3A4 /* User.m in Sources */,
 				84E19B211C4C131E00AABD7D /* TextFieldValidation.m in Sources */,

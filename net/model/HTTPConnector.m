@@ -18,7 +18,10 @@
 @property(strong, nonatomic)NSString *changeIssueStatusToResolve;
 @property(strong, nonatomic)NSString *changeIssueStatusToApproveCancel;
 @property(strong, nonatomic)NSString *allCategories;
-@property(strong, nonatomic)NSString *image;
+@property(strong, nonatomic)NSString *issueImage;
+@property(strong, nonatomic)NSString *defaultIssueImage;
+@property(strong, nonatomic)NSString *defaultUserImage;
+
 
 -(void)postRequest:(NSData*) postData
              toURL:(NSString*) textUrl
@@ -50,7 +53,9 @@
         _changeIssueStatusToResolve = @"issue/issueIDNumber/resolve";
         _changeIssueStatusToApproveCancel = @"issue";
         _allCategories = @"categories/all";
-        _image = @"image/no_attach.png";
+        _issueImage = @"image/";
+        _defaultIssueImage = @"no_attach.png";
+        _defaultUserImage = @"no_avatar.png";
         
     }
     return self;
@@ -66,9 +71,16 @@
 {
     [self getRequestBlankToUrl:[self.globalURL stringByAppendingString:self.allCategories] andHandler:dataSorceHandler];
 }
--(void)requestImage:(void(^)(NSData *data, NSError *error))dataSorceHandler
+-(void)requestImageWithName:(NSString*)name andDataSorceHandler:(void(^)(NSData *data, NSError *error))dataSorceHandler
 {
-    [self getRequestBlankToUrl:[self.globalURL stringByAppendingString:self.image] andHandler:dataSorceHandler];
+    if ([name isEqual:[NSNull null]])
+        name = self.defaultIssueImage;
+    else if ([name isEqualToString:@"defaultUser"])
+        name = self.defaultUserImage;
+    else if ([name isEqualToString:@"defaultIssue"])
+        name = self.defaultIssueImage;
+        
+    [self getRequestBlankToUrl:[NSString stringWithFormat:@"%@%@%@", self.globalURL, self.issueImage, name] andHandler:dataSorceHandler];
 }
 
 -(void)requestSignOutWithHandler:(void (^)(NSData *data, NSError *error))dataSorceHandler

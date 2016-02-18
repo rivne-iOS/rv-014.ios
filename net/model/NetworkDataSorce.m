@@ -49,10 +49,10 @@
 
 }
 
--(void)requestImage:(void (^)(UIImage *image))viewControllerHandler withErrorHandler:(void(^)(NSError *error)) errorHandler
+-(void)requestImageWithName:(NSString*)name andHandler:(void (^)(UIImage *image))viewControllerHandler withErrorHandler:(void(^)(NSError *error)) errorHandler
 {
     HTTPConnector *connector = [[HTTPConnector alloc] init];
-    [connector requestImage:^(NSData *data, NSError *error) {
+    [connector requestImageWithName:name andDataSorceHandler:^(NSData *data, NSError *error) {
         if (data.length > 0 && error==nil)
         {
             UIImage *image = [[UIImage alloc] initWithData:data];
@@ -147,6 +147,14 @@
                          {
                              [[NSUserDefaults standardUserDefaults] setObject:userDic forKey:@"userDictionary"];
                              user = [[User alloc] initWitDictionary:userDic];
+                         }
+                         else
+                         {
+                             NSLog(@"Error with sign up! \n\n");
+                             for(NSString *str in [userDic allKeys])
+                             {
+                                 NSLog(@"%@ - %@", str, [userDic objectForKey:str]);
+                             }
                          }
                          viewControllerHandler(user);
                      }

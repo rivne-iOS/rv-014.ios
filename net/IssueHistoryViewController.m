@@ -10,6 +10,7 @@
 #import "UIColor+Bawl.h"
 #import "ProfileViewController.h"
 #import "IssueHistory.h"
+#import "CurrentItems.h"
 
 static NSString * const kSimpleTableIdentifier = @"SampleTableCell";
 
@@ -103,6 +104,7 @@ static NSString * const kSimpleTableIdentifier = @"SampleTableCell";
 - (void) viewWillAppear:(BOOL)animated {
     [super viewWillAppear:YES];
     [self.tabBarController.tabBar.items objectAtIndex:2].title = @"History";
+    self.issue = [CurrentItems sharedItems].issue;
     [self.issueTitle setText:self.issue.issueDescription];
     [self requestIssueHistory];
     [self.mapDelegate showTabBar];
