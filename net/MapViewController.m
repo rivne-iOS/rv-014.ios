@@ -14,7 +14,7 @@
 #import "IssueHistoryViewController.h"
 #import "IssueCategory.h"
 #import "CurrentItems.h"
-
+#import "IssueCategories.h"
 #import "DescriptionViewController.h"
 #import "UIColor+Bawl.h"
 @import GoogleMaps;
@@ -73,6 +73,7 @@ static double const MAP_REFRESHING_INTERVAL = 120.0;
     [self createAndShowMap];
     [self addBorderColor];
     [self customiseProgressBarView];
+    [IssueCategories earlyPreparing];
     [self requestCategories];
 }
 
