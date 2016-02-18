@@ -13,6 +13,8 @@
 #import "User.h"
 #import "CurrentItems.h"
 #import "UIView+Addition.h"
+#import "UIViewController+backViewController.h"
+#import "IssueHistoryViewController.h"
 
 static NSString const * const AVATAR_NO_IMAGE = @"no_avatar.png";
 
@@ -54,58 +56,44 @@ static NSString const * const AVATAR_NO_IMAGE = @"no_avatar.png";
         self.navigationItem.rightBarButtonItem.title = @"Log In";
     }
     
-    if ([CurrentItems sharedItems].user && (self.userID == [CurrentItems sharedItems].user.userId)) {
-        self.profileImage.image = [CurrentItems sharedItems].userImage;
-        
-        [self.userLogin setText:[NSString stringWithFormat:@"@%@", [CurrentItems sharedItems].user.login]];
-        [self.userEmail setText:[CurrentItems sharedItems].user.email];
-        [self.userName setText:[CurrentItems sharedItems].user.name];
-        
-        switch ([CurrentItems sharedItems].user.role) {
-            case ADMIN:
-                [self.systemRole setText:@"ADMIN"];
-                break;
-            case MANAGER:
-                [self.systemRole setText:@"MANAGER"];
-                break;
-            case USER:
-                [self.systemRole setText:@"USER"];
-                break;
-            case SUBSCRIBER:
-                [self.systemRole setText:@"SUBSCRIBER"];
-                break;
+    if ([[self backViewController] isKindOfClass:[IssueHistoryViewController class]]) {
+    
+        if ([CurrentItems sharedItems].user && (self.userID == [CurrentItems sharedItems].user.userId)) {
+            [self showUserProfile];
         }
-        [self revealAllViews];
+        else {
+            [self requestUserDetailsByID:self.userID updateScreenWithHandler:^(User *user){
+                
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    
+                    [self.userLogin setText:[NSString stringWithFormat:@"@%@", user.login]];
+                    [self.userEmail setText:user.email];
+                    [self.userName setText:user.name];
+                    
+                    switch (user.role) {
+                        case ADMIN:
+                            [self.systemRole setText:@"ADMIN"];
+                            break;
+                        case MANAGER:
+                            [self.systemRole setText:@"MANAGER"];
+                            break;
+                        case USER:
+                            [self.systemRole setText:@"USER"];
+                            break;
+                        case SUBSCRIBER:
+                            [self.systemRole setText:@"SUBSCRIBER"];
+                            break;
+                    }
+                    if ([self.avatarImageURL isEqualToString:@"null"])
+                        [self requestAvatarWithName:self.avatarImageURL];
+                    else [self requestAvatarWithName:AVATAR_NO_IMAGE];
+                });
+            }];
+            
+        }
     }
     else {
-        [self requestUserDetailsByID:self.userID updateScreenWithHandler:^(User *user){
-            
-            dispatch_async(dispatch_get_main_queue(), ^{
-                
-                [self.userLogin setText:[NSString stringWithFormat:@"@%@", user.login]];
-                [self.userEmail setText:user.email];
-                [self.userName setText:user.name];
-                
-                switch (user.role) {
-                    case ADMIN:
-                        [self.systemRole setText:@"ADMIN"];
-                        break;
-                    case MANAGER:
-                        [self.systemRole setText:@"MANAGER"];
-                        break;
-                    case USER:
-                        [self.systemRole setText:@"USER"];
-                        break;
-                    case SUBSCRIBER:
-                        [self.systemRole setText:@"SUBSCRIBER"];
-                        break;
-                }
-                if ([self.avatarImageURL isEqualToString:@"null"])
-                    [self requestAvatarWithName:self.avatarImageURL];
-                else [self requestAvatarWithName:AVATAR_NO_IMAGE];
-            });
-        }];
-
+        [self showUserProfile];
     }
     
     [self.mapViewDelegate hideTabBar];
@@ -119,6 +107,30 @@ static NSString const * const AVATAR_NO_IMAGE = @"no_avatar.png";
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
+}
+
+- (void) showUserProfile {
+    self.profileImage.image = [CurrentItems sharedItems].userImage;
+    
+    [self.userLogin setText:[NSString stringWithFormat:@"@%@", [CurrentItems sharedItems].user.login]];
+    [self.userEmail setText:[CurrentItems sharedItems].user.email];
+    [self.userName setText:[CurrentItems sharedItems].user.name];
+    
+    switch ([CurrentItems sharedItems].user.role) {
+        case ADMIN:
+            [self.systemRole setText:@"ADMIN"];
+            break;
+        case MANAGER:
+            [self.systemRole setText:@"MANAGER"];
+            break;
+        case USER:
+            [self.systemRole setText:@"USER"];
+            break;
+        case SUBSCRIBER:
+            [self.systemRole setText:@"SUBSCRIBER"];
+            break;
+    }
+    [self revealAllViews];
 }
 
 - (void) hideAllViews {
@@ -145,7 +157,13 @@ static NSString const * const AVATAR_NO_IMAGE = @"no_avatar.png";
         [self.labelSystemRole setHidden:NO];
         [self.systemRole setHidden:NO];
         
-        if (self.userID == [CurrentItems sharedItems].user.userId) {
+        if ([[self backViewController] isKindOfClass:[IssueHistoryViewController class]]) {
+            if (self.userID == [CurrentItems sharedItems].user.userId) {
+                [self.changeUserDetails setHidden:NO];
+                [self.changeAvatar setHidden:NO];
+            }
+        }
+        else {
             [self.changeUserDetails setHidden:NO];
             [self.changeAvatar setHidden:NO];
         }
