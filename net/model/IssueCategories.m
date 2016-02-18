@@ -8,6 +8,7 @@
 
 #import "IssueCategories.h"
 #import "NetworkDataSorce.h"
+#import "CurrentItems.h"
 
 static IssueCategories *standartCategories_ = nil;
 
@@ -44,6 +45,19 @@ static IssueCategories *standartCategories_ = nil;
 {
     [IssueCategories object];
     return standartCategories_;
+}
+
+-(UIImage*)imageForCurrentCategory
+{
+    NSInteger intId = [CurrentItems sharedItems].issue.categoryId.intValue;
+    for (NSInteger a=0; a<self.categories.count; ++a)
+    {
+        if(self.categories[a].categoryId.intValue == intId)
+        {
+            return self.categories[a].image;
+        }
+    }
+    return nil;
 }
 
 @end

@@ -20,4 +20,7 @@
 
 +(instancetype)standartCategories;
 +(void)earlyPreparing;
+
+-(UIImage*)imageForCurrentCategory;
+
 @end

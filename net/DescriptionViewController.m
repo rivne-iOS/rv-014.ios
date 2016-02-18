@@ -12,11 +12,12 @@
 #import "NetworkDataSorce.h"
 #import "ChangerBox.h"
 #import "CurrentItems.h"
+#import "IssueCategories.h"
 
 
 
 @interface DescriptionViewController () <IssueImageDelegate>
-@property (weak, nonatomic) IBOutlet UILabel *currentCategoryLabel;
+@property (weak, nonatomic) IBOutlet UIImageView *categoryImageView;
 @property (weak, nonatomic) IBOutlet UILabel *currentStatusLabel;
 @property (weak, nonatomic) IBOutlet UIImageView *issueImageView;
 
@@ -107,47 +108,14 @@
 
 -(void)setDataToView
 {
-    self.titleLabel.text = [CurrentItems sharedItems].issue.name;
+    Issue *currentIssue = [CurrentItems sharedItems].issue;
+    self.titleLabel.text = currentIssue.name;
     self.titleLabel.textColor = [UIColor bawlRedColor];
-    self.descriptionLabel.text = [CurrentItems sharedItems].issue.issueDescription;
+    self.descriptionLabel.text = currentIssue.issueDescription;
+    self.currentStatusLabel.text = currentIssue.status;
     
-    NSString *firstPart = @"Issue status: ";
-    NSMutableAttributedString *aStr = [[NSMutableAttributedString alloc] initWithString:[firstPart stringByAppendingString:[CurrentItems sharedItems].issue.status]];
-    [aStr addAttribute:NSForegroundColorAttributeName value:[UIColor blueColor] range:NSMakeRange(firstPart.length, [aStr string].length - firstPart.length)];
-    self.currentStatusLabel.attributedText = aStr;
-    
-    self.currentCategoryLabel.text = @"Loading category...";
-    [self.dataSorce requestCategories:^(NSArray<IssueCategory *> *issueCategories) {
-        for (IssueCategory *issueCategory in issueCategories)
-        {
-            
-            if ([CurrentItems sharedItems].issue.categoryId.intValue ==  issueCategory.categoryId.intValue)
-            {
-                [self makeCategoryLabelWithStringCategory:issueCategory.name];
-                break;
-            }
-        }
-        
-    } withErrorHandler:^(NSError *error) {
-        // TODO: handle error
-    }];
-    
-    
-    
+    self.categoryImageView.image = [[IssueCategories standartCategories] imageForCurrentCategory];
 }
-
-
--(void)makeCategoryLabelWithStringCategory:(NSString*)stringCategory
-{
-    NSString *firstPart = @"Category: ";
-    NSMutableAttributedString *aStr = [[NSMutableAttributedString alloc] initWithString:[firstPart stringByAppendingString:stringCategory]];
-    [aStr addAttribute:NSForegroundColorAttributeName value:[UIColor blueColor] range:NSMakeRange(firstPart.length, [aStr string].length - firstPart.length)];
-    dispatch_async(dispatch_get_main_queue(), ^{
-        self.currentCategoryLabel.attributedText = aStr;
-    });
-
-}
-
 
 #define SOME_OFFSET 8
 
