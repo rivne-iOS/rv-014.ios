@@ -18,24 +18,31 @@
 #import "DescriptionViewController.h"
 #import "UIColor+Bawl.h"
 @import GoogleMaps;
+@import MobileCoreServices;
 
 static NSString * const GOOGLE_WEB_API_KEY = @"AIzaSyB7InJ3J2AoxlHjsYtde9BNawMINCaHykg";
 static NSString * const DOMAIN_NAME_ALL_ISSUES = @"https://bawl-rivne.rhcloud.com/issue/all";
 static NSString * const DOMAIN_NAME_GOOGLE_PLACE_INFO = @"https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=%f,%f&radius=%d&key=%@";
 static NSString * const DOMAIN_NAME_ALL_CATEGORIES = @"https://bawl-rivne.rhcloud.com/categories/all";
 static NSString * const DOMAIN_NAME_ADD_ISSUE = @"https://bawl-rivne.rhcloud.com/issue";
+static NSString * const DOMAIN_NAME_ADD_ATTACHMENT = @"https://bawl-rivne.rhcloud.com/image/add/issue";
 
 static NSInteger const HTTP_RESPONSE_CODE_OK = 200;
 static double const MAP_REFRESHING_INTERVAL = 120.0;
 
-@interface MapViewController () <GMSMapViewDelegate, UITabBarControllerDelegate>
+@interface MapViewController () <GMSMapViewDelegate, UITabBarControllerDelegate, UIImagePickerControllerDelegate, UINavigationControllerDelegate>
 
-@property(strong,nonatomic) NSArray *arrayOfPoints;
-@property (strong, nonatomic) id <DataSorceProtocol> dataSorce;
 @property (weak, nonatomic) IBOutlet GMSMapView *mapView;
+@property (weak, nonatomic) IBOutlet UIActivityIndicatorView *indicator;
+
+@property (strong,nonatomic) NSArray *arrayOfPoints;
+@property (strong, nonatomic) id <DataSorceProtocol> dataSorce;
 @property (strong, nonatomic) GMSMarker *currentMarker;
+@property (nonatomic)BOOL isMarkerSelected;
 @property (assign, nonatomic) CLLocationCoordinate2D currentLocation;
 @property (nonatomic) BOOL userLogined;
+@property (strong, nonatomic) UIImage *attachmentImage;
+@property (strong, nonatomic) NSString *attachmentFilename;
 
 @end
 
@@ -43,18 +50,30 @@ static double const MAP_REFRESHING_INTERVAL = 120.0;
 
 - (void)viewDidLoad {
     [super viewDidLoad];
+    
+    // even if this controller is on back, it has to listen, and perform selector!
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(renewMap) name:@"renewMap" object:nil];
+    
     self.title = @"Bowl";
+    self.isMarkerSelected = NO;
     self.dataSorce = [[NetworkDataSorce alloc] init];
     self.navigationController.navigationBar.tintColor = [UIColor whiteColor];
     self.navigationController.navigationBar.barTintColor = [UIColor bawlRedColor];
     self.navigationController.navigationBar.titleTextAttributes = @{NSForegroundColorAttributeName : [UIColor whiteColor]};
     self.navigationController.navigationBar.barStyle = UIBarStyleBlack;
     [self checkCurrentUser];
+
     self.scrollViewLeadingConstraint.constant = CGRectGetWidth(self.mapView.bounds);
+    CGRect screenRect = [[UIScreen mainScreen] bounds];
+    self.addingIssueViewHeightConstraint.constant = screenRect.size.height;
+    
     self.tabBarController.delegate = self;
     [self hideTabBar];
     [self customizeTabBar];
     [self createAndShowMap];
+    [self addBorderColor];
+    [self customiseProgressBarView];
+    [self requestCategories];
 }
 
 
@@ -90,7 +109,7 @@ static double const MAP_REFRESHING_INTERVAL = 120.0;
         self.currentUser = [CurrentItems sharedItems].user;
     }
     
-    if(self.currentMarker!=nil)
+    if(self.isMarkerSelected==YES)
         self.tabBarController.tabBar.hidden = NO;
     
     [self renewMap];
@@ -131,35 +150,12 @@ static double const MAP_REFRESHING_INTERVAL = 120.0;
     }
 }
 
-#pragma mark - Navigation
-//-(void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
-//{
-//    if([segue.identifier isEqualToString:@"fromMapToLogIn"]) 
-//    {
-//        if([segue.destinationViewController isKindOfClass:[LogInViewController class]])
-//        {
-//            LogInViewController *logInVC = (LogInViewController*)segue.destinationViewController;
-//            logInVC.mapDelegate = self;
-//            
-//        }
-//    }
-
-//    if([segue.identifier isEqualToString:@"fromMapToDescription"])
-//    {
-//        if([segue.destinationViewController isKindOfClass:[DescriptionViewController class]])
-//        {
-//            DescriptionViewController *DescriptionVC = (DescriptionViewController *)segue.destinationViewController;
-//            DescriptionVC.currentIssue = self.currentMarker.userData;
-//        }
-//    }
-//}
-
-
 - (IBAction)sequeToLogInButton:(UIBarButtonItem *)sender {
     
     
     if (!self.userLogined)
     {
+        self.tabBarController.tabBar.hidden = YES;
         [self performSegueWithIdentifier:@"fromMapToLogIn" sender:self];
     }
     else
@@ -210,21 +206,20 @@ static double const MAP_REFRESHING_INTERVAL = 120.0;
 #pragma mark Map
 -(void)createAndShowMap
 {
-    GMSCameraPosition *camera = [GMSCameraPosition cameraWithLatitude:50.6283612
-                                                            longitude:26.2604453
-                                                                 zoom:14];
+//    50.619020, 26.252073
+    GMSCameraPosition *camera = [GMSCameraPosition cameraWithLatitude:50.619020
+                                                            longitude:26.252073
+                                                                 zoom:12];
     self.mapView.camera = camera;
     self.mapView.myLocationEnabled = YES;
     self.mapView.delegate = self;
     
     [self.tabBarController.tabBar setHidden:YES];
-//    [self requestIssues];
 }
 
-
+#pragma mark Requests
 -(void)requestIssues
 {
-        [self testInternetConnection:DOMAIN_NAME_ALL_ISSUES];
         NSURL *url = [NSURL URLWithString:DOMAIN_NAME_ALL_ISSUES];
         NSURLRequest *request = [NSURLRequest requestWithURL:url];
     
@@ -275,34 +270,19 @@ static double const MAP_REFRESHING_INTERVAL = 120.0;
         [self.view layoutIfNeeded];
         
     }];
-    self.currentMarker = marker;
+    self.isMarkerSelected = YES;
     
-    DescriptionViewController *descriptionVC = nil;
-    for (UIViewController *viewController in self.tabBarController.viewControllers)
-    {
-        
-        if ([viewController isKindOfClass:[UINavigationController class]] && [viewController.restorationIdentifier isEqualToString:@"description"])
-        {
-            UINavigationController *destController = (UINavigationController *)viewController;
-            descriptionVC = (DescriptionViewController *)destController.topViewController;
-            break;
-        }
-    }
-    descriptionVC.image=nil;
-    descriptionVC.actualImageView = NO;
-    [[CurrentItems sharedItems] setIssue:marker.userData withChangingImageViewBloc:^{
-        dispatch_async(dispatch_get_main_queue(), ^{
-            descriptionVC.image = [CurrentItems sharedItems].issueImage;
-        });
-
-    }];
+    CurrentItems *cItems = [CurrentItems sharedItems];
+    cItems.issueImage = nil;
+    NSLog(@"currents issue image is nil");
+    cItems.issue = marker.userData;
     
     return NO;
 }
 
 -(void)mapView:(GMSMapView *)mapView didTapAtCoordinate:(CLLocationCoordinate2D)coordinate
 {
-    self.currentMarker = nil;
+    self.isMarkerSelected = NO;
     [UIView animateWithDuration:0.5 animations:^(void){
         [self hideTabBar];
         [self.view layoutIfNeeded];
@@ -316,16 +296,20 @@ static double const MAP_REFRESHING_INTERVAL = 120.0;
 #pragma mark Tab Bar
 -(void)mapView:(GMSMapView *)mapView didLongPressAtCoordinate:(CLLocationCoordinate2D)coordinate
 {
-    self.mapView.selectedMarker = nil;
-    [[self navigationController] setNavigationBarHidden:YES animated:NO];
-    [self requestGoogleApiPlace:coordinate];
-    [self requestCategories];
-    [self addBorderColor];
-    [UIView animateWithDuration:0.5 animations:^(void){
-        self.scrollViewLeadingConstraint.constant = 0;
-        [self hideTabBar];
-        [self.view layoutIfNeeded];
-    }];
+    // Only logged one can add new issue
+    if (self.currentUser != nil){
+        self.mapView.selectedMarker = nil;
+        [self requestGoogleApiPlace:coordinate];
+        
+        if (self.attachmentImage != nil)
+            [self.attachmentProgressView setProgress:1.0 animated:NO];
+        
+        [UIView animateWithDuration:0.5 animations:^(void){
+            self.scrollViewLeadingConstraint.constant = 0;
+            [self hideTabBar];
+            [self.view layoutIfNeeded];
+        }];
+    }
 }
 
 -(void)requestGoogleApiPlace:(CLLocationCoordinate2D)coordinate
@@ -376,20 +360,7 @@ static double const MAP_REFRESHING_INTERVAL = 120.0;
 
 -(BOOL)tabBarController:(UITabBarController *)tabBarController shouldSelectViewController:(UIViewController *)viewController
 {
-    if ([viewController isKindOfClass:[UINavigationController class]] && [viewController.restorationIdentifier isEqualToString:@"description"]){
-        UINavigationController *destController = (UINavigationController *)viewController;
-        DescriptionViewController *descriptionVC = (DescriptionViewController *)destController.topViewController;
-//        descriptionVC.currentIssue = self.currentMarker.userData;
-        descriptionVC.currentUser = self.currentUser;
-        descriptionVC.mapViewControllerDelegate = self;
-        descriptionVC.title = self.title;
-        //descriptionVC.view.frame;
-//        [descriptionVC setDataToView];
-//        [descriptionVC clearOldDynamicElements];
-//        [descriptionVC prepareUIChangeStatusElements];
-
-    }
-    else if ([viewController isKindOfClass:[UINavigationController class]] && [viewController.restorationIdentifier isEqualToString:@"history"]){
+    if ([viewController isKindOfClass:[UINavigationController class]] && [viewController.restorationIdentifier isEqualToString:@"history"]){
         UINavigationController *destController = (UINavigationController *)viewController;
         [destController popToRootViewControllerAnimated:NO];
         IssueHistoryViewController *issueHistoryViewController = (IssueHistoryViewController *)destController.topViewController;
@@ -398,7 +369,6 @@ static double const MAP_REFRESHING_INTERVAL = 120.0;
         issueHistoryViewController.dataSorce = self.dataSorce;
         issueHistoryViewController.mapDelegate = self;
     }
-//    [self animateTabsSwitching:viewController];
     return YES;
 }
 
@@ -465,13 +435,6 @@ static double const MAP_REFRESHING_INTERVAL = 120.0;
     
     UIView *fromView = self.tabBarController.selectedViewController.view;
     UIView *toView = [viewController view];
-    //UIView *toView = [self.tabBarController.viewControllers[controllerIndex] view];
-//    if([viewController isKindOfClass:[DescriptionViewController class]])
-//    {
-//        DescriptionViewController *dVC = (DescriptionViewController*)viewController;
-//        [dVC setDataToView];
-//    }
-
     [UIView transitionFromView:fromView
                             toView:toView
                           duration:0.5
@@ -483,19 +446,16 @@ static double const MAP_REFRESHING_INTERVAL = 120.0;
                         }];
 }
 
-// returns the number of 'columns' to display.
 - (NSInteger)numberOfComponentsInPickerView:(UIPickerView *)pickerView
 {
     return 1;
 }
 
-// returns the # of rows in each component..
 - (NSInteger)pickerView:(UIPickerView *)pickerView numberOfRowsInComponent:(NSInteger)component
 {
     return self.categoryClassArray.count;
 }
 
-// The data to return for the row and component (column) that's being passed in
 - (NSString*)pickerView:(UIPickerView *)pickerView titleForRow:(NSInteger)row forComponent:(NSInteger)component
 {
     return [self.categoryClassArray[row] name];
@@ -536,6 +496,7 @@ static double const MAP_REFRESHING_INTERVAL = 120.0;
     [self.attachmentTextField.layer setBorderWidth:1.0];
 }
 
+#pragma mark Button events
 - (IBAction)buttonBackPressed:(id)sender
 {
     [[self navigationController] setNavigationBarHidden:NO animated:NO];
@@ -547,7 +508,12 @@ static double const MAP_REFRESHING_INTERVAL = 120.0;
 
 - (IBAction)buttonAddPressed:(id)sender
 {
+    if (![self checkFields]){
+        [self showAlert:@"Validation error" withMessage:@"Fill all fields!"];
+        return;
+    }
     [self requestAddingNewIssue:[self getJsonFromAddingNewIssueView]];
+//    [self requestAddingNewIssue:[self getJsonFromAddingNewIssueView]];
     [[self navigationController] setNavigationBarHidden:NO animated:NO];
     [UIView animateWithDuration:0.5 animations:^(void){
         self.scrollViewLeadingConstraint.constant = CGRectGetWidth(self.mapView.bounds);
@@ -571,6 +537,7 @@ static double const MAP_REFRESHING_INTERVAL = 120.0;
                                [[NSString alloc] initWithFormat:@"LatLng(%f, %f)", self.currentLocation.latitude, self.currentLocation.longitude],
                                @"NEW",
                                [NSNumber numberWithInt:[self.categoryPicker selectedRowInComponent:0]],
+                               self.attachmentFilename,
                                nil];
     NSArray *addIssueKeys = [[NSArray alloc] initWithObjects:
                              @"name",
@@ -578,6 +545,7 @@ static double const MAP_REFRESHING_INTERVAL = 120.0;
                              @"point",
                              @"status",
                              @"category",
+                             @"attach",
                              nil];
     return [[NSDictionary alloc] initWithObjects:addIssueValues forKeys:addIssueKeys];
 }
@@ -598,7 +566,6 @@ static double const MAP_REFRESHING_INTERVAL = 120.0;
     NSError *error = nil;
     NSData *data = [NSJSONSerialization dataWithJSONObject:jsonDictionary
                                                    options:kNilOptions error:&error];
-    
     if (!error) {
         // 4
         NSURLSessionUploadTask *uploadTask = [session uploadTaskWithRequest:request
@@ -614,6 +581,7 @@ static double const MAP_REFRESHING_INTERVAL = 120.0;
                                                                        } else {
                                                                            dispatch_async(dispatch_get_main_queue(), ^{
                                                                                [self renewMap];
+                                                                               [self clearAllFields];
                                                                            });
                                                                        }
                                                                    }];
@@ -623,41 +591,49 @@ static double const MAP_REFRESHING_INTERVAL = 120.0;
     }
 }
 
+//-(void)requestAddingAttachmentToIssue
+//{
+//    NSURL *url = [NSURL URLWithString:DOMAIN_NAME_ADD_ATTACHMENT];
+//    NSURLSessionConfiguration *config = [NSURLSessionConfiguration defaultSessionConfiguration];
+//    NSURLSession *session = [NSURLSession sessionWithConfiguration:config];
+//
+//    NSString *boundary = [self generateBoundaryString];
+//    
+//    // configure the request
+//    NSMutableURLRequest *request = [[NSMutableURLRequest alloc] initWithURL:url];
+//    [request setHTTPMethod:@"POST"];
+//    
+//    // set content type
+//    NSString *contentType = [NSString stringWithFormat:@"multipart/form-data; boundary=%@", boundary];
+//    [request setValue:contentType forHTTPHeaderField: @"Content-Type"];
+//    
+//    // create body
+//    NSData *httpBody = [self createBodyWithBoundary:boundary image:self.attachmentImage fieldName:@"file"];
+//    
+//    request.HTTPBody = httpBody;
+//    
+//    NSURLSessionTask *task = [session dataTaskWithRequest:request completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
+//        if (error) {
+//            NSLog(@"Error = %@", error);
+//            return;
+//        }
+//        
+//        NSDictionary *attachmentServerResponse = [NSJSONSerialization JSONObjectWithData:data options:0                                                                                                   error:NULL];
+//        self.attachmentFilename = attachmentServerResponse[@"filename"];
+//        [self requestAddingNewIssue:[self getJsonFromAddingNewIssueView]];
+//    }];
+//    [task resume];
+//}
+
 -(void)renewMap
 {
+    NSLog(@"renew Map");
     [self requestIssues];
 }
 
 -(void)renewMapWithNSTimer:(NSTimer *)timer
 {
     [self requestIssues];
-}
-
-// Checks if we have an internet connection or not
-- (void)testInternetConnection:(NSString *)hostName
-{
-    Reachability *internetReachableFoo = [Reachability reachabilityWithHostname:hostName];
-    
-    // Internet is reachable
-//    internetReachableFoo.reachableBlock = ^(Reachability*reach)
-//    {
-//        // Update the UI on the main thread
-//        dispatch_async(dispatch_get_main_queue(), ^{
-//            NSLog(@"Yayyy, we have the interwebs!");
-//        });
-//        reachInternet = YES;
-//    };
-    
-    // Internet is not reachable
-    internetReachableFoo.unreachableBlock = ^(Reachability*reach)
-    {
-        // Update the UI on the main thread
-        dispatch_async(dispatch_get_main_queue(), ^{
-            NSLog(@"Someone broke the internet :(");
-        });
-    };
-    
-    [internetReachableFoo startNotifier];
 }
 
 -(UIImage *)changeIconColor:(Issue *)issue
@@ -669,6 +645,196 @@ static double const MAP_REFRESHING_INTERVAL = 120.0;
     }
     
     return [GMSMarker markerImageWithColor:[UIColor redColor]];
+}
+
+-(void)initializeImagePickerController
+{
+//    UIActivityIndicatorView *indicator = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleWhiteLarge];
+//    [self.addingIssueView addSubview:indicator];
+//    indicator.translatesAutoresizingMaskIntoConstraints = NO;
+//    [self.addingIssueView addConstraint:[NSLayoutConstraint constraintWithItem:indicator
+//                                                                     attribute:NSLayoutAttributeCenterX
+//                                                                     relatedBy:NSLayoutRelationEqual
+//                                                                        toItem:self.addingIssueView
+//                                                                     attribute:NSLayoutAttributeCenterX
+//                                                                    multiplier:1.0
+//                                                                      constant:0.0]];
+//    [self.addingIssueView addConstraint:[NSLayoutConstraint constraintWithItem:indicator
+//                                                                     attribute:NSLayoutAttributeCenterY
+//                                                                     relatedBy:NSLayoutRelationEqual
+//                                                                        toItem:self.addingIssueView
+//                                                                     attribute:NSLayoutAttributeCenterY
+//                                                                    multiplier:1.0
+//                                                                      constant:0.0]];
+//    indicator.color = [UIColor blackColor];
+//    [self.addingIssueView layoutIfNeeded];
+//    [self.view bringSubviewToFront:indicator];
+    
+    UIImagePickerController *imagePickerController = [[UIImagePickerController alloc] init];
+    imagePickerController.sourceType = UIImagePickerControllerSourceTypePhotoLibrary;
+    imagePickerController.delegate = self;
+    [self presentViewController:imagePickerController animated:YES completion:nil];
+}
+
+- (void)imagePickerController:(UIImagePickerController *)picker didFinishPickingMediaWithInfo:(NSDictionary *)info
+{
+    self.attachmentImage = info[UIImagePickerControllerOriginalImage];
+
+    [self.indicator stopAnimating];
+    self.addingIssueView.userInteractionEnabled = YES;
+    self.attachmentLoadButton.userInteractionEnabled = NO;
+    
+    [self.attachmentProgressView setProgress:0.0];
+    [self.attachmentProgressView setAlpha:1.0];
+    [self.attachmentSuccessfullLabel setAlpha:0.0];
+    
+    [self requestAddingAttachmentToIssueByAfnetworking:self.attachmentImage fieldName:@"file" mimeType:@"image/jpeg" fileName:@"picture_name.jpg"];
+    
+    [picker dismissViewControllerAnimated:YES completion:^{
+    }];
+}
+
+-(IBAction)buttonLoadPressed:(id)sender
+{
+    self.addingIssueView.userInteractionEnabled = NO;
+    [self.indicator startAnimating];
+
+    [self initializeImagePickerController];
+}
+
+-(BOOL)checkFields
+{
+    if ([self.nameTextField.text isEqualToString:@""] |
+        [self.descriptionTextView.text isEqualToString:@""] |
+        self.attachmentImage == nil)
+        return NO;
+    else
+        return YES;
+}
+
+-(void)showAlert:(NSString *)title withMessage:(NSString *)message
+{
+    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:title
+                                                    message:message
+                                                   delegate:nil
+                                          cancelButtonTitle:@"OK"
+                                          otherButtonTitles:nil];
+    [alert show];
+}
+
+//-(NSData *)createBodyWithBoundary:(NSString *)boundary
+//                            image:(UIImage *)image
+//                        fieldName:(NSString *)fieldName
+//{
+//    NSMutableData *httpBody = [NSMutableData data];
+//    
+//    NSData *data = UIImageJPEGRepresentation(image, 1.0);
+//    
+//    [httpBody appendData:[[NSString stringWithFormat:@"--%@\r\n", boundary] dataUsingEncoding:NSUTF8StringEncoding]];
+//    [httpBody appendData:[[NSString stringWithFormat:@"Content-Disposition: form-data; name=\"%@\"; filename=\"%@\"\r\n", fieldName, @"image_name.jpg"] dataUsingEncoding:NSUTF8StringEncoding]];
+//    [httpBody appendData:[[NSString stringWithFormat:@"Content-Type: %@\r\n\r\n", @"image/jpeg"] dataUsingEncoding:NSUTF8StringEncoding]];
+//    [httpBody appendData:data];
+//    [httpBody appendData:[@"\r\n" dataUsingEncoding:NSUTF8StringEncoding]];
+//    
+//    [httpBody appendData:[[NSString stringWithFormat:@"--%@--\r\n", boundary] dataUsingEncoding:NSUTF8StringEncoding]];
+//    
+//    return httpBody;
+//}
+//
+//- (NSString *)generateBoundaryString
+//{
+//    return [NSString stringWithFormat:@"Boundary-%@", [[NSUUID UUID] UUIDString]];
+//
+//}
+
+-(void)clearAllFields
+{
+    self.nameTextField.text = @"";
+    self.descriptionTextView.text = @"";
+    [self.categoryPicker selectRow:0 inComponent:0 animated:NO];
+    self.attachmentImage = nil;
+    self.attachmentFilename = nil;
+    [self.attachmentProgressView setProgress:0.0];
+    [self.attachmentProgressView setAlpha:1.0];
+    [self.attachmentSuccessfullLabel setAlpha:0.0];
+}
+
+- (void)viewWillTransitionToSize:(CGSize)size withTransitionCoordinator:(id<UIViewControllerTransitionCoordinator>)coordinator
+{
+    [super viewWillTransitionToSize:size withTransitionCoordinator:coordinator];
+    self.scrollViewLeadingConstraint.constant = size.width;
+    
+    [coordinator animateAlongsideTransition:^(id<UIViewControllerTransitionCoordinatorContext> context) {
+        
+        
+    } completion:^(id<UIViewControllerTransitionCoordinatorContext> context) {
+        
+    }];
+}
+
+-(void)requestAddingAttachmentToIssueByAfnetworking:(UIImage *)image
+                                          fieldName:(NSString *)fieldName
+                                           mimeType:(NSString *)mimeType
+                                           fileName:(NSString *)fileName
+{
+    NSData *data = UIImageJPEGRepresentation(image, 1.0);
+    
+    NSMutableURLRequest *request = [[AFHTTPRequestSerializer serializer] multipartFormRequestWithMethod:@"POST" URLString:DOMAIN_NAME_ADD_ATTACHMENT parameters:nil constructingBodyWithBlock:^(id<AFMultipartFormData> formData) {
+        [formData appendPartWithFileData:data name:fieldName fileName:fileName mimeType:mimeType];
+    } error:nil];
+    
+    AFURLSessionManager *manager = [[AFURLSessionManager alloc] initWithSessionConfiguration:[NSURLSessionConfiguration defaultSessionConfiguration]];
+    
+    NSURLSessionUploadTask *uploadTask;
+    uploadTask = [manager
+                  uploadTaskWithStreamedRequest:request
+                  progress:^(NSProgress * _Nonnull uploadProgress) {
+                      dispatch_async(dispatch_get_main_queue(), ^{
+                          //Update the progress view
+                          [self.attachmentProgressView setProgress:uploadProgress.fractionCompleted animated:YES];
+                          if (uploadProgress.fractionCompleted == 1.0) {
+                              [UIView animateWithDuration:1.0 animations:^(void) {
+                                  [self.attachmentProgressView setAlpha:0.0];
+                                  [self.attachmentSuccessfullLabel setAlpha:1.0];
+                              }];
+                              self.attachmentLoadButton.userInteractionEnabled = YES;
+                          }
+                      });
+                  }
+                  completionHandler:^(NSURLResponse * _Nonnull response, id  _Nullable responseObject, NSError * _Nullable error) {
+                      if (error) {
+                          NSLog(@"Error: %@", error);
+                      } else {
+                          NSLog(@"%@ %@", response, responseObject);
+                          self.attachmentFilename = responseObject[@"filename"];
+                      }
+                  }];
+    
+    [uploadTask resume];
+}
+
+- (void)imagePickerControllerDidCancel:(UIImagePickerController *)picker
+{
+    [self.indicator stopAnimating];
+    self.addingIssueView.userInteractionEnabled = YES;
+    [self dismissViewControllerAnimated:YES completion:NULL];
+}
+
+-(void)customiseProgressBarView
+{
+    NSArray *grayColors = @[[UIColor grayColor], [UIColor grayColor]];
+    
+    self.attachmentProgressView.type = YLProgressBarTypeFlat;
+    self.attachmentProgressView.progressTintColors = grayColors;
+    self.attachmentProgressView.trackTintColor = [UIColor whiteColor];
+    self.attachmentProgressView.hideStripes = YES;
+    self.attachmentProgressView.progressStretch = NO;
+    [self.attachmentProgressView setProgress:0.0f animated:NO];
+
+    CGFloat borderWidth = 1.0f;
+    self.attachmentProgressView.frame = CGRectInset(self.attachmentProgressView.frame, -borderWidth, -borderWidth);
+    self.attachmentProgressView.layer.borderColor = [UIColor grayColor].CGColor;
+    self.attachmentProgressView.layer.borderWidth = borderWidth;
 }
 
 @end

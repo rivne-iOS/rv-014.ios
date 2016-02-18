@@ -246,11 +246,12 @@
         else
         {
             NSLog(@"good!!!!");
+            __weak SingUpViewController *weakSelf = self;
             dispatch_async(dispatch_get_main_queue(), ^
-                           {
-                               [CurrentItems sharedItems].user = resUser;
-                               [self.navigationController popToRootViewControllerAnimated:YES];
-                           });
+           {
+               [CurrentItems sharedItems].user = resUser;
+               [weakSelf.navigationController popToRootViewControllerAnimated:YES];
+           });
         }
         
     

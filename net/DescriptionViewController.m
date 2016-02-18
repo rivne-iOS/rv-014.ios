@@ -15,7 +15,7 @@
 
 
 
-@interface DescriptionViewController ()
+@interface DescriptionViewController () <IssueImageDelegate>
 @property (weak, nonatomic) IBOutlet UILabel *currentCategoryLabel;
 @property (weak, nonatomic) IBOutlet UILabel *currentStatusLabel;
 @property (weak, nonatomic) IBOutlet UIImageView *issueImageView;
@@ -26,11 +26,9 @@
 @property (strong, nonatomic) NSArray <NSString*> *stringNewStatuses;
 @property (strong, nonatomic) UIView *viewToConnectChangeButtons;
 
-//dynamic items (for change ctatus)
 @property (strong, nonatomic) UIView *backGreyView;
 @property (strong, nonatomic) UIButton *changeButton;
 @property (strong, nonatomic) NSMutableArray <ChangerBox*> *changerBoxArr;
-
 
 @end
 
@@ -68,51 +66,38 @@
     [self prepareUIChangeStatusElements];
     [self.tabBarController.tabBar.items objectAtIndex:1].title = @"Description";
     
-    
-    if (![self isActualImageView])
+    CurrentItems *cItems = [CurrentItems sharedItems];
+    if(cItems.issueImage==nil)
     {
-        if(self.image==nil)
-        {
-            self.issueImageView.image = nil;
-            self.issueImageView.backgroundColor = [UIColor clearColor];
-        }
-        else
-        {
-            self.issueImageView.image=self.image;
-            self.actualImageView = YES;
-        }
+        NSLog(@"if(cItems.issueImage==nil) in description");
+        self.issueImageView.image = nil;
     }
-//    [self.dataSorce requestImageWithName:self.currentIssue.attachments andViewControllerHandler:^(UIImage *image) {
-//        dispatch_async(dispatch_get_main_queue(), ^{
-//            self.issueImageView.image = image;
-//        });
-//    } withErrorHandler:^(NSError *error) {
-//        // error
-//    }];
-
+     else if( ![self.issueImageView.image isEqual:cItems.issueImage])
+    {
+        NSLog(@"view will appear: ![self.issueImageView.image isEqual:cItems.issueImage], set uotlet.");
+        self.issueImageView.image = cItems.issueImage;
+    }
 }
 
-//-(void)viewDidAppear:(BOOL)animated
-//{
-//
-//
-//}
-
--(void)setImage:(UIImage *)image
+-(void)issueImageDidLoad
 {
-    _image = image;
-
-    if(self.issueImageView !=nil)
+    CurrentItems *cItems = [CurrentItems sharedItems];
+    if (![self.issueImageView.image isEqual:cItems.issueImage])
     {
-        self.issueImageView.image = image;
-        self.actualImageView = YES;
+        NSLog(@"in description issue did load: ![self.issueImageView.image isEqual:cItems.issueImage], setOutlet");
+        dispatch_async(dispatch_get_main_queue(), ^{
+           self.issueImageView.image = [CurrentItems sharedItems].issueImage; 
+        });
+        
     }
-
-    
 }
+
+
 
 -(void)viewDidLoad
 {
+    CurrentItems *cItems = [CurrentItems sharedItems];
+    [cItems.issueImageDelegates addObject:self];
     self.navigationController.navigationBar.tintColor = [UIColor whiteColor];
     self.navigationController.navigationBar.barTintColor = [UIColor bawlRedColor];
     self.navigationController.navigationBar.titleTextAttributes = @{NSForegroundColorAttributeName : [UIColor whiteColor]};
@@ -167,11 +152,13 @@
 
 -(void)prepareUIChangeStatusElements
 {
-    if (self.currentUser==nil)
+    User *currentUser = [CurrentItems sharedItems].user;
+    if (currentUser==nil)
         self.stringNewStatuses = nil;
     else
-        self.stringNewStatuses = [self.statusChanger newIssueStatusesForUser:self.currentUser.stringRole andCurretIssueStatus:[CurrentItems sharedItems].issue.status];
+        self.stringNewStatuses = [self.statusChanger newIssueStatusesForUser:currentUser.stringRole andCurretIssueStatus:[CurrentItems sharedItems].issue.status];
     
+    // just for testing
     // self.stringNewStatuses = @[@"111", @"222", @"333"];
     
     if (self.stringNewStatuses == nil)
@@ -385,7 +372,8 @@
                                                                        otherButtonTitles:nil];
                                  [alert show];
                                  [CurrentItems sharedItems].issue = issue;
-                                 [self.mapViewControllerDelegate renewMap];
+                                 [[NSNotificationCenter defaultCenter] postNotificationName:@"renewMap" object:self];
+                                 
                                  [self setDataToView];
                                  [self clearOldDynamicElements];
                                  [self prepareUIChangeStatusElements];

@@ -8,7 +8,8 @@
 
 #import <UIKit/UIKit.h>
 #import "User.h"
-#import "Reachability.h"
+#import "AFNetworking.h"
+#import "YLProgressBar.h"
 
 @interface MapViewController : UIViewController <UIPickerViewDataSource, UIPickerViewDelegate>
 
@@ -21,14 +22,19 @@
 @property (weak, nonatomic) IBOutlet UIView *addingIssueView;
 @property (weak, nonatomic) IBOutlet NSLayoutConstraint *bottomBarConstraint;
 @property (weak, nonatomic) IBOutlet NSLayoutConstraint *scrollViewLeadingConstraint;
+@property (weak, nonatomic) IBOutlet NSLayoutConstraint *addingIssueViewHeightConstraint;
 
 @property (weak, nonatomic) IBOutlet UILabel *tapLocationLabel;
 @property (strong, nonatomic) NSMutableArray *categoryClassArray;
 @property (weak, nonatomic) IBOutlet UIPickerView *categoryPicker;
 @property (weak, nonatomic) IBOutlet UIScrollView *scrollView;
+@property (weak, nonatomic) IBOutlet UIView *mainView;
 @property (weak, nonatomic) IBOutlet UITextView *descriptionTextView;
 @property (weak, nonatomic) IBOutlet UITextField *nameTextField;
 @property (weak, nonatomic) IBOutlet UITextField *attachmentTextField;
+@property (weak, nonatomic) IBOutlet YLProgressBar *attachmentProgressView;
+@property (weak, nonatomic) IBOutlet UILabel *attachmentSuccessfullLabel;
+@property (weak, nonatomic) IBOutlet UIButton *attachmentLoadButton;
 
 @property (strong, nonatomic) NSTimer *timerForMapRenew;
 
@@ -36,6 +42,7 @@
 
 - (IBAction)buttonBackPressed:(id)sender;
 - (IBAction)buttonAddPressed:(id)sender;
+- (IBAction)buttonLoadPressed:(id)sender;
 - (void)renewMapWithNSTimer:(NSTimer *)timer;
 -(void)renewMap;
 

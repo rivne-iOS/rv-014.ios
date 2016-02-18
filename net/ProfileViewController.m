@@ -100,7 +100,7 @@ static NSString const * const AVATAR_NO_IMAGE = @"no_avatar.png";
                         [self.systemRole setText:@"SUBSCRIBER"];
                         break;
                 }
-                if (self.avatarImageURL)
+                if ([self.avatarImageURL isEqualToString:@"null"])
                     [self requestAvatarWithName:self.avatarImageURL];
                 else [self requestAvatarWithName:AVATAR_NO_IMAGE];
             });
