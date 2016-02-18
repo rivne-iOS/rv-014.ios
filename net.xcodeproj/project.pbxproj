@@ -10,6 +10,7 @@
 		100D5E94A39CA00BFE42E1A3 /* libPods.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 3F322957FCEB450D078EB0DF /* libPods.a */; };
 		84114C691C61503B0092F507 /* UIColor+Bawl.m in Sources */ = {isa = PBXBuildFile; fileRef = 84114C681C61503B0092F507 /* UIColor+Bawl.m */; };
 		841429551C5FEEDE0092C0C5 /* Reachability.m in Sources */ = {isa = PBXBuildFile; fileRef = 841429541C5FEEDE0092C0C5 /* Reachability.m */; };
+		84378ACE1C75C3640063CC0F /* IssueCategories.m in Sources */ = {isa = PBXBuildFile; fileRef = 84378ACD1C75C3640063CC0F /* IssueCategories.m */; };
 		845245A71C4E5923000755AC /* DescriptionViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 845245A61C4E5923000755AC /* DescriptionViewController.m */; };
 		8459C76F1C6505C700F7F595 /* ChangerBox.m in Sources */ = {isa = PBXBuildFile; fileRef = 8459C76E1C6505C700F7F595 /* ChangerBox.m */; };
 		8460F9701C3C531E00ECB3A4 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 8460F96F1C3C531E00ECB3A4 /* main.m */; };
@@ -54,6 +55,8 @@
 		84114C681C61503B0092F507 /* UIColor+Bawl.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIColor+Bawl.m"; sourceTree = "<group>"; };
 		841429531C5FEEDE0092C0C5 /* Reachability.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Reachability.h; path = model/Reachability.h; sourceTree = "<group>"; };
 		841429541C5FEEDE0092C0C5 /* Reachability.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = Reachability.m; path = model/Reachability.m; sourceTree = "<group>"; };
+		84378ACC1C75C3640063CC0F /* IssueCategories.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = IssueCategories.h; path = model/IssueCategories.h; sourceTree = "<group>"; };
+		84378ACD1C75C3640063CC0F /* IssueCategories.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = IssueCategories.m; path = model/IssueCategories.m; sourceTree = "<group>"; };
 		845245A51C4E5923000755AC /* DescriptionViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DescriptionViewController.h; sourceTree = "<group>"; };
 		845245A61C4E5923000755AC /* DescriptionViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DescriptionViewController.m; sourceTree = "<group>"; };
 		8459C76D1C6505C700F7F595 /* ChangerBox.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ChangerBox.h; path = model/ChangerBox.h; sourceTree = "<group>"; };
@@ -233,6 +236,8 @@
 				8459C76E1C6505C700F7F595 /* ChangerBox.m */,
 				849E9B191C709BB200DA527E /* CurrentItems.h */,
 				849E9B1A1C709BB200DA527E /* CurrentItems.m */,
+				84378ACC1C75C3640063CC0F /* IssueCategories.h */,
+				84378ACD1C75C3640063CC0F /* IssueCategories.m */,
 			);
 			name = model;
 			sourceTree = "<group>";
@@ -423,6 +428,7 @@
 				8460F9761C3C531E00ECB3A4 /* LogInViewController.m in Sources */,
 				8460F99C1C3C5E1A00ECB3A4 /* IssueHistory.m in Sources */,
 				84E7BF461C430AA600E66585 /* NetworkDataSorce.m in Sources */,
+				84378ACE1C75C3640063CC0F /* IssueCategories.m in Sources */,
 				84D93FC91C5A245800D4E96D /* IssueChangeStatus.m in Sources */,
 				84114C691C61503B0092F507 /* UIColor+Bawl.m in Sources */,
 				8460F99F1C3C651500ECB3A4 /* HTTPConnector.m in Sources */,
