@@ -18,6 +18,8 @@
 #import "NSString+stringIsEmpry.h"
 
 static NSString const * const AVATAR_NO_IMAGE = @"no_avatar.png";
+static NSString const * const DOMAIN_CHANGE_USER_DETAILS = @"https://bawl-rivne.rhcloud.com/user/details"; // placeholder
+static NSInteger const HTTP_RESPONSE_CODE_OK = 200;
 
 @interface ProfileViewController ()
 
@@ -315,6 +317,52 @@ static NSString const * const AVATAR_NO_IMAGE = @"no_avatar.png";
     [picker dismissViewControllerAnimated:YES completion:nil];
 }
 
+#pragma mark - request Change User Details
+
+- (NSDictionary *) getJSONfromChangeUserDetails {
+    NSArray *values = [[NSArray alloc] initWithObjects:self.userName.text
+                                                    ,self.userLogin.text
+                                                    ,self.userEmail.text
+                                                    ,nil];
+    NSArray *keys = [[NSArray alloc] initWithObjects:@"name",
+                                                     @"login",
+                                                     @"email",
+                                                     nil];
+    NSDictionary *JSONdic = [[NSDictionary alloc] initWithObjects:values forKeys:keys];
+    
+    return JSONdic;
+}
+
+- (void) requestChangeUserDetails: (NSDictionary *) jsonDictionary {
+    NSURL *url = [NSURL URLWithString:DOMAIN_CHANGE_USER_DETAILS];
+    NSURLSessionConfiguration *config = [NSURLSessionConfiguration defaultSessionConfiguration];
+    NSURLSession *session = [NSURLSession sessionWithConfiguration:config];
+    
+    NSMutableURLRequest *request = [[NSMutableURLRequest alloc] initWithURL:url];
+    request.HTTPMethod = @"POST";
+    [request setValue:@"application/json" forHTTPHeaderField:@"Content-Type"];
+    
+    NSError *error = nil;
+    NSData *data = [NSJSONSerialization dataWithJSONObject:jsonDictionary
+                                                   options:kNilOptions error:&error];
+    
+    if (!error) {
+        NSURLSessionUploadTask *uploadTask = [session uploadTaskWithRequest:request
+                                                                   fromData:data completionHandler:^(NSData *data,NSURLResponse *response,NSError *error) {
+                                                                       NSHTTPURLResponse *httpResponse = (NSHTTPURLResponse *) response;
+                                                                       if ([httpResponse statusCode] != HTTP_RESPONSE_CODE_OK) {
+                                                                           UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Attention!"
+                                                                                                                           message:@"Something has gone wrong! (we have ansswer from server, but it's incorrect)"
+                                                                                                                          delegate:nil
+                                                                                                                 cancelButtonTitle:@"I understood"
+                                                                                                                 otherButtonTitles:nil];
+                                                                           [alert show];
+                                                                       } 
+                                                                   }];
+        [uploadTask resume];
+    }
+}
+
 #pragma mark - Change User Datails
 
 - (IBAction)changeUserDatails:(UIButton *)sender {
@@ -337,7 +385,8 @@ static NSString const * const AVATAR_NO_IMAGE = @"no_avatar.png";
         [self.userName setBorderForColor:nil width:0.0f radius:0.0f];
         [self.userLogin setBorderForColor:nil width:0.0f radius:0.0f];
         [self.userEmail setBorderForColor:nil width:0.0f radius:0.0f];
-        // to do send request for change user datails
+        
+//        [self requestChangeUserDetails:[self getJSONfromChangeUserDetails]];
     }
 }
 
