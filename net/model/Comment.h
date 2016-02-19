@@ -11,12 +11,15 @@
 
 @interface Comment : NSObject
 
+@property(strong, nonatomic) NSNumber *userId;
 @property(strong, nonatomic) NSString *userName;
 @property(strong, nonatomic) UIImage *userImage;
 @property(strong, nonatomic) NSString *userMessage;
 
 
--(void)initWithCommentDictionary:(NSDictionary <NSString*,NSString*> *)commentDictionary
-           andAllUsersDictionaries:(NSArray <NSDictionary <NSString*,NSString*> *> *)usersDictionaries;
+
+-(instancetype)initWithCommentDictionary:(NSDictionary <NSString*,id> *)commentDictionary
+           andAllUsersDictionaries:(NSArray <NSDictionary <NSString*,NSString*> *> *)usersDictionaries
+                          andUIImageView:(UIImageView*)imageView;
 
 @end

@@ -49,6 +49,33 @@
 
 }
 
+
+-(void)requestAllUsers:(void (^)(NSArray <NSDictionary <NSString*,NSString*> *> *userDictionaries))handler withErrorHandler:(void(^)(NSError *error)) errorHandler
+{
+    HTTPConnector *connector = [[HTTPConnector alloc] init];
+    [connector requestUsers:^(NSData *data, NSError *error) {
+        NSArray <NSDictionary<NSString*,NSString*>*> *userDics = [NSJSONSerialization JSONObjectWithData:data options:0 error:NULL];
+        if (![userDics isKindOfClass:[NSArray class]] || error != nil)
+        {
+            handler(nil);
+        }
+        errorHandler(error);
+    }];
+}
+
+-(void)requestComment:(void (^)(NSDictionary <NSString*,id> *commentDic))handler withErrorHandler:(void(^)(NSError *error)) errorHandler
+{
+    NSError *tError = nil;
+    NSDictionary <NSString*,id> *tCommentDic = @{ @"USER_ID": @1,
+                                                         @"COMMENT": @"Text of comment Text of comment Text of comment Text of comment ",
+                                                         @"DATE": @"01/01/2016"};
+    handler(tCommentDic);
+    errorHandler(tError);
+    
+}
+
+
+
 -(void)requestImageWithName:(NSString*)name andHandler:(void (^)(UIImage *image))viewControllerHandler withErrorHandler:(void(^)(NSError *error)) errorHandler
 {
     HTTPConnector *connector = [[HTTPConnector alloc] init];

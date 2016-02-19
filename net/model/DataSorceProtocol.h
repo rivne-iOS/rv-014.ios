@@ -19,7 +19,9 @@
 
 -(void)requestCategories:(void (^)(NSArray<IssueCategory*> * issueCategories))viewControllerHandler withErrorHandler:(void(^)(NSError *error)) errorHandler;
 
--(void)requestAllUsers:(void (^)(NSArray <NSDictionary <NSString*,NSString*> *> *userDictionaries))Handler withErrorHandler:(void(^)(NSError *error)) errorHandler;
+-(void)requestAllUsers:(void (^)(NSArray <NSDictionary <NSString*,NSString*> *> *userDictionaries))handler withErrorHandler:(void(^)(NSError *error)) errorHandler;
+
+-(void)requestComment:(void (^)(NSDictionary <NSString*,NSString*> *commentDic))handler withErrorHandler:(void(^)(NSError *error)) errorHandler;
 
 
 -(void)requestImageWithName:(NSString*)name andHandler:(void (^)(UIImage *image))viewControllerHandler withErrorHandler:(void(^)(NSError *error)) errorHandler;
