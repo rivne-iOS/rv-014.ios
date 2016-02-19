@@ -15,6 +15,7 @@
 #import "UIView+Addition.h"
 #import "UIViewController+backViewController.h"
 #import "IssueHistoryViewController.h"
+#import "NSString+stringIsEmpry.h"
 
 static NSString const * const AVATAR_NO_IMAGE = @"no_avatar.png";
 
@@ -84,7 +85,7 @@ static NSString const * const AVATAR_NO_IMAGE = @"no_avatar.png";
                             [self.systemRole setText:@"SUBSCRIBER"];
                             break;
                     }
-                    if ([self.avatarImageURL isEqualToString:@"null"])
+                    if (![NSString stringIsEmpty:self.avatarImageURL])
                         [self requestAvatarWithName:self.avatarImageURL];
                     else [self requestAvatarWithName:AVATAR_NO_IMAGE];
                 });
@@ -173,7 +174,7 @@ static NSString const * const AVATAR_NO_IMAGE = @"no_avatar.png";
     });
 }
 
-- (void) requestAvatarWithName: (NSString *) avatarName {
+- (void) requestAvatarWithName: (NSString const * const) avatarName {
     NSString *urlString = [NSString stringWithFormat:@"https://bawl-rivne.rhcloud.com/image/%@", avatarName];
     
     NSURL *url = [NSURL URLWithString:urlString];
@@ -207,7 +208,9 @@ static NSString const * const AVATAR_NO_IMAGE = @"no_avatar.png";
                                             NSDictionary *userData = [NSJSONSerialization JSONObjectWithData:data
                                                                                                      options:0
                                                                                                        error:NULL];
-                                            self.avatarImageURL = [NSString stringWithFormat:@"%@", userData[@"AVATAR"]];
+                                            if (userData[@"AVATAR"] != [NSNull null])
+                                                self.avatarImageURL = [[NSString alloc] initWithString:userData[@"AVATAR"]];
+                                            else self.avatarImageURL = nil;
                                             User *user = [[User alloc] initWitDictionary:userData];
                                             
                                             handler(user);
@@ -321,23 +324,15 @@ static NSString const * const AVATAR_NO_IMAGE = @"no_avatar.png";
         [self.userName setEnabled:YES];
         [self.userEmail setEnabled:YES];
         
-        [self.userName setBorderStyle:UITextBorderStyleRoundedRect];
-        [self.userLogin setBorderStyle:UITextBorderStyleRoundedRect];
-        [self.userEmail setBorderStyle:UITextBorderStyleRoundedRect];
-        
-        [self.userName setBorderForColor:[UIColor bawlRedColor03alpha] width:0.5f radius:1.0f];
-        [self.userLogin setBorderForColor:[UIColor bawlRedColor03alpha] width:0.5f radius:1.0f];
-        [self.userEmail setBorderForColor:[UIColor bawlRedColor03alpha] width:0.5f radius:1.0f];
+        [self.userName setBorderForColor:[UIColor bawlRedColor03alpha] width:0.5f radius:5.0f];
+        [self.userLogin setBorderForColor:[UIColor bawlRedColor03alpha] width:0.5f radius:5.0f];
+        [self.userEmail setBorderForColor:[UIColor bawlRedColor03alpha] width:0.5f radius:5.0f];
     }
     else if ([sender.titleLabel.text isEqualToString:@"Save"]) {
         [self.changeUserDetails setTitle:@"Change User Details" forState:UIControlStateNormal];
         [self.userLogin setEnabled:NO];
         [self.userName setEnabled:NO];
         [self.userEmail setEnabled:NO];
-        
-        [self.userName setBorderStyle:UITextBorderStyleNone];
-        [self.userLogin setBorderStyle:UITextBorderStyleNone];
-        [self.userEmail setBorderStyle:UITextBorderStyleNone];
         
         [self.userName setBorderForColor:nil width:0.0f radius:0.0f];
         [self.userLogin setBorderForColor:nil width:0.0f radius:0.0f];

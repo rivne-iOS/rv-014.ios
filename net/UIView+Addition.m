@@ -11,10 +11,10 @@
 @implementation UIView (Addition)
 
 - (void) setBorderForColor:(UIColor *)color width:(float)width radius:(float)radius {
-    self.layer.cornerRadius = radius;
     self.layer.masksToBounds = YES;
     self.layer.borderColor = [color CGColor];
     self.layer.borderWidth = width;
+    self.layer.cornerRadius = radius;
 }
 
 @end

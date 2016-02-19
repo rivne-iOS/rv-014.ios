@@ -38,6 +38,7 @@
 		CEC6F6361C5B6FB6002321AA /* CustomTableCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = CEC6F6341C5B6FB6002321AA /* CustomTableCell.xib */; };
 		CEF2B61D1C74761000F4B2F5 /* UIView+Addition.m in Sources */ = {isa = PBXBuildFile; fileRef = CEF2B61C1C74761000F4B2F5 /* UIView+Addition.m */; };
 		CEF2B6201C75D96700F4B2F5 /* UIViewController+backViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = CEF2B61F1C75D96700F4B2F5 /* UIViewController+backViewController.m */; };
+		CEF2B6231C771BAB00F4B2F5 /* NSString+stringIsEmpry.m in Sources */ = {isa = PBXBuildFile; fileRef = CEF2B6221C771BAB00F4B2F5 /* NSString+stringIsEmpry.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -111,6 +112,8 @@
 		CEF2B61C1C74761000F4B2F5 /* UIView+Addition.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIView+Addition.m"; sourceTree = "<group>"; };
 		CEF2B61E1C75D96700F4B2F5 /* UIViewController+backViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIViewController+backViewController.h"; sourceTree = "<group>"; };
 		CEF2B61F1C75D96700F4B2F5 /* UIViewController+backViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIViewController+backViewController.m"; sourceTree = "<group>"; };
+		CEF2B6211C771BAB00F4B2F5 /* NSString+stringIsEmpry.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSString+stringIsEmpry.h"; sourceTree = "<group>"; };
+		CEF2B6221C771BAB00F4B2F5 /* NSString+stringIsEmpry.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSString+stringIsEmpry.m"; sourceTree = "<group>"; };
 		F4AC75DBD87C887E9CEC39A4 /* Pods.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.release.xcconfig; path = "Pods/Target Support Files/Pods/Pods.release.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -247,6 +250,8 @@
 				CEF2B61C1C74761000F4B2F5 /* UIView+Addition.m */,
 				CEF2B61E1C75D96700F4B2F5 /* UIViewController+backViewController.h */,
 				CEF2B61F1C75D96700F4B2F5 /* UIViewController+backViewController.m */,
+				CEF2B6211C771BAB00F4B2F5 /* NSString+stringIsEmpry.h */,
+				CEF2B6221C771BAB00F4B2F5 /* NSString+stringIsEmpry.m */,
 			);
 			name = model;
 			sourceTree = "<group>";
@@ -443,6 +448,7 @@
 			files = (
 				8459C76F1C6505C700F7F595 /* ChangerBox.m in Sources */,
 				849E9B1B1C709BB200DA527E /* CurrentItems.m in Sources */,
+				CEF2B6231C771BAB00F4B2F5 /* NSString+stringIsEmpry.m in Sources */,
 				8460F9761C3C531E00ECB3A4 /* LogInViewController.m in Sources */,
 				8460F99C1C3C5E1A00ECB3A4 /* IssueHistory.m in Sources */,
 				84E7BF461C430AA600E66585 /* NetworkDataSorce.m in Sources */,

@@ -1002,7 +1002,7 @@
                                         </constraints>
                                     </imageView>
                                     <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" enabled="NO" contentHorizontalAlignment="left" contentVerticalAlignment="center" text="Kris Evans" textAlignment="center" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="Cvb-45-iu3">
-                                        <rect key="frame" x="0.0" y="180" width="600" height="24"/>
+                                        <rect key="frame" x="20" y="180" width="560" height="24"/>
                                         <color key="textColor" red="0.83529411764705885" green="0.22352941176470589" blue="0.3411764705882353" alpha="1" colorSpace="calibratedRGB"/>
                                         <fontDescription key="fontDescription" type="system" pointSize="20"/>
                                         <textInputTraits key="textInputTraits"/>
@@ -1109,7 +1109,7 @@
                                 <constraints>
                                     <constraint firstItem="Fk6-jn-N7K" firstAttribute="centerX" secondItem="ibI-TV-PAc" secondAttribute="centerX" id="15E-hO-Xxf"/>
                                     <constraint firstItem="5mg-m6-GgF" firstAttribute="top" secondItem="ICv-Sc-PHI" secondAttribute="bottom" constant="10" id="4NY-yL-mwM"/>
-                                    <constraint firstItem="Cvb-45-iu3" firstAttribute="leading" secondItem="ibI-TV-PAc" secondAttribute="leading" id="Boe-bg-yGw"/>
+                                    <constraint firstItem="Cvb-45-iu3" firstAttribute="leading" secondItem="ibI-TV-PAc" secondAttribute="leading" constant="20" id="Boe-bg-yGw"/>
                                     <constraint firstItem="Cvb-45-iu3" firstAttribute="top" secondItem="lVY-SF-ay3" secondAttribute="bottom" constant="20" id="BuY-mi-5pm"/>
                                     <constraint firstItem="Cvb-45-iu3" firstAttribute="centerX" secondItem="ibI-TV-PAc" secondAttribute="centerX" id="D7W-Tx-Paw"/>
                                     <constraint firstItem="gLf-Px-Gmy" firstAttribute="centerX" secondItem="ibI-TV-PAc" secondAttribute="centerX" id="Du2-bW-OLo"/>
@@ -1123,7 +1123,7 @@
                                     <constraint firstItem="ICv-Sc-PHI" firstAttribute="centerX" secondItem="ibI-TV-PAc" secondAttribute="centerX" id="rIp-zs-Pij"/>
                                     <constraint firstItem="fny-Oy-5Q6" firstAttribute="top" secondItem="5mg-m6-GgF" secondAttribute="bottom" constant="10" id="rc2-4p-h7C"/>
                                     <constraint firstItem="gLf-Px-Gmy" firstAttribute="top" secondItem="fny-Oy-5Q6" secondAttribute="bottom" constant="40" id="tBJ-oz-zUk"/>
-                                    <constraint firstAttribute="trailing" secondItem="Cvb-45-iu3" secondAttribute="trailing" id="vbd-95-Eq7"/>
+                                    <constraint firstAttribute="trailing" secondItem="Cvb-45-iu3" secondAttribute="trailing" constant="20" id="vbd-95-Eq7"/>
                                     <constraint firstItem="5mg-m6-GgF" firstAttribute="centerX" secondItem="ibI-TV-PAc" secondAttribute="centerX" id="yoh-T4-ici"/>
                                 </constraints>
                             </scrollView>
@@ -1240,6 +1240,6 @@
         <image name="traffic_light_issue" width="164" height="92"/>
     </resources>
     <inferredMetricsTieBreakers>
-        <segue reference="TLl-qh-wdc"/>
+        <segue reference="JER-bu-PYI"/>
     </inferredMetricsTieBreakers>
 </document>
