@@ -13,6 +13,8 @@
 #import "ChangerBox.h"
 #import "CurrentItems.h"
 #import "IssueCategories.h"
+#import "AvatarView.h"
+#import "Comment.h"
 
 
 
@@ -23,16 +25,30 @@
 @property (weak, nonatomic) IBOutlet UILabel *titleLabel;
 @property (weak, nonatomic) IBOutlet UILabel *descriptionLabel;
 
+@property (weak, nonatomic) IBOutlet UILabel *commentLabelOnButton;
+@property (weak, nonatomic) IBOutlet UIImageView *changeStatusArrow;
+@property (weak, nonatomic) IBOutlet UIView *viewBetweenCommentAndChare;
+
+@property (weak, nonatomic) IBOutlet UIView *contentView;
+@property (weak, nonatomic) IBOutlet UIScrollView *ScrollView;
+@property (strong, nonatomic) IBOutletCollection(NSLayoutConstraint) NSArray *constraintsVertical;
+@property (strong, nonatomic) IBOutletCollection(UIView) NSArray *viewsVertical;
+
+
+
 
 @property (strong, nonatomic) IssueChangeStatus *statusChanger;
 @property (strong, nonatomic) id <DataSorceProtocol> dataSorce;
 
 @property (strong, nonatomic) NSArray <NSString*> *stringNewStatuses;
-@property (strong, nonatomic) UIView *viewToConnectChangeButtons;
+@property (strong, nonatomic) UIView *viewToConnectDynamicItems;
 
 @property (strong, nonatomic) UIView *backGreyView;
 @property (strong, nonatomic) UIButton *changeButton;
 @property (strong, nonatomic) NSMutableArray <ChangerBox*> *changerBoxArr;
+
+@property(nonatomic) CGFloat avatarSize;
+@property(nonatomic) CGFloat contentHeight;
 
 @end
 
@@ -82,6 +98,18 @@
         NSLog(@"view will appear: ![self.issueImageView.image isEqual:cItems.issueImage], set uotlet.");
         self.issueImageView.image = cItems.issueImage;
     }
+    
+    self.contentHeight = 0;
+    for (UIView *view in self.viewsVertical)
+    {
+        self.contentHeight += view.frame.size.height;
+    }
+    for (NSLayoutConstraint *con in self.constraintsVertical)
+    {
+        self.contentHeight += con.constant;
+    }
+    
+    [self requestUsersAndComments];
 }
 
 -(void)issueImageDidLoad
@@ -101,12 +129,15 @@
 
 -(void)viewDidLoad
 {
+
     CurrentItems *cItems = [CurrentItems sharedItems];
     [cItems.issueImageDelegates addObject:self];
     self.navigationController.navigationBar.tintColor = [UIColor whiteColor];
     self.navigationController.navigationBar.barTintColor = [UIColor bawlRedColor];
     self.navigationController.navigationBar.titleTextAttributes = @{NSForegroundColorAttributeName : [UIColor whiteColor]};
     self.navigationController.navigationBar.barStyle = UIBarStyleBlack;
+    
+    self.avatarSize = self.contentView.frame.size.width / 10;
 }
 
 -(void)setDataToView
@@ -134,23 +165,77 @@
     // self.stringNewStatuses = @[@"111", @"222", @"333"];
     
     if (self.stringNewStatuses == nil)
-        return;
+    {
+        self.changeStatusArrow.hidden = YES;
+    }
+    else
+    {
+        self.changeStatusArrow.hidden = NO;
+    }
+}
 
-    UIButton *changeButton = [[UIButton alloc] init];
-    [changeButton setTitle:@"Change Status" forState:UIControlStateNormal];
-    [changeButton addTarget:self action:@selector(showNewStatuses) forControlEvents:UIControlEventTouchUpInside];
-    [changeButton setBackgroundColor:[UIColor bawlRedColor]];
-    [changeButton setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
-    [changeButton sizeToFit];
-    changeButton.translatesAutoresizingMaskIntoConstraints = NO;
+-(void)requestUsersAndComments
+{
+    __weak DescriptionViewController *weakSelf = self;
+    [self.dataSorce requestAllUsers:^(NSArray<NSDictionary<NSString *,NSString *> *> *userDictionaries) {
+        [weakSelf commentBlockWithAllUserDictionaries:userDictionaries];
+    } withErrorHandler:^(NSError *error) {
+        //error
+    }];
+}
+
+
+-(void)commentBlockWithAllUserDictionaries:(NSArray<NSDictionary<NSString *,NSString *> *> *) allUserDictionaries
+{
+    __weak DescriptionViewController *weakSelf = self;
+    self.viewToConnectDynamicItems = self.viewBetweenCommentAndChare;
+    [self.dataSorce requestComments:^(NSArray<NSDictionary<NSString *,id> *> *commentDics) {
+       dispatch_async(dispatch_get_main_queue(), ^{
+          
+           for (NSDictionary<NSString *,id> *commentDic in commentDics)
+           {
+               AvatarView *avatar = [[AvatarView alloc] init];
+               avatar.translatesAutoresizingMaskIntoConstraints = NO;
+               
+               [weakSelf.contentView addSubview:avatar];
+               [avatar.widthAnchor constraintEqualToConstant:weakSelf.avatarSize];
+               [avatar.heightAnchor constraintEqualToConstant:weakSelf.avatarSize];
+               [avatar.leadingAnchor constraintEqualToAnchor:weakSelf.contentView.leadingAnchor constant:5];
+               [avatar.topAnchor constraintEqualToAnchor:weakSelf.viewToConnectDynamicItems.bottomAnchor];
+               weakSelf.contentHeight += weakSelf.avatarSize;
+               
+               Comment *comment = [[Comment alloc] initWithCommentDictionary:commentDic andAllUsersDictionaries:allUserDictionaries andUIImageView:(UIImageView*)avatar];
+               
+               UILabel *commentLabelName = [[UILabel alloc] init];
+               commentLabelName.translatesAutoresizingMaskIntoConstraints = NO;
+               commentLabelName.text = comment.userName;
+               [commentLabelName sizeToFit];
+               
+               [weakSelf.contentView addSubview:commentLabelName];
+               [commentLabelName.trailingAnchor constraintEqualToAnchor:avatar.trailingAnchor];
+               [commentLabelName.topAnchor constraintEqualToAnchor:weakSelf.viewToConnectDynamicItems.bottomAnchor];
+               [commentLabelName.trailingAnchor constraintEqualToAnchor:weakSelf.contentView.trailingAnchor constant:5];
+               weakSelf.contentHeight += commentLabelName.frame.size.height;
+               
+               UILabel *commentLabelMessage = [[UILabel alloc] init];
+               commentLabelMessage.translatesAutoresizingMaskIntoConstraints = NO;
+               commentLabelMessage.text = comment.userMessage;
+               commentLabelMessage.lineBreakMode = NSLineBreakByWordWrapping;
+               
+               [weakSelf.contentView addSubview:commentLabelMessage];
+               [commentLabelMessage.leadingAnchor constraintEqualToAnchor:avatar.trailingAnchor];
+               [commentLabelMessage.topAnchor constraintEqualToAnchor:commentLabelName.bottomAnchor];
+               [commentLabelMessage.trailingAnchor constraintEqualToAnchor:weakSelf.contentView.trailingAnchor constant:5];
+               weakSelf.contentHeight += commentLabelMessage.frame.size.height;
+               
+           }
+           
+       });
+        
+    } withErrorHandler:^(NSError *error) {
+        // error
+    }];
     
-    [self.view addSubview:changeButton];
-    [changeButton.centerXAnchor constraintEqualToAnchor:self.view.centerXAnchor].active = YES;
-    [changeButton.topAnchor constraintEqualToAnchor:self.currentStatusLabel.bottomAnchor constant:10.0].active = YES;
-    [changeButton.heightAnchor constraintEqualToConstant:changeButton.frame.size.height].active = YES;
-    [changeButton.widthAnchor constraintEqualToConstant:changeButton.frame.size.width+40].active = YES;
-    self.changeButton = changeButton;
-
 }
 
 -(void)clearOldDynamicElements
@@ -203,7 +288,7 @@
     [cancelButton.leadingAnchor constraintEqualToAnchor:self.view.leadingAnchor].active=YES;
     [cancelButton.trailingAnchor constraintEqualToAnchor:self.view.trailingAnchor].active = YES;
     [cancelButton.topAnchor constraintEqualToAnchor:self.view.centerYAnchor].active=YES;
-    self.viewToConnectChangeButtons = cancelButton;
+    self.viewToConnectDynamicItems = cancelButton;
     
     CGFloat firstOffset = 8;
     for (NSInteger a =self.stringNewStatuses.count; a>0; --a)
@@ -254,10 +339,10 @@
         [self.view addSubview:newStatusButton];
         [newStatusButton.leadingAnchor constraintEqualToAnchor:self.view.leadingAnchor].active=YES;
         [newStatusButton.trailingAnchor constraintEqualToAnchor:self.view.trailingAnchor].active = YES;
-        [newStatusButton.bottomAnchor constraintEqualToAnchor:self.viewToConnectChangeButtons.topAnchor constant:-firstOffset].active=YES;
+        [newStatusButton.bottomAnchor constraintEqualToAnchor:self.viewToConnectDynamicItems.topAnchor constant:-firstOffset].active=YES;
         [newStatusButton.heightAnchor constraintEqualToConstant:newStatusButton.frame.size.height+15].active=YES;
         firstOffset = 1;
-        self.viewToConnectChangeButtons = newStatusButton;
+        self.viewToConnectDynamicItems = newStatusButton;
         
         [self.view addSubview:newStatusImage];
         [newStatusImage.leadingAnchor constraintEqualToAnchor:newStatusButton.leadingAnchor constant:15].active = YES;

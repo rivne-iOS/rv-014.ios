@@ -22,4 +22,8 @@
            andAllUsersDictionaries:(NSArray <NSDictionary <NSString*,NSString*> *> *)usersDictionaries
                           andUIImageView:(UIImageView*)imageView;
 
+-(instancetype)initWithCommentDictionary:(NSDictionary <NSString*,id> *)commentDictionary
+                 andAllUsersDictionaries:(NSArray <NSDictionary <NSString*,NSString*> *> *)usersDictionaries;
+
+
 @end

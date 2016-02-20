@@ -57,8 +57,9 @@
         NSArray <NSDictionary<NSString*,NSString*>*> *userDics = [NSJSONSerialization JSONObjectWithData:data options:0 error:NULL];
         if (![userDics isKindOfClass:[NSArray class]] || error != nil)
         {
-            handler(nil);
+            userDics=nil;
         }
+        handler(userDics);
         errorHandler(error);
     }];
 }
@@ -70,6 +71,20 @@
                                                          @"COMMENT": @"Text of comment Text of comment Text of comment Text of comment ",
                                                          @"DATE": @"01/01/2016"};
     handler(tCommentDic);
+    errorHandler(tError);
+    
+}
+
+-(void)requestComments:(void (^)(NSArray <NSDictionary <NSString*,id> *> *commentDics))handler withErrorHandler:(void(^)(NSError *error)) errorHandler;
+{
+    NSError *tError = nil;
+    NSDictionary <NSString*,id> *tCommentDic = @{ @"USER_ID": @1,
+                                                  @"COMMENT": @"Text of comment Text of comment Text of comment Text of comment ",
+                                                  @"DATE": @"01/01/2016"};
+    
+    NSArray <NSDictionary <NSString*,id> *> *listDics = @[tCommentDic, tCommentDic, tCommentDic, tCommentDic];
+    
+    handler(listDics);
     errorHandler(tError);
     
 }

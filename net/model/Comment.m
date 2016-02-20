@@ -18,6 +18,13 @@
 //}
 
 
+-(instancetype)initWithCommentDictionary:(NSDictionary <NSString*,id> *)commentDictionary
+                 andAllUsersDictionaries:(NSArray <NSDictionary <NSString*,NSString*> *> *)usersDictionaries
+{
+    self = [self initWithCommentDictionary:commentDictionary andAllUsersDictionaries:usersDictionaries andUIImageView:nil];
+    return self;
+}
+
 
 -(instancetype)initWithCommentDictionary:(NSDictionary <NSString*,id> *)commentDictionary
                  andAllUsersDictionaries:(NSArray <NSDictionary <NSString*,NSString*> *> *)usersDictionaries

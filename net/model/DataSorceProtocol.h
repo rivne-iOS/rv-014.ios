@@ -21,7 +21,9 @@
 
 -(void)requestAllUsers:(void (^)(NSArray <NSDictionary <NSString*,NSString*> *> *userDictionaries))handler withErrorHandler:(void(^)(NSError *error)) errorHandler;
 
--(void)requestComment:(void (^)(NSDictionary <NSString*,NSString*> *commentDic))handler withErrorHandler:(void(^)(NSError *error)) errorHandler;
+-(void)requestComment:(void (^)(NSDictionary <NSString*,id> *commentDic))handler withErrorHandler:(void(^)(NSError *error)) errorHandler;
+
+-(void)requestComments:(void (^)(NSArray <NSDictionary <NSString*,id> *> *commentDics))handler withErrorHandler:(void(^)(NSError *error)) errorHandler;
 
 
 -(void)requestImageWithName:(NSString*)name andHandler:(void (^)(UIImage *image))viewControllerHandler withErrorHandler:(void(^)(NSError *error)) errorHandler;
