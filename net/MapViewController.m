@@ -29,6 +29,7 @@ static NSString * const DOMAIN_NAME_ADD_ATTACHMENT = @"https://bawl-rivne.rhclou
 
 static NSInteger const HTTP_RESPONSE_CODE_OK = 200;
 static double const MAP_REFRESHING_INTERVAL = 120.0;
+static int const MARKER_HIDING_RADIUS = 10;
 
 @interface MapViewController () <GMSMapViewDelegate, UITabBarControllerDelegate, UIImagePickerControllerDelegate, UINavigationControllerDelegate>
 
@@ -43,6 +44,7 @@ static double const MAP_REFRESHING_INTERVAL = 120.0;
 @property (nonatomic) BOOL userLogined;
 @property (strong, nonatomic) UIImage *attachmentImage;
 @property (strong, nonatomic) NSString *attachmentFilename;
+@property (strong, nonatomic) NSMutableArray *arrayOfMarkers;
 
 @end
 
@@ -237,7 +239,9 @@ static double const MAP_REFRESHING_INTERVAL = 120.0;
                                                 dispatch_async(dispatch_get_main_queue(), ^{
                                                     
                                                     [self.mapView clear];
+                                                    [self.arrayOfMarkers removeAllObjects];
                                                     
+                                                    self.arrayOfMarkers = [[NSMutableArray alloc] init];
                                                     for (Issue *issue in issuesClassArray) {
                                                         if ([issue.status isEqualToString:@"TO_RESOLVE"] || [issue.status isEqualToString:@"APPROVED"]
                                                             || (self.currentUser.role==ADMIN || self.currentUser.role==MANAGER)
@@ -248,6 +252,9 @@ static double const MAP_REFRESHING_INTERVAL = 120.0;
                                                             marker.title = issue.name;
                                                             marker.icon = [self changeIconColor:issue];
                                                             marker.map = self.mapView;
+                                                            
+                                                            [self.arrayOfMarkers addObject:marker];
+                                                            [self optimizeUIByHidingMarkers];
                                                         }
                                                     }
                                                 });
@@ -278,6 +285,39 @@ static double const MAP_REFRESHING_INTERVAL = 120.0;
     cItems.issue = marker.userData;
     
     return NO;
+}
+
+-(void)mapView:(GMSMapView *)mapView didChangeCameraPosition:(GMSCameraPosition *)position
+{
+    [self revealAllMarkers];
+    [self optimizeUIByHidingMarkers];
+}
+
+-(void)revealAllMarkers
+{
+    for (GMSMarker *marker in self.arrayOfMarkers){
+        marker.map = self.mapView;
+    }
+}
+-(void)optimizeUIByHidingMarkers
+{
+    CurrentItems *cItems = [CurrentItems sharedItems];
+    
+    //(x-x0)^2 + (y-y0)^2 = R^2
+    for (GMSMarker *markerFirst in self.arrayOfMarkers){
+        for (GMSMarker *markerSecond in self.arrayOfMarkers){
+            CGPoint pixelPointFirstMarker = [self.mapView.projection pointForCoordinate:markerFirst.position];
+            CGPoint pixelPointSecondMarker = [self.mapView.projection pointForCoordinate:markerSecond.position];
+            
+            if (markerFirst != markerSecond && markerFirst.map != nil && markerSecond.map != nil && pixelPointFirstMarker.x >= 0 && pixelPointFirstMarker.y >= 0 && pixelPointSecondMarker.x >=0 && pixelPointSecondMarker.y >=0){
+                if (pow((pixelPointSecondMarker.x - pixelPointFirstMarker.x), 2.0) + pow((pixelPointSecondMarker.y - pixelPointFirstMarker.y), 2.0) <= pow(MARKER_HIDING_RADIUS, 2.0)){
+                    if (cItems.issue == markerSecond.userData)
+                        self.tabBarController.tabBar.hidden = YES;
+                    markerSecond.map = nil;
+                }
+            }
+        }
+    }
 }
 
 -(void)mapView:(GMSMapView *)mapView didTapAtCoordinate:(CLLocationCoordinate2D)coordinate
