@@ -57,7 +57,9 @@
         
         [datasorce requestImageWithName:imageName andHandler:^(UIImage *image) {
             _userImage = image;
-            imageView.image = image;
+            dispatch_async(dispatch_get_main_queue(), ^{
+                imageView.image = image;
+            });
         } withErrorHandler:^(NSError *error) {
             // error
         }];

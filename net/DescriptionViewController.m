@@ -33,6 +33,7 @@
 @property (weak, nonatomic) IBOutlet UIScrollView *ScrollView;
 @property (strong, nonatomic) IBOutletCollection(NSLayoutConstraint) NSArray *constraintsVertical;
 @property (strong, nonatomic) IBOutletCollection(UIView) NSArray *viewsVertical;
+@property (weak, nonatomic) IBOutlet NSLayoutConstraint *contentViewHeightConstraint;
 
 
 
@@ -48,7 +49,8 @@
 @property (strong, nonatomic) NSMutableArray <ChangerBox*> *changerBoxArr;
 
 @property(nonatomic) CGFloat avatarSize;
-@property(nonatomic) CGFloat contentHeight;
+@property(nonatomic) CGFloat contentStaticHeight;
+@property(nonatomic) CGFloat contentDynamicHeight;
 
 @end
 
@@ -56,7 +58,7 @@
 
 
 
-
+#pragma mark - Lasy instantiation
 
 -(NSMutableArray <ChangerBox*> *)changerBoxArr
 {
@@ -79,8 +81,24 @@
     return _dataSorce;
 }
 
+#pragma mark - View appear / disappear (+ loading data)
+
+-(void)viewDidLoad
+{
+    
+    CurrentItems *cItems = [CurrentItems sharedItems];
+    [cItems.issueImageDelegates addObject:self];
+    self.navigationController.navigationBar.tintColor = [UIColor whiteColor];
+    self.navigationController.navigationBar.barTintColor = [UIColor bawlRedColor];
+    self.navigationController.navigationBar.titleTextAttributes = @{NSForegroundColorAttributeName : [UIColor whiteColor]};
+    self.navigationController.navigationBar.barStyle = UIBarStyleBlack;
+    
+    self.avatarSize = self.contentView.frame.size.width / 10;
+}
+
 - (void) viewWillAppear:(BOOL)animated
 {
+    [[NSNotificationCenter defaultCenter] addObserver:self  selector:@selector(orientationChanged:)    name:UIDeviceOrientationDidChangeNotification  object:nil];
     CurrentItems *cItems = [CurrentItems sharedItems];
     self.title = cItems.appTitle;
     [self setDataToView];
@@ -99,17 +117,18 @@
         self.issueImageView.image = cItems.issueImage;
     }
     
-    self.contentHeight = 0;
-    for (UIView *view in self.viewsVertical)
-    {
-        self.contentHeight += view.frame.size.height;
-    }
-    for (NSLayoutConstraint *con in self.constraintsVertical)
-    {
-        self.contentHeight += con.constant;
-    }
     
     [self requestUsersAndComments];
+}
+
+-(void)viewWillDisappear:(BOOL)animated
+{
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:UIDeviceOrientationDidChangeNotification object:nil];
+}
+
+-(void)viewDidAppear:(BOOL)animated
+{
+    [self calculateContentViewStaticHeight];
 }
 
 -(void)issueImageDidLoad
@@ -119,26 +138,29 @@
     {
         NSLog(@"in description issue did load: ![self.issueImageView.image isEqual:cItems.issueImage], setOutlet");
         dispatch_async(dispatch_get_main_queue(), ^{
-           self.issueImageView.image = [CurrentItems sharedItems].issueImage; 
+            self.issueImageView.image = [CurrentItems sharedItems].issueImage;
         });
         
     }
 }
 
-
-
--(void)viewDidLoad
+-(void)calculateContentViewStaticHeight
 {
+    self.contentStaticHeight = 0;
+    for (UIView *view in self.viewsVertical)
+    {
+        self.contentStaticHeight += view.frame.size.height;
+        NSLog(@"append view height: %f",view.frame.size.height);
+    }
+    for (NSLayoutConstraint *con in self.constraintsVertical)
+    {
+        self.contentStaticHeight += con.constant;
+        NSLog(@"append consthaint height: %f",con.constant);
+        
+    }
 
-    CurrentItems *cItems = [CurrentItems sharedItems];
-    [cItems.issueImageDelegates addObject:self];
-    self.navigationController.navigationBar.tintColor = [UIColor whiteColor];
-    self.navigationController.navigationBar.barTintColor = [UIColor bawlRedColor];
-    self.navigationController.navigationBar.titleTextAttributes = @{NSForegroundColorAttributeName : [UIColor whiteColor]};
-    self.navigationController.navigationBar.barStyle = UIBarStyleBlack;
-    
-    self.avatarSize = self.contentView.frame.size.width / 10;
 }
+
 
 -(void)setDataToView
 {
@@ -151,28 +173,15 @@
     self.categoryImageView.image = [[IssueCategories standartCategories] imageForCurrentCategory];
 }
 
-#define SOME_OFFSET 8
-
--(void)prepareUIChangeStatusElements
+-(void)orientationChanged:(NSNotification*)notification
 {
-    User *currentUser = [CurrentItems sharedItems].user;
-    if (currentUser==nil)
-        self.stringNewStatuses = nil;
-    else
-        self.stringNewStatuses = [self.statusChanger newIssueStatusesForUser:currentUser.stringRole andCurretIssueStatus:[CurrentItems sharedItems].issue.status];
+    [self calculateContentViewStaticHeight];
+    self.contentViewHeightConstraint.constant  = self.contentStaticHeight + self.contentDynamicHeight;
     
-    // just for testing
-    // self.stringNewStatuses = @[@"111", @"222", @"333"];
-    
-    if (self.stringNewStatuses == nil)
-    {
-        self.changeStatusArrow.hidden = YES;
-    }
-    else
-    {
-        self.changeStatusArrow.hidden = NO;
-    }
 }
+
+
+#pragma mark - Dynamic elements
 
 -(void)requestUsersAndComments
 {
@@ -189,46 +198,72 @@
 {
     __weak DescriptionViewController *weakSelf = self;
     self.viewToConnectDynamicItems = self.viewBetweenCommentAndChare;
+    
     [self.dataSorce requestComments:^(NSArray<NSDictionary<NSString *,id> *> *commentDics) {
        dispatch_async(dispatch_get_main_queue(), ^{
-          
+           self.contentDynamicHeight = 0;
            for (NSDictionary<NSString *,id> *commentDic in commentDics)
            {
+               
+               UIView *commentBox = [[UIView alloc] init];
+               commentBox.translatesAutoresizingMaskIntoConstraints = NO;
+               
+               [weakSelf.contentView addSubview:commentBox];
+               [commentBox.topAnchor constraintEqualToAnchor:weakSelf.viewToConnectDynamicItems.bottomAnchor].active = YES;
+               [commentBox.leadingAnchor constraintEqualToAnchor:weakSelf.contentView.leadingAnchor constant:8].active = YES;
+               [commentBox.heightAnchor constraintEqualToConstant:weakSelf.avatarSize+10].active = YES;
+               [commentBox.trailingAnchor constraintEqualToAnchor:weakSelf.contentView.trailingAnchor constant:-8].active = YES;
+//                commentBox.layer.borderColor = [[UIColor blackColor] CGColor];
+//                commentBox.layer.borderWidth = 1;
+               weakSelf.viewToConnectDynamicItems = commentBox;
+               weakSelf.contentDynamicHeight += weakSelf.avatarSize+10;
+               
                AvatarView *avatar = [[AvatarView alloc] init];
                avatar.translatesAutoresizingMaskIntoConstraints = NO;
+//               avatar.layer.borderColor = [[UIColor blackColor] CGColor];
+//               avatar.layer.borderWidth = 1;
                
-               [weakSelf.contentView addSubview:avatar];
-               [avatar.widthAnchor constraintEqualToConstant:weakSelf.avatarSize];
-               [avatar.heightAnchor constraintEqualToConstant:weakSelf.avatarSize];
-               [avatar.leadingAnchor constraintEqualToAnchor:weakSelf.contentView.leadingAnchor constant:5];
-               [avatar.topAnchor constraintEqualToAnchor:weakSelf.viewToConnectDynamicItems.bottomAnchor];
-               weakSelf.contentHeight += weakSelf.avatarSize;
+               [commentBox addSubview:avatar];
+               [avatar.widthAnchor constraintEqualToConstant:weakSelf.avatarSize].active = YES;
+               [avatar.heightAnchor constraintEqualToConstant:weakSelf.avatarSize].active = YES;
+               [avatar.leadingAnchor constraintEqualToAnchor:commentBox.leadingAnchor constant:5].active = YES;
+               [avatar.centerYAnchor constraintEqualToAnchor:commentBox.centerYAnchor].active = YES;
                
                Comment *comment = [[Comment alloc] initWithCommentDictionary:commentDic andAllUsersDictionaries:allUserDictionaries andUIImageView:(UIImageView*)avatar];
                
                UILabel *commentLabelName = [[UILabel alloc] init];
                commentLabelName.translatesAutoresizingMaskIntoConstraints = NO;
                commentLabelName.text = comment.userName;
-               [commentLabelName sizeToFit];
+//               commentLabelName.layer.borderWidth = 1;
+//               commentLabelName.layer.borderColor = [[UIColor redColor] CGColor];
+               // [commentLabelName sizeToFit];
                
-               [weakSelf.contentView addSubview:commentLabelName];
-               [commentLabelName.trailingAnchor constraintEqualToAnchor:avatar.trailingAnchor];
-               [commentLabelName.topAnchor constraintEqualToAnchor:weakSelf.viewToConnectDynamicItems.bottomAnchor];
-               [commentLabelName.trailingAnchor constraintEqualToAnchor:weakSelf.contentView.trailingAnchor constant:5];
-               weakSelf.contentHeight += commentLabelName.frame.size.height;
+               [commentBox addSubview:commentLabelName];
+               [commentLabelName.leadingAnchor constraintEqualToAnchor:avatar.trailingAnchor constant:5].active = YES;
+               [commentLabelName.topAnchor constraintEqualToAnchor:avatar.topAnchor].active = YES;
+               [commentLabelName.trailingAnchor constraintEqualToAnchor:commentBox.trailingAnchor].active=YES;
+//               weakSelf.contentHeight += commentLabelName.frame.size.height;
                
                UILabel *commentLabelMessage = [[UILabel alloc] init];
                commentLabelMessage.translatesAutoresizingMaskIntoConstraints = NO;
                commentLabelMessage.text = comment.userMessage;
-               commentLabelMessage.lineBreakMode = NSLineBreakByWordWrapping;
+               commentLabelMessage.numberOfLines = 0;
+               UIFont *oldFont = commentLabelMessage.font;
+               commentLabelMessage.font = [UIFont fontWithName:oldFont.fontName size:oldFont.pointSize-5];
+               [commentLabelMessage sizeToFit];
+//               commentLabelMessage.layer.borderWidth = 1;
+//               commentLabelMessage.layer.borderColor = [[UIColor blueColor] CGColor];
                
-               [weakSelf.contentView addSubview:commentLabelMessage];
-               [commentLabelMessage.leadingAnchor constraintEqualToAnchor:avatar.trailingAnchor];
-               [commentLabelMessage.topAnchor constraintEqualToAnchor:commentLabelName.bottomAnchor];
-               [commentLabelMessage.trailingAnchor constraintEqualToAnchor:weakSelf.contentView.trailingAnchor constant:5];
-               weakSelf.contentHeight += commentLabelMessage.frame.size.height;
-               
+               [commentBox addSubview:commentLabelMessage];
+               [commentLabelMessage.leadingAnchor constraintEqualToAnchor:avatar.trailingAnchor constant:5].active = YES;
+               [commentLabelMessage.topAnchor constraintEqualToAnchor:commentLabelName.bottomAnchor].active = YES;
+               [commentLabelMessage.trailingAnchor constraintEqualToAnchor:commentBox.trailingAnchor].active = YES;
+               [commentLabelMessage.bottomAnchor constraintEqualToAnchor:avatar.bottomAnchor].active = YES;
+//               weakSelf.contentHeight += commentLabelMessage.frame.size.height;
            }
+           NSLog(@"weakSelf.viewBetweenCommentAndChare %@",weakSelf.viewBetweenCommentAndChare);
+           weakSelf.contentViewHeightConstraint.constant = weakSelf.contentDynamicHeight + weakSelf.contentStaticHeight;
+           // weakSelf.ScrollView.contentSize = CGSizeMake(weakSelf.contentView.frame.size.width, weakSelf.contentHeight);
            
        });
         
@@ -248,6 +283,27 @@
         [box.button removeFromSuperview];
         [box.label removeFromSuperview];
         [box.image removeFromSuperview];
+    }
+}
+
+-(void)prepareUIChangeStatusElements
+{
+    User *currentUser = [CurrentItems sharedItems].user;
+    if (currentUser==nil)
+        self.stringNewStatuses = nil;
+    else
+        self.stringNewStatuses = [self.statusChanger newIssueStatusesForUser:currentUser.stringRole andCurretIssueStatus:[CurrentItems sharedItems].issue.status];
+    
+    // just for testing
+    // self.stringNewStatuses = @[@"111", @"222", @"333"];
+    
+    if (self.stringNewStatuses == nil)
+    {
+        self.changeStatusArrow.hidden = YES;
+    }
+    else
+    {
+        self.changeStatusArrow.hidden = NO;
     }
 }
 
@@ -377,6 +433,8 @@
     
     
 }
+
+
 
 -(void)rerformChangeStatus:(UIButton*)sender
 {

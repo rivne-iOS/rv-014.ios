@@ -27,7 +27,7 @@
         // Instead of Loop method you can also use:
         // [self setValuesForKeysWithDictionary:JSONDictionary];
     }
-    self.image = [UIImage imageNamed:[NSString stringWithFormat:@"id_0%@", _categoryId]];
+    self.image = [UIImage imageNamed:[NSString stringWithFormat:@"id_0%@", self.categoryId]];
     return self;
 }
 
