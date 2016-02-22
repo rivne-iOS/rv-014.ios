@@ -113,18 +113,19 @@ static int const MARKER_HIDING_RADIUS = 10;
     
     [self renewMap];
     
-    if(self.isMarkerSelected == YES) {
-        self.tabBarController.tabBar.hidden = NO;
-        CurrentItems *cItems = [CurrentItems sharedItems];
-        for (GMSMarker *marker in self.arrayOfMarkers){
-            if (cItems.issue.issueId == ((Issue *)marker.userData).issueId){
-                [[NSOperationQueue mainQueue] addOperationWithBlock:^{
-                    [self.mapView setSelectedMarker:marker];
-                }];
-                break;
-            }
-        }
-    }
+//    if(self.isMarkerSelected == YES) {
+//        self.tabBarController.tabBar.hidden = NO;
+//        CurrentItems *cItems = [CurrentItems sharedItems];
+//        for (GMSMarker *marker in self.arrayOfMarkers){
+//            if (cItems.issue.issueId == ((Issue *)marker.userData).issueId){
+//                self.mapView.selectedMarker = nil;
+//                [self.mapView setSelectedMarker:nil];
+//                self.mapView.selectedMarker = marker;
+//                [self.mapView setSelectedMarker:marker];
+//                break;
+//            }
+//        }
+//    }
     
     [self.timerForMapRenew invalidate];
 
@@ -136,6 +137,23 @@ static int const MARKER_HIDING_RADIUS = 10;
     
     NSRunLoop *runner = [NSRunLoop currentRunLoop];
     [runner addTimer:self.timerForMapRenew forMode: NSDefaultRunLoopMode];
+}
+
+-(void)selectCurrentMarker
+{
+        if(self.isMarkerSelected == YES) {
+            self.tabBarController.tabBar.hidden = NO;
+            CurrentItems *cItems = [CurrentItems sharedItems];
+            for (GMSMarker *marker in self.arrayOfMarkers){
+                if (cItems.issue.issueId == ((Issue *)marker.userData).issueId){
+                    self.mapView.selectedMarker = nil;
+                    [self.mapView setSelectedMarker:nil];
+                    self.mapView.selectedMarker = marker;
+                    [self.mapView setSelectedMarker:marker];
+                    break;
+                }
+            }
+        }
 }
 
 -(void)viewWillDisappear:(BOOL)animated
@@ -265,6 +283,8 @@ static int const MARKER_HIDING_RADIUS = 10;
                                                             
                                                             [self.arrayOfMarkers addObject:marker];
                                                             [self optimizeUIByHidingMarkers];
+                                                            [self selectCurrentMarker];
+                                                            
                                                         }
                                                     }
                                                 });
