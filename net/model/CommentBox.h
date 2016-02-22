@@ -21,7 +21,16 @@
 @property(strong, nonatomic) UIButton *buttonMessage;
 @property(strong, nonatomic) UIButton *buttonImage;
 
+@property(strong, nonatomic) NSMutableArray <NSLayoutConstraint*> *messageConstraints;
+@property(strong, nonatomic) NSMutableArray <NSLayoutConstraint*> *messageConstraintsBig;
 
+@property(strong, nonatomic) NSMutableArray <NSLayoutConstraint*> *nameConstraints;
+@property(strong, nonatomic) NSMutableArray <NSLayoutConstraint*> *nameConstraintsBig;
+
+@property(strong, nonatomic) NSMutableArray <NSLayoutConstraint*> *avatarConstraints;
+@property(strong, nonatomic) NSMutableArray <NSLayoutConstraint*> *avatarConstraintsBig;
+
+@property(nonatomic)BOOL isBig;
 
 -(instancetype)initWithView:(UIView*)view
                 andUserName:(UILabel*)name
