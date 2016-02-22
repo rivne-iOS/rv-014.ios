@@ -111,10 +111,20 @@ static int const MARKER_HIDING_RADIUS = 10;
         self.currentUser = [CurrentItems sharedItems].user;
     }
     
-    if(self.isMarkerSelected==YES)
-        self.tabBarController.tabBar.hidden = NO;
-    
     [self renewMap];
+    
+    if(self.isMarkerSelected == YES) {
+        self.tabBarController.tabBar.hidden = NO;
+        CurrentItems *cItems = [CurrentItems sharedItems];
+        for (GMSMarker *marker in self.arrayOfMarkers){
+            if (cItems.issue.issueId == ((Issue *)marker.userData).issueId){
+                [[NSOperationQueue mainQueue] addOperationWithBlock:^{
+                    [self.mapView setSelectedMarker:marker];
+                }];
+                break;
+            }
+        }
+    }
     
     [self.timerForMapRenew invalidate];
 
@@ -311,7 +321,7 @@ static int const MARKER_HIDING_RADIUS = 10;
             
             if (markerFirst != markerSecond && markerFirst.map != nil && markerSecond.map != nil && pixelPointFirstMarker.x >= 0 && pixelPointFirstMarker.y >= 0 && pixelPointSecondMarker.x >=0 && pixelPointSecondMarker.y >=0){
                 if (pow((pixelPointSecondMarker.x - pixelPointFirstMarker.x), 2.0) + pow((pixelPointSecondMarker.y - pixelPointFirstMarker.y), 2.0) <= pow(MARKER_HIDING_RADIUS, 2.0)){
-                    if (cItems.issue == markerSecond.userData)
+                    if (cItems.issue.issueId == ((Issue *)markerSecond.userData).issueId)
                         self.tabBarController.tabBar.hidden = YES;
                     markerSecond.map = nil;
                 }
