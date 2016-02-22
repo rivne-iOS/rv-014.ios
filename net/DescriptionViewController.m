@@ -15,6 +15,7 @@
 #import "IssueCategories.h"
 #import "AvatarView.h"
 #import "Comment.h"
+#import "CommentBox.h"
 
 
 
@@ -35,6 +36,7 @@
 @property (strong, nonatomic) IBOutletCollection(UIView) NSArray *viewsVertical;
 @property (weak, nonatomic) IBOutlet NSLayoutConstraint *contentViewHeightConstraint;
 
+@property (strong, nonatomic) UIButton *changeButton;
 
 
 
@@ -45,8 +47,8 @@
 @property (strong, nonatomic) UIView *viewToConnectDynamicItems;
 
 @property (strong, nonatomic) UIView *backGreyView;
-@property (strong, nonatomic) UIButton *changeButton;
 @property (strong, nonatomic) NSMutableArray <ChangerBox*> *changerBoxArr;
+@property (strong, nonatomic) NSMutableArray <CommentBox*> *commentBoxArr;
 
 @property(nonatomic) CGFloat avatarSize;
 @property(nonatomic) CGFloat contentStaticHeight;
@@ -116,7 +118,6 @@
         NSLog(@"view will appear: ![self.issueImageView.image isEqual:cItems.issueImage], set uotlet.");
         self.issueImageView.image = cItems.issueImage;
     }
-    
     
     [self requestUsersAndComments];
 }
@@ -205,44 +206,54 @@
            for (NSDictionary<NSString *,id> *commentDic in commentDics)
            {
                
-               UIView *commentBox = [[UIView alloc] init];
-               commentBox.translatesAutoresizingMaskIntoConstraints = NO;
+               UIView *commentView = [[UIView alloc] init];
+               commentView.translatesAutoresizingMaskIntoConstraints = NO;
                
-               [weakSelf.contentView addSubview:commentBox];
-               [commentBox.topAnchor constraintEqualToAnchor:weakSelf.viewToConnectDynamicItems.bottomAnchor].active = YES;
-               [commentBox.leadingAnchor constraintEqualToAnchor:weakSelf.contentView.leadingAnchor constant:8].active = YES;
-               [commentBox.heightAnchor constraintEqualToConstant:weakSelf.avatarSize+10].active = YES;
-               [commentBox.trailingAnchor constraintEqualToAnchor:weakSelf.contentView.trailingAnchor constant:-8].active = YES;
-//                commentBox.layer.borderColor = [[UIColor blackColor] CGColor];
-//                commentBox.layer.borderWidth = 1;
-               weakSelf.viewToConnectDynamicItems = commentBox;
+               [weakSelf.contentView addSubview:commentView];
+               [commentView.topAnchor constraintEqualToAnchor:weakSelf.viewToConnectDynamicItems.bottomAnchor].active = YES;
+               [commentView.leadingAnchor constraintEqualToAnchor:weakSelf.contentView.leadingAnchor constant:8].active = YES;
+               [commentView.heightAnchor constraintEqualToConstant:weakSelf.avatarSize+10].active = YES;
+               [commentView.trailingAnchor constraintEqualToAnchor:weakSelf.contentView.trailingAnchor constant:-8].active = YES;
+               weakSelf.viewToConnectDynamicItems = commentView;
                weakSelf.contentDynamicHeight += weakSelf.avatarSize+10;
                
                AvatarView *avatar = [[AvatarView alloc] init];
                avatar.translatesAutoresizingMaskIntoConstraints = NO;
-//               avatar.layer.borderColor = [[UIColor blackColor] CGColor];
-//               avatar.layer.borderWidth = 1;
                
-               [commentBox addSubview:avatar];
+               [commentView addSubview:avatar];
                [avatar.widthAnchor constraintEqualToConstant:weakSelf.avatarSize].active = YES;
                [avatar.heightAnchor constraintEqualToConstant:weakSelf.avatarSize].active = YES;
-               [avatar.leadingAnchor constraintEqualToAnchor:commentBox.leadingAnchor constant:5].active = YES;
-               [avatar.centerYAnchor constraintEqualToAnchor:commentBox.centerYAnchor].active = YES;
+               [avatar.leadingAnchor constraintEqualToAnchor:commentView.leadingAnchor constant:5].active = YES;
+               [avatar.centerYAnchor constraintEqualToAnchor:commentView.centerYAnchor].active = YES;
+               
+               UIButton *buttonAvatar = [[UIButton alloc] init];
+               buttonAvatar.translatesAutoresizingMaskIntoConstraints = NO;
+               
+               [commentView addSubview:buttonAvatar];
+               [buttonAvatar.topAnchor constraintEqualToAnchor:avatar.topAnchor].active=YES;
+               [buttonAvatar.bottomAnchor constraintEqualToAnchor:avatar.bottomAnchor].active=YES;
+               [buttonAvatar.leadingAnchor constraintEqualToAnchor:avatar.leadingAnchor].active=YES;
+               [buttonAvatar.trailingAnchor constraintEqualToAnchor:avatar.trailingAnchor].active=YES;
                
                Comment *comment = [[Comment alloc] initWithCommentDictionary:commentDic andAllUsersDictionaries:allUserDictionaries andUIImageView:(UIImageView*)avatar];
                
                UILabel *commentLabelName = [[UILabel alloc] init];
                commentLabelName.translatesAutoresizingMaskIntoConstraints = NO;
                commentLabelName.text = comment.userName;
-//               commentLabelName.layer.borderWidth = 1;
-//               commentLabelName.layer.borderColor = [[UIColor redColor] CGColor];
-               // [commentLabelName sizeToFit];
                
-               [commentBox addSubview:commentLabelName];
+               [commentView addSubview:commentLabelName];
                [commentLabelName.leadingAnchor constraintEqualToAnchor:avatar.trailingAnchor constant:5].active = YES;
                [commentLabelName.topAnchor constraintEqualToAnchor:avatar.topAnchor].active = YES;
-               [commentLabelName.trailingAnchor constraintEqualToAnchor:commentBox.trailingAnchor].active=YES;
-//               weakSelf.contentHeight += commentLabelName.frame.size.height;
+               [commentLabelName.trailingAnchor constraintEqualToAnchor:commentView.trailingAnchor].active=YES;
+
+               UIButton *buttonCommentName = [[UIButton alloc] init];
+               buttonCommentName.translatesAutoresizingMaskIntoConstraints = NO;
+               
+               [commentView addSubview:buttonCommentName];
+               [buttonCommentName.topAnchor constraintEqualToAnchor:commentLabelName.topAnchor].active=YES;
+               [buttonCommentName.bottomAnchor constraintEqualToAnchor:commentLabelName.bottomAnchor].active=YES;
+               [buttonCommentName.leadingAnchor constraintEqualToAnchor:commentLabelName.leadingAnchor].active=YES;
+               [buttonCommentName.trailingAnchor constraintEqualToAnchor:commentLabelName.trailingAnchor].active=YES;
                
                UILabel *commentLabelMessage = [[UILabel alloc] init];
                commentLabelMessage.translatesAutoresizingMaskIntoConstraints = NO;
@@ -251,20 +262,33 @@
                UIFont *oldFont = commentLabelMessage.font;
                commentLabelMessage.font = [UIFont fontWithName:oldFont.fontName size:oldFont.pointSize-5];
                [commentLabelMessage sizeToFit];
-//               commentLabelMessage.layer.borderWidth = 1;
-//               commentLabelMessage.layer.borderColor = [[UIColor blueColor] CGColor];
                
-               [commentBox addSubview:commentLabelMessage];
+               [commentView addSubview:commentLabelMessage];
                [commentLabelMessage.leadingAnchor constraintEqualToAnchor:avatar.trailingAnchor constant:5].active = YES;
                [commentLabelMessage.topAnchor constraintEqualToAnchor:commentLabelName.bottomAnchor].active = YES;
-               [commentLabelMessage.trailingAnchor constraintEqualToAnchor:commentBox.trailingAnchor].active = YES;
+               [commentLabelMessage.trailingAnchor constraintEqualToAnchor:commentView.trailingAnchor].active = YES;
                [commentLabelMessage.bottomAnchor constraintEqualToAnchor:avatar.bottomAnchor].active = YES;
-//               weakSelf.contentHeight += commentLabelMessage.frame.size.height;
+
+               UIButton *buttonCommentMessage = [[UIButton alloc] init];
+               buttonCommentMessage.translatesAutoresizingMaskIntoConstraints = NO;
+               
+               [commentView addSubview:buttonCommentMessage];
+               [buttonCommentMessage.topAnchor constraintEqualToAnchor:commentLabelMessage.topAnchor].active=YES;
+               [buttonCommentMessage.bottomAnchor constraintEqualToAnchor:commentLabelMessage.bottomAnchor].active=YES;
+               [buttonCommentMessage.leadingAnchor constraintEqualToAnchor:commentLabelMessage.leadingAnchor].active=YES;
+               [buttonCommentMessage.trailingAnchor constraintEqualToAnchor:commentLabelMessage.trailingAnchor].active=YES;
+               
+               CommentBox *box = [[CommentBox alloc] initWithView:commentView
+                                                      andUserName:commentLabelName
+                                                    andButtonName:buttonCommentName
+                                                   andUserMessage:commentLabelMessage
+                                                 andButtonMessage:buttonCommentMessage
+                                                        andAvatar:avatar
+                                                  andButtonAvatar:buttonAvatar];
+               [self.commentBoxArr addObject:box];
            }
            NSLog(@"weakSelf.viewBetweenCommentAndChare %@",weakSelf.viewBetweenCommentAndChare);
            weakSelf.contentViewHeightConstraint.constant = weakSelf.contentDynamicHeight + weakSelf.contentStaticHeight;
-           // weakSelf.ScrollView.contentSize = CGSizeMake(weakSelf.contentView.frame.size.width, weakSelf.contentHeight);
-           
        });
         
     } withErrorHandler:^(NSError *error) {
@@ -275,7 +299,6 @@
 
 -(void)clearOldDynamicElements
 {
-    [self.changeButton removeFromSuperview];
     [self.backGreyView removeFromSuperview];
     
     for (ChangerBox *box in self.changerBoxArr)
@@ -284,6 +307,10 @@
         [box.label removeFromSuperview];
         [box.image removeFromSuperview];
     }
+    [self.changerBoxArr removeAllObjects];
+    
+    [self.commentBoxArr makeObjectsPerformSelector:@selector(removeElementsFromSuperView)];
+    [self.commentBoxArr removeAllObjects];
 }
 
 -(void)prepareUIChangeStatusElements
@@ -316,11 +343,11 @@
     backView.alpha = 0;
     backView.restorationIdentifier =@"dynamicItem showNewStatuses";
     backView.translatesAutoresizingMaskIntoConstraints = NO;
-    [self.view addSubview:backView];
-    [backView.topAnchor constraintEqualToAnchor:self.view.topAnchor].active = YES;
-    [backView.bottomAnchor constraintEqualToAnchor:self.view.bottomAnchor].active = YES;
-    [backView.leadingAnchor constraintEqualToAnchor:self.view.leadingAnchor].active = YES;
-    [backView.trailingAnchor constraintEqualToAnchor:self.view.trailingAnchor].active = YES;
+    [self.contentView addSubview:backView];
+    [backView.topAnchor constraintEqualToAnchor:self.contentView.topAnchor].active = YES;
+    [backView.bottomAnchor constraintEqualToAnchor:self.contentView.bottomAnchor].active = YES;
+    [backView.leadingAnchor constraintEqualToAnchor:self.contentView.leadingAnchor].active = YES;
+    [backView.trailingAnchor constraintEqualToAnchor:self.contentView.trailingAnchor].active = YES;
     self.backGreyView = backView;
     
 #define CORNER_RADIUS 6

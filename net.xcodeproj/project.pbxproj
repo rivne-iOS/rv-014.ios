@@ -13,6 +13,7 @@
 		84378ACE1C75C3640063CC0F /* IssueCategories.m in Sources */ = {isa = PBXBuildFile; fileRef = 84378ACD1C75C3640063CC0F /* IssueCategories.m */; };
 		845245A71C4E5923000755AC /* DescriptionViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 845245A61C4E5923000755AC /* DescriptionViewController.m */; };
 		8459C76F1C6505C700F7F595 /* ChangerBox.m in Sources */ = {isa = PBXBuildFile; fileRef = 8459C76E1C6505C700F7F595 /* ChangerBox.m */; };
+		845ED2F31C7B5F4A00613F44 /* CommentBox.m in Sources */ = {isa = PBXBuildFile; fileRef = 845ED2F21C7B5F4A00613F44 /* CommentBox.m */; };
 		8460F9701C3C531E00ECB3A4 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 8460F96F1C3C531E00ECB3A4 /* main.m */; };
 		8460F9731C3C531E00ECB3A4 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 8460F9721C3C531E00ECB3A4 /* AppDelegate.m */; };
 		8460F9761C3C531E00ECB3A4 /* LogInViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 8460F9751C3C531E00ECB3A4 /* LogInViewController.m */; };
@@ -64,6 +65,8 @@
 		845245A61C4E5923000755AC /* DescriptionViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DescriptionViewController.m; sourceTree = "<group>"; };
 		8459C76D1C6505C700F7F595 /* ChangerBox.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ChangerBox.h; path = model/ChangerBox.h; sourceTree = "<group>"; };
 		8459C76E1C6505C700F7F595 /* ChangerBox.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ChangerBox.m; path = model/ChangerBox.m; sourceTree = "<group>"; };
+		845ED2F11C7B5F4A00613F44 /* CommentBox.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CommentBox.h; path = model/CommentBox.h; sourceTree = "<group>"; };
+		845ED2F21C7B5F4A00613F44 /* CommentBox.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = CommentBox.m; path = model/CommentBox.m; sourceTree = "<group>"; };
 		8460F96A1C3C531E00ECB3A4 /* net.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = net.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		8460F96E1C3C531E00ECB3A4 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		8460F96F1C3C531E00ECB3A4 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
@@ -145,6 +148,23 @@
 			name = Pods;
 			sourceTree = "<group>";
 		};
+		845ED2F41C7B602A00613F44 /* UI custom obj */ = {
+			isa = PBXGroup;
+			children = (
+				845ED2F11C7B5F4A00613F44 /* CommentBox.h */,
+				845ED2F21C7B5F4A00613F44 /* CommentBox.m */,
+				8459C76D1C6505C700F7F595 /* ChangerBox.h */,
+				8459C76E1C6505C700F7F595 /* ChangerBox.m */,
+				84114C671C61503B0092F507 /* UIColor+Bawl.h */,
+				84114C681C61503B0092F507 /* UIColor+Bawl.m */,
+				84E2CF121C7722230032F444 /* AvatarMaskView.h */,
+				84E2CF131C7722230032F444 /* AvatarMaskView.m */,
+				84E2CF3E1C77742D0032F444 /* AvatarView.h */,
+				84E2CF3F1C77742D0032F444 /* AvatarView.m */,
+			);
+			name = "UI custom obj";
+			sourceTree = "<group>";
+		};
 		8460F9611C3C531E00ECB3A4 = {
 			isa = PBXGroup;
 			children = (
@@ -171,6 +191,7 @@
 			children = (
 				CEC6F62D1C5B6F46002321AA /* Issue History */,
 				8460F9961C3C5C0000ECB3A4 /* model */,
+				845ED2F41C7B602A00613F44 /* UI custom obj */,
 				8460F9741C3C531E00ECB3A4 /* LogInViewController.h */,
 				8460F9751C3C531E00ECB3A4 /* LogInViewController.m */,
 				8460F9771C3C531E00ECB3A4 /* Main.storyboard */,
@@ -185,10 +206,6 @@
 				8460F97A1C3C531E00ECB3A4 /* Images.xcassets */,
 				8460F97C1C3C531E00ECB3A4 /* LaunchScreen.xib */,
 				8460F96D1C3C531E00ECB3A4 /* Supporting Files */,
-				84E2CF121C7722230032F444 /* AvatarMaskView.h */,
-				84E2CF131C7722230032F444 /* AvatarMaskView.m */,
-				84E2CF3E1C77742D0032F444 /* AvatarView.h */,
-				84E2CF3F1C77742D0032F444 /* AvatarView.m */,
 			);
 			path = net;
 			sourceTree = "<group>";
@@ -243,10 +260,6 @@
 				84D93FC81C5A245800D4E96D /* IssueChangeStatus.m */,
 				8499309E1C5915E100EDBF5E /* IssueCategory.h */,
 				8499309F1C5915E100EDBF5E /* IssueCategory.m */,
-				84114C671C61503B0092F507 /* UIColor+Bawl.h */,
-				84114C681C61503B0092F507 /* UIColor+Bawl.m */,
-				8459C76D1C6505C700F7F595 /* ChangerBox.h */,
-				8459C76E1C6505C700F7F595 /* ChangerBox.m */,
 				849E9B191C709BB200DA527E /* CurrentItems.h */,
 				849E9B1A1C709BB200DA527E /* CurrentItems.m */,
 				84378ACC1C75C3640063CC0F /* IssueCategories.h */,
@@ -457,6 +470,7 @@
 				84E334821C4436B200BEE6BA /* SingUpViewController.m in Sources */,
 				8460F9951C3C537900ECB3A4 /* User.m in Sources */,
 				84E19B211C4C131E00AABD7D /* TextFieldValidation.m in Sources */,
+				845ED2F31C7B5F4A00613F44 /* CommentBox.m in Sources */,
 				84E3347F1C4435E800BEE6BA /* MapViewController.m in Sources */,
 				849930A01C5915E100EDBF5E /* IssueCategory.m in Sources */,
 				8460F9701C3C531E00ECB3A4 /* main.m in Sources */,
