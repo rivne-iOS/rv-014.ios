@@ -397,24 +397,25 @@ static int const MARKER_HIDING_RADIUS = 10;
                                         if (data.length > 0 && connectionError == nil)
                                         {
                                             dispatch_async(dispatch_get_main_queue(), ^{
-                                                NSString *regionName;
-                                                NSString *streetName;
-                                                NSString *placeAddressString = [self retrievePlaceInfoByPlaceId:[self takePlaceIdFromGoogleApiPlace:data]];
-                                                NSArray *placeAddressArray = [placeAddressString componentsSeparatedByString:@","];
-                                                if ([self takeVicinityFromGoogleApiPlace:data] == nil){
-                                                    regionName = placeAddressArray[1];
-                                                    streetName = placeAddressArray[0];
-                                                } else {
-                                                    regionName = placeAddressArray[3];
-                                                    streetName = placeAddressArray[1];
-                                                }
-                                                
-                                                self.tapLocationLabel.numberOfLines = 5;
-                                                self.tapLocationLabel.lineBreakMode = NSLineBreakByCharWrapping;
-                                                self.tapLocationLabel.text = @"";
-                                                self.tapLocationLabel.text = [self.tapLocationLabel.text stringByAppendingFormat:@"Location of issue:\n%@, %@",
-                                                                              regionName,
-                                                                              streetName];
+                                                [self retrievePlaceInfoByPlaceId:[self takePlaceIdFromGoogleApiPlace:data] andData:data];
+//                                                NSString *regionName;
+//                                                NSString *streetName;
+//                                                NSString *placeAddressString = [self retrievePlaceInfoByPlaceId:[self takePlaceIdFromGoogleApiPlace:data]];
+//                                                NSArray *placeAddressArray = [placeAddressString componentsSeparatedByString:@","];
+//                                                if ([self takeVicinityFromGoogleApiPlace:data] == nil){
+//                                                    regionName = placeAddressArray[1];
+//                                                    streetName = placeAddressArray[0];
+//                                                } else {
+//                                                    regionName = placeAddressArray[3];
+//                                                    streetName = placeAddressArray[1];
+//                                                }
+//                                                
+//                                                self.tapLocationLabel.numberOfLines = 5;
+//                                                self.tapLocationLabel.lineBreakMode = NSLineBreakByCharWrapping;
+//                                                self.tapLocationLabel.text = @"";
+//                                                self.tapLocationLabel.text = [self.tapLocationLabel.text stringByAppendingFormat:@"Location of issue:\n%@, %@",
+//                                                                              regionName,
+//                                                                              streetName];
 //                                                [self takeVicinityFromGoogleApiPlace:data],
 //                                                [self takeStreetFromGoogleApiPlace:data]];
 //                                              [self retrievePlaceInfoByPlaceId:[self takePlaceIdFromGoogleApiPlace:data]];
@@ -928,9 +929,8 @@ static int const MARKER_HIDING_RADIUS = 10;
     self.attachmentProgressView.layer.borderWidth = borderWidth;
 }
 
--(NSString *)retrievePlaceInfoByPlaceId:(NSString *)placeId
+-(void)retrievePlaceInfoByPlaceId:(NSString *)placeId andData:(NSData *)data
 {
-    __block NSString *result;
     GMSPlacesClient *placesClient = [GMSPlacesClient sharedClient];
     [placesClient lookUpPlaceID:placeId callback:^(GMSPlace *place, NSError *error) {
         if (error != nil) {
@@ -939,16 +939,29 @@ static int const MARKER_HIDING_RADIUS = 10;
         }
         
         if (place != nil) {
-            result = place.formattedAddress;
-            NSLog(@"Place name %@", place.name);
-            NSLog(@"Place address %@", place.formattedAddress);
-            NSLog(@"Place placeID %@", place.placeID);
-            NSLog(@"Place attributions %@", place.attributions);
+            NSString *regionName;
+            NSString *streetName;
+            NSString *placeAddressString = place.formattedAddress;
+            NSArray *placeAddressArray = [placeAddressString componentsSeparatedByString:@","];
+
+            if ([placeAddressArray[1] rangeOfCharacterFromSet:[NSCharacterSet decimalDigitCharacterSet]].location == NSNotFound){
+                regionName = placeAddressArray[1];
+                streetName = placeAddressArray[0];
+            } else {
+                regionName = placeAddressArray[2];
+                streetName = placeAddressArray[0];
+            }
+            
+            self.tapLocationLabel.numberOfLines = 5;
+            self.tapLocationLabel.lineBreakMode = NSLineBreakByCharWrapping;
+            self.tapLocationLabel.text = @"";
+            self.tapLocationLabel.text = [self.tapLocationLabel.text stringByAppendingFormat:@"Location of issue:\n%@, %@",
+                                          regionName,
+                                          streetName];
         } else {
             NSLog(@"No place details for %@", placeId);
         }
     }];
-    return result;
 }
 
 @end
