@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="9531" systemVersion="14F27" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="U7z-LT-7dR">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="9531" systemVersion="14F1509" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="U7z-LT-7dR">
     <dependencies>
         <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="9529"/>
@@ -742,6 +742,7 @@
                                             <constraint firstItem="cXe-sS-Oy9" firstAttribute="top" secondItem="Yul-Ee-TTn" secondAttribute="bottom" constant="8" id="hyw-Qr-te7"/>
                                             <constraint firstItem="VQ1-HP-R8K" firstAttribute="leading" secondItem="Ved-ZM-JBP" secondAttribute="leading" id="icA-6Z-c5X"/>
                                             <constraint firstItem="Ved-ZM-JBP" firstAttribute="top" secondItem="VQ1-HP-R8K" secondAttribute="bottom" constant="10" id="n7X-H2-CUa"/>
+                                            <constraint firstItem="Seo-CW-BkQ" firstAttribute="width" secondItem="Yfl-g3-YHX" secondAttribute="width" id="nSu-4h-mEa"/>
                                             <constraint firstItem="pal-Y4-dn9" firstAttribute="centerY" secondItem="VQ1-HP-R8K" secondAttribute="centerY" id="qSV-cl-jKP"/>
                                             <constraint firstItem="Yfl-g3-YHX" firstAttribute="leading" secondItem="Dor-qQ-OyS" secondAttribute="leading" id="suV-GR-jaw"/>
                                             <constraint firstItem="Dor-qQ-OyS" firstAttribute="top" secondItem="Yfl-g3-YHX" secondAttribute="bottom" constant="32" id="tOQ-ec-gLJ"/>

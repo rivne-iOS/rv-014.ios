@@ -396,17 +396,42 @@ static int const MARKER_HIDING_RADIUS = 10;
                                     completionHandler:^(NSData * _Nullable data, NSURLResponse * _Nullable response, NSError * _Nullable connectionError) {
                                         if (data.length > 0 && connectionError == nil)
                                         {
-                                                dispatch_async(dispatch_get_main_queue(), ^{
-                                                self.tapLocationLabel.numberOfLines = 2;
+                                            dispatch_async(dispatch_get_main_queue(), ^{
+                                                NSString *regionName;
+                                                NSString *streetName;
+                                                NSString *placeAddressString = [self retrievePlaceInfoByPlaceId:[self takePlaceIdFromGoogleApiPlace:data]];
+                                                NSArray *placeAddressArray = [placeAddressString componentsSeparatedByString:@","];
+                                                if ([self takeVicinityFromGoogleApiPlace:data] == nil){
+                                                    regionName = placeAddressArray[1];
+                                                    streetName = placeAddressArray[0];
+                                                } else {
+                                                    regionName = placeAddressArray[3];
+                                                    streetName = placeAddressArray[1];
+                                                }
+                                                
+                                                self.tapLocationLabel.numberOfLines = 5;
                                                 self.tapLocationLabel.lineBreakMode = NSLineBreakByCharWrapping;
                                                 self.tapLocationLabel.text = @"";
                                                 self.tapLocationLabel.text = [self.tapLocationLabel.text stringByAppendingFormat:@"Location of issue:\n%@, %@",
-                                                                              [self takeVicinityFromGoogleApiPlace:data],
-                                                                              [self takeStreetFromGoogleApiPlace:data]];
-                                            });
+                                                                              regionName,
+                                                                              streetName];
+//                                                [self takeVicinityFromGoogleApiPlace:data],
+//                                                [self takeStreetFromGoogleApiPlace:data]];
+//                                              [self retrievePlaceInfoByPlaceId:[self takePlaceIdFromGoogleApiPlace:data]];
+                                                });
                                         }
                                     }] resume];
 
+}
+
+-(NSString *)takePlaceIdFromGoogleApiPlace:(NSData *)data
+{
+    NSDictionary *placeDictionary = [NSJSONSerialization JSONObjectWithData:data options:0 error:NULL];
+    NSArray *resultsArray = [placeDictionary valueForKey:@"results"];
+    NSDictionary *locationDictionary = [resultsArray objectAtIndex:0];
+    NSString *placeId = [locationDictionary valueForKey:@"place_id"];
+    return placeId;
+    
 }
 
 -(NSString *)takeStreetFromGoogleApiPlace:(NSData *)data
@@ -901,6 +926,29 @@ static int const MARKER_HIDING_RADIUS = 10;
     self.attachmentProgressView.frame = CGRectInset(self.attachmentProgressView.frame, -borderWidth, -borderWidth);
     self.attachmentProgressView.layer.borderColor = [UIColor grayColor].CGColor;
     self.attachmentProgressView.layer.borderWidth = borderWidth;
+}
+
+-(NSString *)retrievePlaceInfoByPlaceId:(NSString *)placeId
+{
+    __block NSString *result;
+    GMSPlacesClient *placesClient = [GMSPlacesClient sharedClient];
+    [placesClient lookUpPlaceID:placeId callback:^(GMSPlace *place, NSError *error) {
+        if (error != nil) {
+            NSLog(@"Place Details error %@", [error localizedDescription]);
+            return;
+        }
+        
+        if (place != nil) {
+            result = place.formattedAddress;
+            NSLog(@"Place name %@", place.name);
+            NSLog(@"Place address %@", place.formattedAddress);
+            NSLog(@"Place placeID %@", place.placeID);
+            NSLog(@"Place attributions %@", place.attributions);
+        } else {
+            NSLog(@"No place details for %@", placeId);
+        }
+    }];
+    return result;
 }
 
 @end
