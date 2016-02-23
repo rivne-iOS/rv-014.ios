@@ -16,9 +16,10 @@
 #import "UIViewController+backViewController.h"
 #import "IssueHistoryViewController.h"
 #import "NSString+stringIsEmpry.h"
+#import "User.h"
 
 static NSString const * const AVATAR_NO_IMAGE = @"no_avatar.png";
-static NSString const * const DOMAIN_CHANGE_USER_DETAILS = @"https://bawl-rivne.rhcloud.com/user/details"; // placeholder
+static NSString const * const DOMAIN_CHANGE_USER_DETAILS = @"https://bawl-rivne.rhcloud.com/users/";
 static NSInteger const HTTP_RESPONSE_CODE_OK = 200;
 
 @interface ProfileViewController ()
@@ -62,31 +63,14 @@ static NSInteger const HTTP_RESPONSE_CODE_OK = 200;
     if ([[self backViewController] isKindOfClass:[IssueHistoryViewController class]]) {
     
         if ([CurrentItems sharedItems].user && (self.userID == [CurrentItems sharedItems].user.userId)) {
-            [self showUserProfile];
+            [self showUserProfile:[CurrentItems sharedItems].user isLoggedUser:YES];
         }
         else {
             [self requestUserDetailsByID:self.userID updateScreenWithHandler:^(User *user){
                 
                 dispatch_async(dispatch_get_main_queue(), ^{
+                    [self showUserProfile:user isLoggedUser:NO];
                     
-                    [self.userLogin setText:[NSString stringWithFormat:@"@%@", user.login]];
-                    [self.userEmail setText:user.email];
-                    [self.userName setText:user.name];
-                    
-                    switch (user.role) {
-                        case ADMIN:
-                            [self.systemRole setText:@"ADMIN"];
-                            break;
-                        case MANAGER:
-                            [self.systemRole setText:@"MANAGER"];
-                            break;
-                        case USER:
-                            [self.systemRole setText:@"USER"];
-                            break;
-                        case SUBSCRIBER:
-                            [self.systemRole setText:@"SUBSCRIBER"];
-                            break;
-                    }
                     if (![NSString stringIsEmpty:self.avatarImageURL])
                         [self requestAvatarWithName:self.avatarImageURL];
                     else [self requestAvatarWithName:AVATAR_NO_IMAGE];
@@ -96,7 +80,7 @@ static NSInteger const HTTP_RESPONSE_CODE_OK = 200;
         }
     }
     else {
-        [self showUserProfile];
+        [self showUserProfile:[CurrentItems sharedItems].user isLoggedUser:YES];
     }
     
     [self.mapViewDelegate hideTabBar];
@@ -112,14 +96,15 @@ static NSInteger const HTTP_RESPONSE_CODE_OK = 200;
     // Dispose of any resources that can be recreated.
 }
 
-- (void) showUserProfile {
-    self.profileImage.image = [CurrentItems sharedItems].userImage;
+- (void) showUserProfile: (User *)user isLoggedUser:(BOOL) isLoggedUser{
     
-    [self.userLogin setText:[NSString stringWithFormat:@"@%@", [CurrentItems sharedItems].user.login]];
-    [self.userEmail setText:[CurrentItems sharedItems].user.email];
-    [self.userName setText:[CurrentItems sharedItems].user.name];
+    if (isLoggedUser) self.profileImage.image = [CurrentItems sharedItems].userImage;
     
-    switch ([CurrentItems sharedItems].user.role) {
+    [self.userLogin setText:[NSString stringWithFormat:@"@%@", user.login]];
+    [self.userEmail setText:user.email];
+    [self.userName setText:user.name];
+    
+    switch (user.role) {
         case ADMIN:
             [self.systemRole setText:@"ADMIN"];
             break;
@@ -203,6 +188,8 @@ static NSInteger const HTTP_RESPONSE_CODE_OK = 200;
     NSURL *url = [NSURL URLWithString:urlString];
     NSURLRequest *request = [NSURLRequest requestWithURL:url];
     
+    __weak ProfileViewController *selfWeak = self;
+    
     [[[NSURLSession sharedSession]dataTaskWithRequest:request
                                     completionHandler:^(NSData * _Nullable data, NSURLResponse * _Nullable response, NSError * _Nullable connectionError) {
                                         if (data.length > 0 && connectionError == nil)
@@ -210,9 +197,9 @@ static NSInteger const HTTP_RESPONSE_CODE_OK = 200;
                                             NSDictionary *userData = [NSJSONSerialization JSONObjectWithData:data
                                                                                                      options:0
                                                                                                        error:NULL];
-                                            if (userData[@"AVATAR"] != [NSNull null])
-                                                self.avatarImageURL = [[NSString alloc] initWithString:userData[@"AVATAR"]];
-                                            else self.avatarImageURL = nil;
+                                            if (![userData[@"AVATAR"] isKindOfClass:[NSNull class]])
+                                                selfWeak.avatarImageURL = [[NSString alloc] initWithString:userData[@"AVATAR"]];
+                                            else selfWeak.avatarImageURL = nil;
                                             User *user = [[User alloc] initWitDictionary:userData];
                                             
                                             handler(user);
@@ -272,26 +259,40 @@ static NSInteger const HTTP_RESPONSE_CODE_OK = 200;
 }
 
 - (void) sendProfileImage: (UIImage *)profileImage {
-    NSString *urlString = [NSString stringWithFormat:@"https://bawl-rivne.rhcloud.com/image"];
+    NSString *urlString = [NSString stringWithFormat:@"https://bawl-rivne.rhcloud.com/image/add/avatar"];
     NSData *imageData = UIImagePNGRepresentation(profileImage);
-    NSString *postLength = [NSString stringWithFormat:@"%d", [imageData length]];
     
-    NSURL *url = [NSURL URLWithString:urlString];
-    NSMutableURLRequest *request = [[NSMutableURLRequest alloc] init];
-    [request setHTTPMethod:@"POST"];
-    [request setURL:url];
-    [request setValue:@"application/x-www-form-urlencoded" forHTTPHeaderField:@"Content-Type"];
-    [request setValue:postLength forHTTPHeaderField:@"Content-Length"];
-    [request setHTTPBody:imageData];
+    NSMutableURLRequest *request = [[AFHTTPRequestSerializer serializer] multipartFormRequestWithMethod:@"POST" URLString:urlString parameters:nil constructingBodyWithBlock:^(id<AFMultipartFormData> formData) {
+        [formData appendPartWithFileData:imageData name:@"file" fileName:@"image/jpeg" mimeType:@"avatar_picture.jpg"];
+    } error:nil];
     
-    [[[NSURLSession sharedSession]dataTaskWithRequest:request
-                                    completionHandler:^(NSData * _Nullable data, NSURLResponse * _Nullable response, NSError * _Nullable connectionError) {
-                                        if (data.length > 0 && connectionError == nil)
-                                        {
-                                            //to do: set avatar name to user
-                                        }
-                                    }] resume];
-
+    AFURLSessionManager *manager = [[AFURLSessionManager alloc] initWithSessionConfiguration:[NSURLSessionConfiguration defaultSessionConfiguration]];
+    
+    NSURLSessionUploadTask *uploadTask;
+    uploadTask = [manager
+                  uploadTaskWithStreamedRequest:request
+                  progress:^(NSProgress * _Nonnull uploadProgress) {
+                      dispatch_async(dispatch_get_main_queue(), ^{
+                          //Update the progress view
+                          /*[self.attachmentProgressView setProgress:uploadProgress.fractionCompleted animated:YES];
+                          if (uploadProgress.fractionCompleted == 1.0) {
+                              [UIView animateWithDuration:1.0 animations:^(void) {
+                                  [self.attachmentProgressView setAlpha:0.0];
+                                  [self.attachmentSuccessfullLabel setAlpha:1.0];
+                              }];
+                              self.attachmentLoadButton.userInteractionEnabled = YES;
+                          }*/
+                      });
+                  }
+                  completionHandler:^(NSURLResponse * _Nonnull response, id  _Nullable responseObject, NSError * _Nullable error) {
+                      if (error) {
+                          NSLog(@"Error: %@", error);
+                      } else {
+                          NSLog(@"%@ %@", response, responseObject);
+                      }
+                  }];
+    
+    [uploadTask resume];
 }
 
 #pragma mark - Change Avatar
@@ -321,11 +322,9 @@ static NSInteger const HTTP_RESPONSE_CODE_OK = 200;
 
 - (NSDictionary *) getJSONfromChangeUserDetails {
     NSArray *values = [[NSArray alloc] initWithObjects:self.userName.text
-                                                    ,self.userLogin.text
                                                     ,self.userEmail.text
                                                     ,nil];
     NSArray *keys = [[NSArray alloc] initWithObjects:@"name",
-                                                     @"login",
                                                      @"email",
                                                      nil];
     NSDictionary *JSONdic = [[NSDictionary alloc] initWithObjects:values forKeys:keys];
@@ -334,12 +333,13 @@ static NSInteger const HTTP_RESPONSE_CODE_OK = 200;
 }
 
 - (void) requestChangeUserDetails: (NSDictionary *) jsonDictionary {
-    NSURL *url = [NSURL URLWithString:DOMAIN_CHANGE_USER_DETAILS];
+    NSString *strUrl = [NSString stringWithFormat:@"%@%li",DOMAIN_CHANGE_USER_DETAILS, (unsigned long)[CurrentItems sharedItems].user.userId];
+    NSURL *url = [NSURL URLWithString:strUrl];
     NSURLSessionConfiguration *config = [NSURLSessionConfiguration defaultSessionConfiguration];
     NSURLSession *session = [NSURLSession sessionWithConfiguration:config];
     
     NSMutableURLRequest *request = [[NSMutableURLRequest alloc] initWithURL:url];
-    request.HTTPMethod = @"POST";
+    request.HTTPMethod = @"PUT";
     [request setValue:@"application/json" forHTTPHeaderField:@"Content-Type"];
     
     NSError *error = nil;
@@ -386,7 +386,7 @@ static NSInteger const HTTP_RESPONSE_CODE_OK = 200;
         [self.userLogin setBorderForColor:nil width:0.0f radius:0.0f];
         [self.userEmail setBorderForColor:nil width:0.0f radius:0.0f];
         
-//        [self requestChangeUserDetails:[self getJSONfromChangeUserDetails]];
+        [self requestChangeUserDetails:[self getJSONfromChangeUserDetails]];
     }
 }
 
