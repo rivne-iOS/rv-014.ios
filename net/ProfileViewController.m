@@ -50,6 +50,13 @@ static NSInteger const HTTP_RESPONSE_CODE_OK = 200;
 
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:YES];
+    
+    if ([CurrentItems sharedItems].user) {
+        self.navigationItem.rightBarButtonItem.title = @"Log Out";
+    }
+    else {
+        self.navigationItem.rightBarButtonItem.title = @"Log In";
+    }
 }
 
 - (void)viewDidAppear:(BOOL)animated {
@@ -59,13 +66,6 @@ static NSInteger const HTTP_RESPONSE_CODE_OK = 200;
     
     self.activityIndicatorView.hidden = NO;
     [self.activityIndicatorView startAnimating];
-    
-    if ([CurrentItems sharedItems].user) {
-        self.navigationItem.rightBarButtonItem.title = @"Log Out";
-    }
-    else {
-        self.navigationItem.rightBarButtonItem.title = @"Log In";
-    }
     
     if ([[self backViewController] isKindOfClass:[IssueHistoryViewController class]]) {
     
