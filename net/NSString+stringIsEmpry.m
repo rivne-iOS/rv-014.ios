@@ -11,8 +11,6 @@
 @implementation NSString (stringIsEmpty)
 
 + (BOOL) stringIsEmpty:(NSString *)string {
-    if ((NSNull *) string == [NSNull null])
-        return YES;
     if (string == nil)
         return YES;
     else if ([string length] == 0)

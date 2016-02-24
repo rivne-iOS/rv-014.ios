@@ -27,6 +27,7 @@ static NSInteger const HTTP_RESPONSE_CODE_OK = 200;
 @property (nonatomic, weak) IBOutlet UILabel *labelUserLogin;
 @property (nonatomic, weak) IBOutlet UILabel *labelSystemRole;
 @property (nonatomic, weak) IBOutlet UILabel *labelUserEmail;
+@property (nonatomic, weak) IBOutlet UIProgressView *progressView;
 
 @property (strong, nonatomic) UIImage *avatarImage;
 @property (strong, nonatomic) NSString *avatarImageURL;
@@ -41,8 +42,14 @@ static NSInteger const HTTP_RESPONSE_CODE_OK = 200;
     [self.changeUserDetails setBackgroundColor:[UIColor bawlRedColor]];
     [self.changeAvatar setBackgroundColor:[UIColor bawlRedColor]];
     
+    [self.progressView setAlpha:0.0];
+    
     [self hideAllViews];
     // Do any additional setup after loading the view.
+}
+
+- (void)viewWillAppear:(BOOL)animated {
+    [super viewWillAppear:YES];
 }
 
 - (void)viewDidAppear:(BOOL)animated {
@@ -63,13 +70,13 @@ static NSInteger const HTTP_RESPONSE_CODE_OK = 200;
     if ([[self backViewController] isKindOfClass:[IssueHistoryViewController class]]) {
     
         if ([CurrentItems sharedItems].user && (self.userID == [CurrentItems sharedItems].user.userId)) {
-            [self showUserProfile:[CurrentItems sharedItems].user isLoggedUser:YES];
+            [self setUserProfileDetails:[CurrentItems sharedItems].user isLoggedUser:YES];
         }
         else {
             [self requestUserDetailsByID:self.userID updateScreenWithHandler:^(User *user){
                 
                 dispatch_async(dispatch_get_main_queue(), ^{
-                    [self showUserProfile:user isLoggedUser:NO];
+                    [self setUserProfileDetails:user isLoggedUser:NO];
                     
                     if (![NSString stringIsEmpty:self.avatarImageURL])
                         [self requestAvatarWithName:self.avatarImageURL];
@@ -80,7 +87,7 @@ static NSInteger const HTTP_RESPONSE_CODE_OK = 200;
         }
     }
     else {
-        [self showUserProfile:[CurrentItems sharedItems].user isLoggedUser:YES];
+        [self setUserProfileDetails:[CurrentItems sharedItems].user isLoggedUser:YES];
     }
     
     [self.mapViewDelegate hideTabBar];
@@ -96,7 +103,7 @@ static NSInteger const HTTP_RESPONSE_CODE_OK = 200;
     // Dispose of any resources that can be recreated.
 }
 
-- (void) showUserProfile: (User *)user isLoggedUser:(BOOL) isLoggedUser{
+- (void) setUserProfileDetails: (User *)user isLoggedUser:(BOOL) isLoggedUser{
     
     if (isLoggedUser) self.profileImage.image = [CurrentItems sharedItems].userImage;
     
@@ -167,14 +174,16 @@ static NSInteger const HTTP_RESPONSE_CODE_OK = 200;
     NSURL *url = [NSURL URLWithString:urlString];
     NSURLRequest *requset = [NSURLRequest requestWithURL:url];
     
+    __weak ProfileViewController *weakSelf = self;
+    
     [[[NSURLSession sharedSession]   dataTaskWithRequest:requset
                                       completionHandler:^(NSData * _Nullable data, NSURLResponse * _Nullable response, NSError * _Nullable connectionError){
                                           if (data.length > 0 && connectionError == nil) {
                                               UIImage *tmpImage = [[UIImage alloc] initWithData:data];
                                               
                                               dispatch_async(dispatch_get_main_queue(), ^{
-                                                  self.profileImage.image = tmpImage;
-                                                  [self revealAllViews];
+                                                  weakSelf.profileImage.image = tmpImage;
+                                                  [weakSelf revealAllViews];
                                               });
                                               
                                           }
@@ -260,13 +269,19 @@ static NSInteger const HTTP_RESPONSE_CODE_OK = 200;
 
 - (void) sendProfileImage: (UIImage *)profileImage {
     NSString *urlString = [NSString stringWithFormat:@"https://bawl-rivne.rhcloud.com/image/add/avatar"];
-    NSData *imageData = UIImagePNGRepresentation(profileImage);
+    NSData *imageData = UIImageJPEGRepresentation(profileImage, 1.0);
     
     NSMutableURLRequest *request = [[AFHTTPRequestSerializer serializer] multipartFormRequestWithMethod:@"POST" URLString:urlString parameters:nil constructingBodyWithBlock:^(id<AFMultipartFormData> formData) {
-        [formData appendPartWithFileData:imageData name:@"file" fileName:@"image/jpeg" mimeType:@"avatar_picture.jpg"];
+        [formData appendPartWithFileData:imageData name:@"file" fileName:@"avatar_picture.jpg" mimeType:@"image/jpeg"];
     } error:nil];
     
     AFURLSessionManager *manager = [[AFURLSessionManager alloc] initWithSessionConfiguration:[NSURLSessionConfiguration defaultSessionConfiguration]];
+    
+    __weak ProfileViewController *weakSelf = self;
+    
+    [UIView animateWithDuration:1.0 animations:^(void) {
+        [weakSelf.progressView setAlpha:1.0];
+    }];
     
     NSURLSessionUploadTask *uploadTask;
     uploadTask = [manager
@@ -274,21 +289,33 @@ static NSInteger const HTTP_RESPONSE_CODE_OK = 200;
                   progress:^(NSProgress * _Nonnull uploadProgress) {
                       dispatch_async(dispatch_get_main_queue(), ^{
                           //Update the progress view
-                          /*[self.attachmentProgressView setProgress:uploadProgress.fractionCompleted animated:YES];
+                          [weakSelf.progressView setProgress:uploadProgress.fractionCompleted animated:YES];
                           if (uploadProgress.fractionCompleted == 1.0) {
                               [UIView animateWithDuration:1.0 animations:^(void) {
-                                  [self.attachmentProgressView setAlpha:0.0];
-                                  [self.attachmentSuccessfullLabel setAlpha:1.0];
+                                  [weakSelf.progressView  setAlpha:0.0];
                               }];
-                              self.attachmentLoadButton.userInteractionEnabled = YES;
-                          }*/
+                          }
                       });
                   }
                   completionHandler:^(NSURLResponse * _Nonnull response, id  _Nullable responseObject, NSError * _Nullable error) {
+                      
                       if (error) {
+                          [UIView animateWithDuration:1.0 animations:^(void) {
+                              [weakSelf.progressView  setAlpha:0.0];
+                          }];
                           NSLog(@"Error: %@", error);
                       } else {
                           NSLog(@"%@ %@", response, responseObject);
+                          NSArray *value = [[NSArray alloc] initWithObjects:responseObject[@"filename"], nil];
+                          NSArray *key = [[NSArray alloc] initWithObjects:@"avatar", nil];
+                          NSDictionary *JSONdic = [[NSDictionary alloc] initWithObjects:value forKeys:key];
+                          
+                          [weakSelf requestChangeUserDetails:JSONdic completionHandler:^(void){
+                              dispatch_async(dispatch_get_main_queue(), ^{
+                                  [CurrentItems sharedItems].userImage = profileImage;
+                                  [weakSelf.profileImage setImage:profileImage];
+                              });
+                          }];
                       }
                   }];
     
@@ -332,7 +359,7 @@ static NSInteger const HTTP_RESPONSE_CODE_OK = 200;
     return JSONdic;
 }
 
-- (void) requestChangeUserDetails: (NSDictionary *) jsonDictionary {
+- (void) requestChangeUserDetails: (NSDictionary *) jsonDictionary  completionHandler:(void(^)(void)) handler {
     NSString *strUrl = [NSString stringWithFormat:@"%@%li",DOMAIN_CHANGE_USER_DETAILS, (unsigned long)[CurrentItems sharedItems].user.userId];
     NSURL *url = [NSURL URLWithString:strUrl];
     NSURLSessionConfiguration *config = [NSURLSessionConfiguration defaultSessionConfiguration];
@@ -357,7 +384,9 @@ static NSInteger const HTTP_RESPONSE_CODE_OK = 200;
                                                                                                                  cancelButtonTitle:@"I understood"
                                                                                                                  otherButtonTitles:nil];
                                                                            [alert show];
-                                                                       } 
+                                                                       }
+                                                                       else if (handler)
+                                                                           handler();
                                                                    }];
         [uploadTask resume];
     }
@@ -386,7 +415,10 @@ static NSInteger const HTTP_RESPONSE_CODE_OK = 200;
         [self.userLogin setBorderForColor:nil width:0.0f radius:0.0f];
         [self.userEmail setBorderForColor:nil width:0.0f radius:0.0f];
         
-        [self requestChangeUserDetails:[self getJSONfromChangeUserDetails]];
+        [self requestChangeUserDetails:[self getJSONfromChangeUserDetails] completionHandler: ^ (void) {
+            [CurrentItems sharedItems].user.name = self.userName.text;
+            [CurrentItems sharedItems].user.email = self.userEmail.text;
+        }];
     }
 }
 
