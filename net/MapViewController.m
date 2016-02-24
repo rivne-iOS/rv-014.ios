@@ -17,7 +17,6 @@
 
 #import "DescriptionViewController.h"
 #import "UIColor+Bawl.h"
-@import GoogleMaps;
 @import MobileCoreServices;
 
 static NSString * const GOOGLE_WEB_API_KEY = @"AIzaSyB7InJ3J2AoxlHjsYtde9BNawMINCaHykg";
@@ -72,6 +71,7 @@ static int const MARKER_HIDING_RADIUS = 10;
     self.tabBarController.delegate = self;
     [self hideTabBar];
     [self customizeTabBar];
+    [self customizeGeolocationButton];
     [self createAndShowMap];
     [self addBorderColor];
     [self customiseProgressBarView];
@@ -106,6 +106,8 @@ static int const MARKER_HIDING_RADIUS = 10;
 
 -(void)viewWillAppear:(BOOL)animated
 {
+    [self.geolocationButton setHidden:NO];
+    
     if(self.currentUser==nil)
     {
         self.currentUser = [CurrentItems sharedItems].user;
@@ -145,7 +147,7 @@ static int const MARKER_HIDING_RADIUS = 10;
             self.tabBarController.tabBar.hidden = NO;
             CurrentItems *cItems = [CurrentItems sharedItems];
             for (GMSMarker *marker in self.arrayOfMarkers){
-                if (cItems.issue.issueId == ((Issue *)marker.userData).issueId){
+                if ([cItems.issue.issueId intValue] == [((Issue *)marker.userData).issueId intValue]){
                     self.mapView.selectedMarker = nil;
                     [self.mapView setSelectedMarker:nil];
                     self.mapView.selectedMarker = marker;
@@ -282,11 +284,10 @@ static int const MARKER_HIDING_RADIUS = 10;
                                                             marker.map = self.mapView;
                                                             
                                                             [self.arrayOfMarkers addObject:marker];
-                                                            [self optimizeUIByHidingMarkers];
-                                                            [self selectCurrentMarker];
-                                                            
                                                         }
                                                     }
+                                                    [self optimizeUIByHidingMarkers];
+                                                    [self selectCurrentMarker];
                                                 });
                                             } else {
                                                 UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Attention!"
@@ -304,6 +305,7 @@ static int const MARKER_HIDING_RADIUS = 10;
     [self.tabBarController.tabBar setHidden:NO];
     [UIView animateWithDuration:0.5 animations:^(void){
         [self showTabBar];
+        [self liftUpGeolocationButton];
         [self.view layoutIfNeeded];
         
     }];
@@ -316,6 +318,17 @@ static int const MARKER_HIDING_RADIUS = 10;
     
     return NO;
 }
+
+-(void)liftUpGeolocationButton
+{
+    self.geolocationButtonBottomConstraint.constant = 48 + 15;
+}
+
+-(void)pullDownGeolocationButton
+{
+    self.geolocationButtonBottomConstraint.constant = 15;
+}
+
 
 -(void)mapView:(GMSMapView *)mapView didChangeCameraPosition:(GMSCameraPosition *)position
 {
@@ -355,6 +368,7 @@ static int const MARKER_HIDING_RADIUS = 10;
     self.isMarkerSelected = NO;
     [UIView animateWithDuration:0.5 animations:^(void){
         [self hideTabBar];
+        [self pullDownGeolocationButton];
         [self.view layoutIfNeeded];
     } completion:^(BOOL finished){
         if (finished == YES){
@@ -379,6 +393,7 @@ static int const MARKER_HIDING_RADIUS = 10;
             [self hideTabBar];
             [self.view layoutIfNeeded];
         }];
+        [self.geolocationButton setHidden:YES];
     }
 }
 
@@ -595,6 +610,9 @@ static int const MARKER_HIDING_RADIUS = 10;
     [UIView animateWithDuration:0.5 animations:^(void){
         self.scrollViewLeadingConstraint.constant = CGRectGetWidth(self.mapView.bounds);
         [self.view layoutIfNeeded];
+    } completion:^(BOOL finished){
+        if (finished == YES)
+            [self.geolocationButton setHidden:NO];
     }];
 }
 
@@ -960,6 +978,31 @@ static int const MARKER_HIDING_RADIUS = 10;
                                           streetName];
         } else {
             NSLog(@"No place details for %@", placeId);
+        }
+    }];
+}
+
+-(void)customizeGeolocationButton
+{
+    self.geolocationButton.layer.cornerRadius = self.geolocationButton.bounds.size.width / 2.0;;
+    self.geolocationButton.layer.borderWidth = 1;
+}
+
+-(IBAction)buttonGeolocationPressed:(id)sender
+{
+    self.placesClient_ = [GMSPlacesClient sharedClient];
+    [self.placesClient_ currentPlaceWithCallback:^(GMSPlaceLikelihoodList *likelihoodList, NSError *error) {
+        if (error != nil) {
+            NSLog(@"Current Place error %@", [error localizedDescription]);
+            return;
+        }
+        
+        for (GMSPlaceLikelihood *likelihood in likelihoodList.likelihoods) {
+            GMSPlace* place = likelihood.place;
+            NSLog(@"Current Place name %@ at likelihood %g", place.name, likelihood.likelihood);
+            NSLog(@"Current Place address %@", place.formattedAddress);
+            NSLog(@"Current Place attributions %@", place.attributions);
+            NSLog(@"Current PlaceID %@", place.placeID);
         }
     }];
 }
