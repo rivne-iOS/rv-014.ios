@@ -44,6 +44,7 @@ static int const MARKER_HIDING_RADIUS = 10;
 @property (strong, nonatomic) UIImage *attachmentImage;
 @property (strong, nonatomic) NSString *attachmentFilename;
 @property (strong, nonatomic) NSMutableArray *arrayOfMarkers;
+@property (assign, nonatomic) BOOL isGeolocationButtonPressed;
 
 @end
 
@@ -342,6 +343,14 @@ static int const MARKER_HIDING_RADIUS = 10;
         marker.map = self.mapView;
     }
 }
+
+-(void)hideAllMarkers
+{
+    for (GMSMarker *marker in self.arrayOfMarkers){
+        marker.map = nil;
+    }
+}
+
 -(void)optimizeUIByHidingMarkers
 {
     CurrentItems *cItems = [CurrentItems sharedItems];
@@ -997,14 +1006,60 @@ static int const MARKER_HIDING_RADIUS = 10;
             return;
         }
         
-        for (GMSPlaceLikelihood *likelihood in likelihoodList.likelihoods) {
-            GMSPlace* place = likelihood.place;
-            NSLog(@"Current Place name %@ at likelihood %g", place.name, likelihood.likelihood);
-            NSLog(@"Current Place address %@", place.formattedAddress);
-            NSLog(@"Current Place attributions %@", place.attributions);
-            NSLog(@"Current PlaceID %@", place.placeID);
-        }
+//        for (GMSPlaceLikelihood *likelihood in likelihoodList.likelihoods) {
+//            GMSPlace* place = likelihood.place;
+//            NSLog(@"Current Place name %@ at likelihood %g", place.name, likelihood.likelihood);
+//            NSLog(@"Current Place address %@", place.formattedAddress);
+//            NSLog(@"Current Place attributions %@", place.attributions);
+//            NSLog(@"Current PlaceID %@", place.placeID);
+        GMSPlaceLikelihood *likelyhood = likelihoodList.likelihoods[0];
+        GMSPlace *place = likelyhood.place;
+        [self showClosestMarkersToGeolocation:place.coordinate];
+//        }
     }];
 }
+
+-(double)arcDistance:(CLLocationCoordinate2D)loc1 andSecondPoint:(CLLocationCoordinate2D)loc2 {
+    double rad  = M_PI / 180.0,
+    earth_radius = 6371.009, // close enough
+    lat1 = loc1.latitude * rad,
+    lat2 = loc2.latitude * rad,
+    dlon = fabs(loc1.longitude - loc2.longitude) * rad;
+    
+    return earth_radius * acos((sin(lat1) * sin(lat2)) + (cos(lat1) * cos(lat2) * cos(dlon)));
+}
+
+-(void)showClosestMarkersToGeolocation:(CLLocationCoordinate2D)geolocation
+{
+    self.isGeolocationButtonPressed = YES;
+    [self.mapView animateToLocation:geolocation];
+    
+    [self hideAllMarkers];
+    
+//    GMSCameraPosition *geolocationCameraPosition = [GMSCameraPosition cameraWithLatitude:geolocation.latitude
+//                                                            longitude:geolocation.longitude
+//                                                                 zoom:self.mapView.camera.zoom];
+    
+    for (GMSMarker *marker in self.arrayOfMarkers){
+        if ([self arcDistance:geolocation andSecondPoint:marker.position] <= 1) {
+            marker.map = self.mapView;
+        }
+    }
+//    [self.mapView setCamera:geolocationCameraPosition];
+}
+
+//-(BOOL)respondsToSelector:(SEL)selector
+//{
+//    if (selector == @selector(mapView:didChangeCameraPosition:))
+//    {
+//        if (self.isGeolocationButtonPressed == YES){
+//            self.isGeolocationButtonPressed = NO;
+//            return NO;
+//        } else {
+//            return YES;
+//        }
+//    }
+//    return [super respondsToSelector:selector];
+//}
 
 @end
