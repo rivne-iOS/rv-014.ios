@@ -82,7 +82,7 @@
                                                   @"COMMENT": @"Is there a way to have multiple lines of text in UILabel like in the UITextView or should I use the second one instead?",
                                                   @"DATE": @"01/01/2016"};
     
-    NSArray <NSDictionary <NSString*,id> *> *listDics = @[tCommentDic, tCommentDic, tCommentDic, tCommentDic];
+    NSArray <NSDictionary <NSString*,id> *> *listDics = @[tCommentDic, tCommentDic, tCommentDic, tCommentDic, tCommentDic, tCommentDic, tCommentDic, tCommentDic, tCommentDic];
     
     handler(listDics);
     errorHandler(tError);

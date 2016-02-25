@@ -13,6 +13,7 @@
 @interface CommentBox : NSObject
 
 @property(strong, nonatomic) UIView *commentView;
+@property(strong, nonatomic) UIView *commentView2;
 @property(strong, nonatomic) UILabel *commentLabelName;
 @property(strong, nonatomic) UILabel *commentLabelMessage;
 @property(strong, nonatomic) AvatarView *avatar;
@@ -32,7 +33,11 @@
 
 @property(nonatomic)BOOL isBig;
 
+@property(nonatomic)CGFloat firstZPos;
+@property(nonatomic)CGFloat lastZPos;
+
 -(instancetype)initWithView:(UIView*)view
+                   andView2:(UIView*)view2
                 andUserName:(UILabel*)name
                 andButtonName:(UIButton*)buttonName
              andUserMessage:(UILabel*)message
@@ -41,4 +46,7 @@
                   andButtonAvatar:(UIButton*) buttonAvatar;
 
 -(void)removeElementsFromSuperView;
+
+
+-(void)takeElementsToTop;
 @end
