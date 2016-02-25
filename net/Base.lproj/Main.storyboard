@@ -760,7 +760,7 @@
                                     <outlet property="delegate" destination="exP-kZ-Qky" id="PmD-gR-pg6"/>
                                 </connections>
                             </scrollView>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="oxc-Sj-Imj">
+                            <button opaque="NO" contentMode="scaleToFill" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="oxc-Sj-Imj">
                                 <rect key="frame" x="417" y="383" width="290" height="276"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="45" id="PqW-Y1-LxL"/>

@@ -970,6 +970,13 @@ static int const MARKER_HIDING_RADIUS = 10;
 
 -(IBAction)buttonGeolocationPressed:(id)sender
 {
+    self.isMarkerSelected = NO;
+    self.mapView.selectedMarker = nil;
+    [self hideTabBar];
+    [self pullDownGeolocationButton];
+    [self.tabBarController.tabBar setHidden:YES];
+    [self.view layoutIfNeeded];
+    
     self.placesClient_ = [GMSPlacesClient sharedClient];
     [self.placesClient_ currentPlaceWithCallback:^(GMSPlaceLikelihoodList *likelihoodList, NSError *error) {
         if (error != nil) {
