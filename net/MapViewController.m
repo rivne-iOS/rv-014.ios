@@ -116,20 +116,6 @@ static int const MARKER_HIDING_RADIUS = 10;
     
     [self renewMap];
     
-//    if(self.isMarkerSelected == YES) {
-//        self.tabBarController.tabBar.hidden = NO;
-//        CurrentItems *cItems = [CurrentItems sharedItems];
-//        for (GMSMarker *marker in self.arrayOfMarkers){
-//            if (cItems.issue.issueId == ((Issue *)marker.userData).issueId){
-//                self.mapView.selectedMarker = nil;
-//                [self.mapView setSelectedMarker:nil];
-//                self.mapView.selectedMarker = marker;
-//                [self.mapView setSelectedMarker:marker];
-//                break;
-//            }
-//        }
-//    }
-    
     [self.timerForMapRenew invalidate];
 
     self.timerForMapRenew = [NSTimer scheduledTimerWithTimeInterval:MAP_REFRESHING_INTERVAL
@@ -422,27 +408,6 @@ static int const MARKER_HIDING_RADIUS = 10;
                                         {
                                             dispatch_async(dispatch_get_main_queue(), ^{
                                                 [self retrievePlaceInfoByPlaceId:[self takePlaceIdFromGoogleApiPlace:data] andData:data];
-//                                                NSString *regionName;
-//                                                NSString *streetName;
-//                                                NSString *placeAddressString = [self retrievePlaceInfoByPlaceId:[self takePlaceIdFromGoogleApiPlace:data]];
-//                                                NSArray *placeAddressArray = [placeAddressString componentsSeparatedByString:@","];
-//                                                if ([self takeVicinityFromGoogleApiPlace:data] == nil){
-//                                                    regionName = placeAddressArray[1];
-//                                                    streetName = placeAddressArray[0];
-//                                                } else {
-//                                                    regionName = placeAddressArray[3];
-//                                                    streetName = placeAddressArray[1];
-//                                                }
-//                                                
-//                                                self.tapLocationLabel.numberOfLines = 5;
-//                                                self.tapLocationLabel.lineBreakMode = NSLineBreakByCharWrapping;
-//                                                self.tapLocationLabel.text = @"";
-//                                                self.tapLocationLabel.text = [self.tapLocationLabel.text stringByAppendingFormat:@"Location of issue:\n%@, %@",
-//                                                                              regionName,
-//                                                                              streetName];
-//                                                [self takeVicinityFromGoogleApiPlace:data],
-//                                                [self takeStreetFromGoogleApiPlace:data]];
-//                                              [self retrievePlaceInfoByPlaceId:[self takePlaceIdFromGoogleApiPlace:data]];
                                                 });
                                         }
                                     }] resume];
@@ -632,7 +597,6 @@ static int const MARKER_HIDING_RADIUS = 10;
         return;
     }
     [self requestAddingNewIssue:[self getJsonFromAddingNewIssueView]];
-//    [self requestAddingNewIssue:[self getJsonFromAddingNewIssueView]];
     [[self navigationController] setNavigationBarHidden:NO animated:NO];
     [UIView animateWithDuration:0.5 animations:^(void){
         self.scrollViewLeadingConstraint.constant = CGRectGetWidth(self.mapView.bounds);
@@ -998,7 +962,6 @@ static int const MARKER_HIDING_RADIUS = 10;
     self.geolocationButton.layer.shadowOpacity = 0.7;
     self.geolocationButton.layer.shadowRadius = 6;
     self.geolocationButton.layer.shadowOffset = CGSizeMake(6.0f, 6.0f);
-//    self.geolocationButton.layer.borderWidth = 1;
 }
 
 -(IBAction)buttonGeolocationPressed:(id)sender
@@ -1010,16 +973,10 @@ static int const MARKER_HIDING_RADIUS = 10;
             return;
         }
         
-//        for (GMSPlaceLikelihood *likelihood in likelihoodList.likelihoods) {
-//            GMSPlace* place = likelihood.place;
-//            NSLog(@"Current Place name %@ at likelihood %g", place.name, likelihood.likelihood);
-//            NSLog(@"Current Place address %@", place.formattedAddress);
-//            NSLog(@"Current Place attributions %@", place.attributions);
-//            NSLog(@"Current PlaceID %@", place.placeID);
+        // First element because it has the highest accuracy of user place detection.
         GMSPlaceLikelihood *likelyhood = likelihoodList.likelihoods[0];
         GMSPlace *place = likelyhood.place;
         [self showClosestMarkersToGeolocation:place.coordinate];
-//        }
     }];
 }
 
@@ -1035,38 +992,9 @@ static int const MARKER_HIDING_RADIUS = 10;
 
 -(void)showClosestMarkersToGeolocation:(CLLocationCoordinate2D)geolocation
 {
-//    self.isGeolocationButtonPressed = YES;
     CGRect screenRect = [[UIScreen mainScreen] bounds];
-//    [self calculateZoomLevel:screenRect.size.width];
-//    CLLocationCoordinate2D bottomLeftCoord =
-//    self.mapView.projection.visibleRegion.nearLeft;
-//    CLLocationCoordinate2D bottomRightCoord =
-//    self.mapView.projection.visibleRegion.nearRight;
-    
-//    double distanceResult = getDistanceMetresBetweenLocationCoordinates(bottomLeftCoord, bottomRightCoord);
-//    [GMSCameraUpdate zoomTo:[self calculateZoomLevel:screenRect.size.width]];
-//    [self.mapView moveCamera:[GMSCameraUpdate zoomTo:[self calculateZoomLevel:screenRect.size.width]]];
-//    [self.mapView animateToLocation:geolocation];
-//    CLLocationDistance distanceResult = getDistanceMetresBetweenLocationCoordinates(bottomLeftCoord, bottomRightCoord);
-//    [GMSCameraPosition zoomAtCoordinate:geolocation forMeters:5000.0 perPoints:screenRect.size.width];
     [self.mapView moveCamera:[GMSCameraUpdate zoomTo:[GMSCameraPosition zoomAtCoordinate:geolocation forMeters:5000.0 perPoints:screenRect.size.width]]];
-        [self.mapView animateToLocation:geolocation];
-//    CLLocationDistance distanceResult = getDistanceMetresBetweenLocationCoordinates(bottomLeftCoord, bottomRightCoord);
-
-
-    
-//    [self hideAllMarkers];
-    
-//    GMSCameraPosition *geolocationCameraPosition = [GMSCameraPosition cameraWithLatitude:geolocation.latitude
-//                                                            longitude:geolocation.longitude
-//                                                                 zoom:self.mapView.camera.zoom];
-    
-//    for (GMSMarker *marker in self.arrayOfMarkers){
-//        if ([self arcDistance:geolocation andSecondPoint:marker.position] <= 1) {
-//            marker.map = self.mapView;
-//        }
-//    }
-//    [self.mapView setCamera:geolocationCameraPosition];
+    [self.mapView animateToLocation:geolocation];
 }
 
 -(int)calculateZoomLevel:(int)screenWidth
