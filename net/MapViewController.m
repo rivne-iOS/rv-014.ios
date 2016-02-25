@@ -71,6 +71,7 @@ static int const MARKER_HIDING_RADIUS = 10;
     
     self.tabBarController.delegate = self;
     [self hideTabBar];
+//    self.scrollView.preservesSuperviewLayoutMargins = YES;
     [self customizeTabBar];
     [self customizeGeolocationButton];
     [self createAndShowMap];
