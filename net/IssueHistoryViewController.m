@@ -5,15 +5,18 @@
 //  Created by user on 1/19/16.
 //  Copyright © 2016 Admin. All rights reserved.
 //
-
+#import "MapViewController.h"
 #import "IssueHistoryViewController.h"
 #import "UIColor+Bawl.h"
+#import "ProfileViewController.h"
+#import "IssueHistory.h"
+#import "CurrentItems.h"
 
 static NSString * const kSimpleTableIdentifier = @"SampleTableCell";
 
 @interface IssueHistoryViewController ()
 @property (weak, nonatomic) IBOutlet UITableView *issueTable;
-//@property (strong, nonatomic) UIRefreshControl *refreshControl;
+@property NSUInteger userID;
 
 @end
 
@@ -42,7 +45,7 @@ static NSString * const kSimpleTableIdentifier = @"SampleTableCell";
                                             for (NSDictionary *issue in issuesDictionaryArray) {
                                                 
                                                 NSAttributedString *date = [[NSAttributedString alloc] initWithString:[NSString stringWithFormat:@"%@: ",issue[@"DATE"]] attributes:attrs];
-                                                NSAttributedString *user = [[NSAttributedString alloc] initWithString:[NSString stringWithFormat:@"%@ ", issue[@"USER"]]];
+                                                NSAttributedString *user = [[NSAttributedString alloc] initWithString:[NSString stringWithFormat:@"%@ ", issue[@"USER"]] attributes:attrs];
                                                 NSAttributedString *action =[[NSAttributedString alloc] initWithString:issue[@"ACTION"]];
                                                 
                                                 NSMutableDictionary *oneCell = [[NSMutableDictionary alloc] init];
@@ -101,8 +104,11 @@ static NSString * const kSimpleTableIdentifier = @"SampleTableCell";
 - (void) viewWillAppear:(BOOL)animated {
     [super viewWillAppear:YES];
     [self.tabBarController.tabBar.items objectAtIndex:2].title = @"History";
+    self.issue = [CurrentItems sharedItems].issue;
     [self.issueTitle setText:self.issue.issueDescription];
     [self requestIssueHistory];
+    [self.mapDelegate showTabBar];
+    self.tabBarController.tabBar.hidden = NO;
 }
 
 
@@ -156,15 +162,27 @@ static NSString * const kSimpleTableIdentifier = @"SampleTableCell";
     return 0;
 }
 
-
-/*
-#pragma mark - Navigation
-
-// In a storyboard-based application, you will often want to do a little preparation before navigation
-- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
-    // Get the new view controller using [segue destinationViewController].
-    // Pass the selected object to the new view controller.
+-(void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
+    NSArray *history = self.issue.history;
+    
+    NSDictionary *currentHistory = history[indexPath.row];
+    
+    self.userID = [currentHistory[@"USER_ID"] integerValue];
+    
+    [self performSegueWithIdentifier:@"showProfile" sender:self];
 }
-*/
 
+-(void) prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
+    if ([[segue identifier] isEqualToString:@"showProfile"]) {
+        if([segue.destinationViewController isKindOfClass:[ProfileViewController class]])
+        {
+            ProfileViewController *profileViewController = (ProfileViewController*)segue.destinationViewController;
+            profileViewController.userID = self.userID;
+            profileViewController.isLogged = self.isLogged;
+            profileViewController.currentUser = self.currentUser;
+            profileViewController.dataSorce = self.dataSorce;
+            profileViewController.mapViewDelegate = self.mapDelegate;
+        }
+    }
+}
 @end
