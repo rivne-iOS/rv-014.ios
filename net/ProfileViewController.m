@@ -291,9 +291,7 @@ static NSInteger const HTTP_RESPONSE_CODE_OK = 200;
                           //Update the progress view
                           [weakSelf.progressView setProgress:uploadProgress.fractionCompleted animated:YES];
                           if (uploadProgress.fractionCompleted == 1.0) {
-                              [UIView animateWithDuration:1.0 animations:^(void) {
-                                  [weakSelf.progressView  setAlpha:0.0];
-                              }];
+                              // do something
                           }
                       });
                   }
@@ -314,6 +312,10 @@ static NSInteger const HTTP_RESPONSE_CODE_OK = 200;
                               dispatch_async(dispatch_get_main_queue(), ^{
                                   [CurrentItems sharedItems].userImage = profileImage;
                                   [weakSelf.profileImage setImage:profileImage];
+                                  
+                                  [UIView animateWithDuration:1.0 animations:^(void) {
+                                      [weakSelf.progressView  setAlpha:0.0];
+                                  }];
                               });
                           }];
                       }
@@ -397,22 +399,18 @@ static NSInteger const HTTP_RESPONSE_CODE_OK = 200;
 - (IBAction)changeUserDatails:(UIButton *)sender {
     if ([sender.titleLabel.text isEqualToString:@"Change User Details"]) {
         [self.changeUserDetails setTitle:@"Save" forState:UIControlStateNormal];
-        [self.userLogin setEnabled:YES];
         [self.userName setEnabled:YES];
         [self.userEmail setEnabled:YES];
         
         [self.userName setBorderForColor:[UIColor bawlRedColor03alpha] width:0.5f radius:5.0f];
-        [self.userLogin setBorderForColor:[UIColor bawlRedColor03alpha] width:0.5f radius:5.0f];
         [self.userEmail setBorderForColor:[UIColor bawlRedColor03alpha] width:0.5f radius:5.0f];
     }
     else if ([sender.titleLabel.text isEqualToString:@"Save"]) {
         [self.changeUserDetails setTitle:@"Change User Details" forState:UIControlStateNormal];
-        [self.userLogin setEnabled:NO];
         [self.userName setEnabled:NO];
         [self.userEmail setEnabled:NO];
         
         [self.userName setBorderForColor:nil width:0.0f radius:0.0f];
-        [self.userLogin setBorderForColor:nil width:0.0f radius:0.0f];
         [self.userEmail setBorderForColor:nil width:0.0f radius:0.0f];
         
         [self requestChangeUserDetails:[self getJSONfromChangeUserDetails] completionHandler: ^ (void) {
