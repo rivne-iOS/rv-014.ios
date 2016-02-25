@@ -71,6 +71,7 @@ static NSInteger const HTTP_RESPONSE_CODE_OK = 200;
     
         if ([CurrentItems sharedItems].user && (self.userID == [CurrentItems sharedItems].user.userId)) {
             [self setUserProfileDetails:[CurrentItems sharedItems].user isLoggedUser:YES];
+            [self revealAllViews];
         }
         else {
             [self requestUserDetailsByID:self.userID updateScreenWithHandler:^(User *user){
@@ -88,6 +89,7 @@ static NSInteger const HTTP_RESPONSE_CODE_OK = 200;
     }
     else {
         [self setUserProfileDetails:[CurrentItems sharedItems].user isLoggedUser:YES];
+        [self revealAllViews];
     }
     
     [self.mapViewDelegate hideTabBar];
@@ -125,7 +127,6 @@ static NSInteger const HTTP_RESPONSE_CODE_OK = 200;
             [self.systemRole setText:@"SUBSCRIBER"];
             break;
     }
-    [self revealAllViews];
 }
 
 - (void) hideAllViews {
