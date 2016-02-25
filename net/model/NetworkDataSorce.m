@@ -79,7 +79,7 @@
 {
     NSError *tError = nil;
     NSDictionary <NSString*,id> *tCommentDic = @{ @"USER_ID": @1,
-                                                  @"COMMENT": @"Is there a way to have multiple lines of text in UILabel like in the UITextView or should I use the second one instead?",
+                                                  @"COMMENT": @"Quartz 2D is an advanced, two-dimensional drawing engine available for iOS application development and to all Mac OS X application environments outside of the kernel. Quartz 2D provides low-level, lightweight 2D rendering with unmatched output fidelity regardless of display or printing device. Quartz 2D is resolution- and device-independent; you don’t need to think about the final destination when you use the Quartz 2D application programming interface (API) for drawing. ",
                                                   @"DATE": @"01/01/2016"};
     
     NSArray <NSDictionary <NSString*,id> *> *listDics = @[tCommentDic, tCommentDic, tCommentDic, tCommentDic, tCommentDic, tCommentDic, tCommentDic, tCommentDic, tCommentDic];

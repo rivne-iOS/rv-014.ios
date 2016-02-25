@@ -901,6 +901,12 @@
                                                     <constraint firstAttribute="height" constant="10" id="rAI-4z-mX9"/>
                                                 </constraints>
                                             </imageView>
+                                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="O0Y-TU-iv8" userLabel="change status button">
+                                                <rect key="frame" x="582" y="23" width="10" height="10"/>
+                                                <connections>
+                                                    <action selector="changeStatus:" destination="PW6-qZ-q9d" eventType="touchUpInside" id="o7d-7m-nb4"/>
+                                                </connections>
+                                            </button>
                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Tittle" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="3" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="8xD-oT-cPk">
                                                 <rect key="frame" x="83" y="18" width="434" height="20"/>
                                                 <constraints>
@@ -992,6 +998,8 @@
                                             <constraint firstItem="7pm-I9-YFc" firstAttribute="leading" secondItem="bAc-jz-UJ1" secondAttribute="trailing" constant="8" id="6XA-5p-7jg"/>
                                             <constraint firstItem="Aww-tA-2wQ" firstAttribute="centerY" secondItem="7pm-I9-YFc" secondAttribute="centerY" id="77g-52-Pj7"/>
                                             <constraint firstAttribute="trailing" secondItem="b5C-Xa-9wo" secondAttribute="trailing" constant="8" id="9ud-Bh-G9W"/>
+                                            <constraint firstItem="O0Y-TU-iv8" firstAttribute="leading" secondItem="Qq5-Z0-7jt" secondAttribute="leading" id="BMj-3c-9rb"/>
+                                            <constraint firstItem="O0Y-TU-iv8" firstAttribute="trailing" secondItem="Qq5-Z0-7jt" secondAttribute="trailing" id="EXt-iz-Efd"/>
                                             <constraint firstItem="Aww-tA-2wQ" firstAttribute="leading" secondItem="7pm-I9-YFc" secondAttribute="trailing" id="H7I-ym-KLx"/>
                                             <constraint firstAttribute="trailingMargin" secondItem="8A7-hb-9GL" secondAttribute="trailing" id="IsT-3r-jB4"/>
                                             <constraint firstItem="Qq5-Z0-7jt" firstAttribute="leading" secondItem="k24-do-pW1" secondAttribute="trailing" id="JhS-ZS-z2r"/>
@@ -1013,11 +1021,13 @@
                                             <constraint firstItem="Aww-tA-2wQ" firstAttribute="top" secondItem="b5C-Xa-9wo" secondAttribute="bottom" constant="1" id="dZI-VR-Pa5"/>
                                             <constraint firstItem="bm5-vH-yGN" firstAttribute="centerY" secondItem="Gl8-Ee-6Wb" secondAttribute="centerY" id="gcs-5y-dvj"/>
                                             <constraint firstAttribute="height" constant="487" id="hDR-NX-AJK"/>
+                                            <constraint firstItem="O0Y-TU-iv8" firstAttribute="top" secondItem="Qq5-Z0-7jt" secondAttribute="top" id="jhh-1h-V7D"/>
                                             <constraint firstItem="1Ic-EP-cB2" firstAttribute="centerX" secondItem="b5C-Xa-9wo" secondAttribute="centerX" id="lBm-KY-fgQ"/>
                                             <constraint firstItem="8A7-hb-9GL" firstAttribute="top" secondItem="Gl8-Ee-6Wb" secondAttribute="bottom" constant="26" id="mVu-Qw-9tG"/>
                                             <constraint firstItem="Aww-tA-2wQ" firstAttribute="centerY" secondItem="bAc-jz-UJ1" secondAttribute="centerY" id="ngN-h2-j9C"/>
                                             <constraint firstItem="Gl8-Ee-6Wb" firstAttribute="leading" secondItem="xDe-do-YBG" secondAttribute="leading" constant="8" id="oeg-Vt-2X9"/>
                                             <constraint firstItem="Aww-tA-2wQ" firstAttribute="centerX" secondItem="xDe-do-YBG" secondAttribute="centerX" id="pW9-Kc-BbV"/>
+                                            <constraint firstItem="O0Y-TU-iv8" firstAttribute="bottom" secondItem="Qq5-Z0-7jt" secondAttribute="bottom" id="q2O-Eg-etW"/>
                                             <constraint firstAttribute="trailing" secondItem="Qq5-Z0-7jt" secondAttribute="trailing" constant="8" id="uY7-ix-KRx"/>
                                         </constraints>
                                     </view>
@@ -1048,6 +1058,7 @@
                     <connections>
                         <outlet property="ScrollView" destination="eSC-Id-pRY" id="tRP-gN-luF"/>
                         <outlet property="categoryImageView" destination="Gl8-Ee-6Wb" id="hLl-hj-7IP"/>
+                        <outlet property="changeButton" destination="O0Y-TU-iv8" id="eEz-sF-pGv"/>
                         <outlet property="changeStatusArrow" destination="Qq5-Z0-7jt" id="kpH-vt-OnT"/>
                         <outlet property="commentLabelOnButton" destination="7pm-I9-YFc" id="Gt6-LP-jNG"/>
                         <outlet property="contentView" destination="xDe-do-YBG" id="RLv-Px-LR8"/>

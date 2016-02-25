@@ -36,7 +36,7 @@
 @property (strong, nonatomic) IBOutletCollection(UIView) NSArray *viewsVertical;
 @property (weak, nonatomic) IBOutlet NSLayoutConstraint *contentViewHeightConstraint;
 
-@property (strong, nonatomic) UIButton *changeButton;
+@property (strong, nonatomic) IBOutlet UIButton *changeButton;
 
 
 
@@ -105,6 +105,7 @@
     self.navigationController.navigationBar.barStyle = UIBarStyleBlack;
     
     self.avatarSize = self.contentView.frame.size.width / 10;
+    
 }
 
 - (void) viewWillAppear:(BOOL)animated
@@ -192,6 +193,12 @@
 
 
 #pragma mark - Dynamic elements
+
+- (IBAction)changeStatus:(UIButton *)sender
+{
+    [self showNewStatuses];
+}
+
 
 -(void)requestUsersAndComments
 {
@@ -487,10 +494,12 @@
     if (self.stringNewStatuses == nil)
     {
         self.changeStatusArrow.hidden = YES;
+        self.changeButton.hidden = YES;
     }
     else
     {
         self.changeStatusArrow.hidden = NO;
+        self.changeButton.hidden = NO;
     }
 }
 
@@ -679,6 +688,7 @@
                                  [self setDataToView];
                                  [self clearOldDynamicElements];
                                  [self prepareUIChangeStatusElements];
+                                 [self requestUsersAndComments];
                                  
                              }
                              else
