@@ -760,14 +760,13 @@
                                     <outlet property="delegate" destination="exP-kZ-Qky" id="PmD-gR-pg6"/>
                                 </connections>
                             </scrollView>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="oxc-Sj-Imj">
-                                <rect key="frame" x="539" y="506" width="46" height="30"/>
-                                <color key="backgroundColor" red="1" green="0.050213125069722309" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="oxc-Sj-Imj">
+                                <rect key="frame" x="417" y="383" width="290" height="276"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="45" id="PqW-Y1-LxL"/>
                                     <constraint firstAttribute="width" constant="45" id="f3g-zz-p2F"/>
                                 </constraints>
-                                <state key="normal" title="G"/>
+                                <state key="normal" title="G" image="geolocation_button"/>
                                 <connections>
                                     <action selector="buttonGeolocationPressed:" destination="exP-kZ-Qky" eventType="touchUpInside" id="GVK-zd-UpC"/>
                                 </connections>
@@ -1055,6 +1054,7 @@
     <resources>
         <image name="button_background.png" width="13" height="13"/>
         <image name="description_disabled" width="57" height="42"/>
+        <image name="geolocation_button" width="276" height="276"/>
         <image name="history_disabled" width="50" height="43"/>
         <image name="location_enabled" width="48" height="45"/>
         <image name="more" width="43" height="34"/>

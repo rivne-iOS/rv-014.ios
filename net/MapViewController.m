@@ -655,7 +655,7 @@ static int const MARKER_HIDING_RADIUS = 10;
                                self.descriptionTextView.text,
                                [[NSString alloc] initWithFormat:@"LatLng(%f, %f)", self.currentLocation.latitude, self.currentLocation.longitude],
                                @"NEW",
-                               [NSNumber numberWithInt:[self.categoryPicker selectedRowInComponent:0]],
+                               [NSNumber numberWithLong:[self.categoryPicker selectedRowInComponent:0]],
                                self.attachmentFilename,
                                nil];
     NSArray *addIssueKeys = [[NSArray alloc] initWithObjects:
@@ -993,8 +993,12 @@ static int const MARKER_HIDING_RADIUS = 10;
 
 -(void)customizeGeolocationButton
 {
-    self.geolocationButton.layer.cornerRadius = self.geolocationButton.bounds.size.width / 2.0;;
-    self.geolocationButton.layer.borderWidth = 1;
+    self.geolocationButton.layer.cornerRadius = self.geolocationButton.bounds.size.width / 2.0;
+    self.geolocationButton.layer.shadowColor = [UIColor blackColor].CGColor;
+    self.geolocationButton.layer.shadowOpacity = 0.7;
+    self.geolocationButton.layer.shadowRadius = 6;
+    self.geolocationButton.layer.shadowOffset = CGSizeMake(6.0f, 6.0f);
+//    self.geolocationButton.layer.borderWidth = 1;
 }
 
 -(IBAction)buttonGeolocationPressed:(id)sender
@@ -1031,35 +1035,67 @@ static int const MARKER_HIDING_RADIUS = 10;
 
 -(void)showClosestMarkersToGeolocation:(CLLocationCoordinate2D)geolocation
 {
-    self.isGeolocationButtonPressed = YES;
-    [self.mapView animateToLocation:geolocation];
+//    self.isGeolocationButtonPressed = YES;
+    CGRect screenRect = [[UIScreen mainScreen] bounds];
+//    [self calculateZoomLevel:screenRect.size.width];
+//    CLLocationCoordinate2D bottomLeftCoord =
+//    self.mapView.projection.visibleRegion.nearLeft;
+//    CLLocationCoordinate2D bottomRightCoord =
+//    self.mapView.projection.visibleRegion.nearRight;
     
-    [self hideAllMarkers];
+//    double distanceResult = getDistanceMetresBetweenLocationCoordinates(bottomLeftCoord, bottomRightCoord);
+//    [GMSCameraUpdate zoomTo:[self calculateZoomLevel:screenRect.size.width]];
+//    [self.mapView moveCamera:[GMSCameraUpdate zoomTo:[self calculateZoomLevel:screenRect.size.width]]];
+//    [self.mapView animateToLocation:geolocation];
+//    CLLocationDistance distanceResult = getDistanceMetresBetweenLocationCoordinates(bottomLeftCoord, bottomRightCoord);
+//    [GMSCameraPosition zoomAtCoordinate:geolocation forMeters:5000.0 perPoints:screenRect.size.width];
+    [self.mapView moveCamera:[GMSCameraUpdate zoomTo:[GMSCameraPosition zoomAtCoordinate:geolocation forMeters:5000.0 perPoints:screenRect.size.width]]];
+        [self.mapView animateToLocation:geolocation];
+//    CLLocationDistance distanceResult = getDistanceMetresBetweenLocationCoordinates(bottomLeftCoord, bottomRightCoord);
+
+
+    
+//    [self hideAllMarkers];
     
 //    GMSCameraPosition *geolocationCameraPosition = [GMSCameraPosition cameraWithLatitude:geolocation.latitude
 //                                                            longitude:geolocation.longitude
 //                                                                 zoom:self.mapView.camera.zoom];
     
-    for (GMSMarker *marker in self.arrayOfMarkers){
-        if ([self arcDistance:geolocation andSecondPoint:marker.position] <= 1) {
-            marker.map = self.mapView;
-        }
-    }
+//    for (GMSMarker *marker in self.arrayOfMarkers){
+//        if ([self arcDistance:geolocation andSecondPoint:marker.position] <= 1) {
+//            marker.map = self.mapView;
+//        }
+//    }
 //    [self.mapView setCamera:geolocationCameraPosition];
 }
 
-//-(BOOL)respondsToSelector:(SEL)selector
-//{
-//    if (selector == @selector(mapView:didChangeCameraPosition:))
-//    {
-//        if (self.isGeolocationButtonPressed == YES){
-//            self.isGeolocationButtonPressed = NO;
-//            return NO;
-//        } else {
-//            return YES;
-//        }
-//    }
-//    return [super respondsToSelector:selector];
-//}
+-(int)calculateZoomLevel:(int)screenWidth
+{
+    double equatorLength = 40075004.0; // in meters
+    double widthInPixels = screenWidth;
+    double metersPerPixel = equatorLength / 256.0;
+    int zoomLevel = 1;
+    while ((metersPerPixel * widthInPixels) > 10000) {
+        metersPerPixel /= 2;
+        ++zoomLevel;
+    }
+    NSLog(@"Zoom level is %d", zoomLevel);
+    return zoomLevel;
+}
+
+double getDistanceMetresBetweenLocationCoordinates(CLLocationCoordinate2D coord1,
+                                                   CLLocationCoordinate2D coord2)
+{
+    CLLocation* location1 =
+    [[CLLocation alloc]
+     initWithLatitude: coord1.latitude
+     longitude: coord1.longitude];
+    CLLocation* location2 =
+    [[CLLocation alloc]
+     initWithLatitude: coord2.latitude
+     longitude: coord2.longitude];
+    
+    return [location1 distanceFromLocation: location2];
+}
 
 @end
