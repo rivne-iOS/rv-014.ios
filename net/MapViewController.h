@@ -10,6 +10,7 @@
 #import "User.h"
 #import "AFNetworking.h"
 #import "YLProgressBar.h"
+@import GoogleMaps;
 
 @interface MapViewController : UIViewController <UIPickerViewDataSource, UIPickerViewDelegate>
 
@@ -23,6 +24,7 @@
 @property (weak, nonatomic) IBOutlet NSLayoutConstraint *bottomBarConstraint;
 @property (weak, nonatomic) IBOutlet NSLayoutConstraint *scrollViewLeadingConstraint;
 @property (weak, nonatomic) IBOutlet NSLayoutConstraint *addingIssueViewHeightConstraint;
+@property (weak, nonatomic) IBOutlet NSLayoutConstraint *geolocationButtonBottomConstraint;
 
 @property (weak, nonatomic) IBOutlet UILabel *tapLocationLabel;
 @property (strong, nonatomic) NSMutableArray *categoryClassArray;
@@ -36,6 +38,10 @@
 @property (weak, nonatomic) IBOutlet UILabel *attachmentSuccessfullLabel;
 @property (weak, nonatomic) IBOutlet UIButton *attachmentLoadButton;
 
+@property (weak, nonatomic) IBOutlet UIButton *geolocationButton;
+@property (strong, nonatomic) GMSPlacesClient *placesClient_;
+
+
 @property (strong, nonatomic) NSTimer *timerForMapRenew;
 
 
@@ -43,6 +49,7 @@
 - (IBAction)buttonBackPressed:(id)sender;
 - (IBAction)buttonAddPressed:(id)sender;
 - (IBAction)buttonLoadPressed:(id)sender;
+- (IBAction)buttonGeolocationPressed:(id)sender;
 - (void)renewMapWithNSTimer:(NSTimer *)timer;
 -(void)renewMap;
 

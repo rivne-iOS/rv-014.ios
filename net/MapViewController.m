@@ -17,7 +17,6 @@
 
 #import "DescriptionViewController.h"
 #import "UIColor+Bawl.h"
-@import GoogleMaps;
 @import MobileCoreServices;
 
 static NSString * const GOOGLE_WEB_API_KEY = @"AIzaSyB7InJ3J2AoxlHjsYtde9BNawMINCaHykg";
@@ -29,6 +28,7 @@ static NSString * const DOMAIN_NAME_ADD_ATTACHMENT = @"https://bawl-rivne.rhclou
 
 static NSInteger const HTTP_RESPONSE_CODE_OK = 200;
 static double const MAP_REFRESHING_INTERVAL = 120.0;
+static int const MARKER_HIDING_RADIUS = 10;
 
 @interface MapViewController () <GMSMapViewDelegate, UITabBarControllerDelegate, UIImagePickerControllerDelegate, UINavigationControllerDelegate>
 
@@ -43,6 +43,8 @@ static double const MAP_REFRESHING_INTERVAL = 120.0;
 @property (nonatomic) BOOL userLogined;
 @property (strong, nonatomic) UIImage *attachmentImage;
 @property (strong, nonatomic) NSString *attachmentFilename;
+@property (strong, nonatomic) NSMutableArray *arrayOfMarkers;
+@property (assign, nonatomic) BOOL isGeolocationButtonPressed;
 
 @end
 
@@ -69,7 +71,9 @@ static double const MAP_REFRESHING_INTERVAL = 120.0;
     
     self.tabBarController.delegate = self;
     [self hideTabBar];
+//    self.scrollView.preservesSuperviewLayoutMargins = YES;
     [self customizeTabBar];
+    [self customizeGeolocationButton];
     [self createAndShowMap];
     [self addBorderColor];
     [self customiseProgressBarView];
@@ -104,13 +108,12 @@ static double const MAP_REFRESHING_INTERVAL = 120.0;
 
 -(void)viewWillAppear:(BOOL)animated
 {
+    [self.geolocationButton setHidden:NO];
+    
     if(self.currentUser==nil)
     {
         self.currentUser = [CurrentItems sharedItems].user;
     }
-    
-    if(self.isMarkerSelected==YES)
-        self.tabBarController.tabBar.hidden = NO;
     
     [self renewMap];
     
@@ -124,6 +127,23 @@ static double const MAP_REFRESHING_INTERVAL = 120.0;
     
     NSRunLoop *runner = [NSRunLoop currentRunLoop];
     [runner addTimer:self.timerForMapRenew forMode: NSDefaultRunLoopMode];
+}
+
+-(void)selectCurrentMarker
+{
+        if(self.isMarkerSelected == YES) {
+            self.tabBarController.tabBar.hidden = NO;
+            CurrentItems *cItems = [CurrentItems sharedItems];
+            for (GMSMarker *marker in self.arrayOfMarkers){
+                if ([cItems.issue.issueId intValue] == [((Issue *)marker.userData).issueId intValue]){
+                    self.mapView.selectedMarker = nil;
+                    [self.mapView setSelectedMarker:nil];
+                    self.mapView.selectedMarker = marker;
+                    [self.mapView setSelectedMarker:marker];
+                    break;
+                }
+            }
+        }
 }
 
 -(void)viewWillDisappear:(BOOL)animated
@@ -237,7 +257,9 @@ static double const MAP_REFRESHING_INTERVAL = 120.0;
                                                 dispatch_async(dispatch_get_main_queue(), ^{
                                                     
                                                     [self.mapView clear];
+                                                    [self.arrayOfMarkers removeAllObjects];
                                                     
+                                                    self.arrayOfMarkers = [[NSMutableArray alloc] init];
                                                     for (Issue *issue in issuesClassArray) {
                                                         if ([issue.status isEqualToString:@"TO_RESOLVE"] || [issue.status isEqualToString:@"APPROVED"]
                                                             || (self.currentUser.role==ADMIN || self.currentUser.role==MANAGER)
@@ -248,8 +270,12 @@ static double const MAP_REFRESHING_INTERVAL = 120.0;
                                                             marker.title = issue.name;
                                                             marker.icon = [self changeIconColor:issue];
                                                             marker.map = self.mapView;
+                                                            
+                                                            [self.arrayOfMarkers addObject:marker];
                                                         }
                                                     }
+                                                    [self optimizeUIByHidingMarkers];
+                                                    [self selectCurrentMarker];
                                                 });
                                             } else {
                                                 UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Attention!"
@@ -267,6 +293,7 @@ static double const MAP_REFRESHING_INTERVAL = 120.0;
     [self.tabBarController.tabBar setHidden:NO];
     [UIView animateWithDuration:0.5 animations:^(void){
         [self showTabBar];
+        [self liftUpGeolocationButton];
         [self.view layoutIfNeeded];
         
     }];
@@ -280,11 +307,64 @@ static double const MAP_REFRESHING_INTERVAL = 120.0;
     return NO;
 }
 
+-(void)liftUpGeolocationButton
+{
+    self.geolocationButtonBottomConstraint.constant = 48 + 15;
+}
+
+-(void)pullDownGeolocationButton
+{
+    self.geolocationButtonBottomConstraint.constant = 15;
+}
+
+
+-(void)mapView:(GMSMapView *)mapView didChangeCameraPosition:(GMSCameraPosition *)position
+{
+    [self revealAllMarkers];
+    [self optimizeUIByHidingMarkers];
+}
+
+-(void)revealAllMarkers
+{
+    for (GMSMarker *marker in self.arrayOfMarkers){
+        marker.map = self.mapView;
+    }
+}
+
+-(void)hideAllMarkers
+{
+    for (GMSMarker *marker in self.arrayOfMarkers){
+        marker.map = nil;
+    }
+}
+
+-(void)optimizeUIByHidingMarkers
+{
+    CurrentItems *cItems = [CurrentItems sharedItems];
+    
+    //(x-x0)^2 + (y-y0)^2 = R^2
+    for (GMSMarker *markerFirst in self.arrayOfMarkers){
+        for (GMSMarker *markerSecond in self.arrayOfMarkers){
+            CGPoint pixelPointFirstMarker = [self.mapView.projection pointForCoordinate:markerFirst.position];
+            CGPoint pixelPointSecondMarker = [self.mapView.projection pointForCoordinate:markerSecond.position];
+            
+            if (markerFirst != markerSecond && markerFirst.map != nil && markerSecond.map != nil && pixelPointFirstMarker.x >= 0 && pixelPointFirstMarker.y >= 0 && pixelPointSecondMarker.x >=0 && pixelPointSecondMarker.y >=0){
+                if (pow((pixelPointSecondMarker.x - pixelPointFirstMarker.x), 2.0) + pow((pixelPointSecondMarker.y - pixelPointFirstMarker.y), 2.0) <= pow(MARKER_HIDING_RADIUS, 2.0)){
+                    if (cItems.issue.issueId == ((Issue *)markerSecond.userData).issueId)
+                        self.tabBarController.tabBar.hidden = YES;
+                    markerSecond.map = nil;
+                }
+            }
+        }
+    }
+}
+
 -(void)mapView:(GMSMapView *)mapView didTapAtCoordinate:(CLLocationCoordinate2D)coordinate
 {
     self.isMarkerSelected = NO;
     [UIView animateWithDuration:0.5 animations:^(void){
         [self hideTabBar];
+        [self pullDownGeolocationButton];
         [self.view layoutIfNeeded];
     } completion:^(BOOL finished){
         if (finished == YES){
@@ -309,6 +389,7 @@ static double const MAP_REFRESHING_INTERVAL = 120.0;
             [self hideTabBar];
             [self.view layoutIfNeeded];
         }];
+        [self.geolocationButton setHidden:YES];
     }
 }
 
@@ -326,17 +407,22 @@ static double const MAP_REFRESHING_INTERVAL = 120.0;
                                     completionHandler:^(NSData * _Nullable data, NSURLResponse * _Nullable response, NSError * _Nullable connectionError) {
                                         if (data.length > 0 && connectionError == nil)
                                         {
-                                                dispatch_async(dispatch_get_main_queue(), ^{
-                                                self.tapLocationLabel.numberOfLines = 2;
-                                                self.tapLocationLabel.lineBreakMode = NSLineBreakByCharWrapping;
-                                                self.tapLocationLabel.text = @"";
-                                                self.tapLocationLabel.text = [self.tapLocationLabel.text stringByAppendingFormat:@"Location of issue:\n%@, %@",
-                                                                              [self takeVicinityFromGoogleApiPlace:data],
-                                                                              [self takeStreetFromGoogleApiPlace:data]];
-                                            });
+                                            dispatch_async(dispatch_get_main_queue(), ^{
+                                                [self retrievePlaceInfoByPlaceId:[self takePlaceIdFromGoogleApiPlace:data] andData:data];
+                                                });
                                         }
                                     }] resume];
 
+}
+
+-(NSString *)takePlaceIdFromGoogleApiPlace:(NSData *)data
+{
+    NSDictionary *placeDictionary = [NSJSONSerialization JSONObjectWithData:data options:0 error:NULL];
+    NSArray *resultsArray = [placeDictionary valueForKey:@"results"];
+    NSDictionary *locationDictionary = [resultsArray objectAtIndex:0];
+    NSString *placeId = [locationDictionary valueForKey:@"place_id"];
+    return placeId;
+    
 }
 
 -(NSString *)takeStreetFromGoogleApiPlace:(NSData *)data
@@ -503,6 +589,9 @@ static double const MAP_REFRESHING_INTERVAL = 120.0;
     [UIView animateWithDuration:0.5 animations:^(void){
         self.scrollViewLeadingConstraint.constant = CGRectGetWidth(self.mapView.bounds);
         [self.view layoutIfNeeded];
+    } completion:^(BOOL finished){
+        if (finished == YES)
+            [self.geolocationButton setHidden:NO];
     }];
 }
 
@@ -513,7 +602,6 @@ static double const MAP_REFRESHING_INTERVAL = 120.0;
         return;
     }
     [self requestAddingNewIssue:[self getJsonFromAddingNewIssueView]];
-//    [self requestAddingNewIssue:[self getJsonFromAddingNewIssueView]];
     [[self navigationController] setNavigationBarHidden:NO animated:NO];
     [UIView animateWithDuration:0.5 animations:^(void){
         self.scrollViewLeadingConstraint.constant = CGRectGetWidth(self.mapView.bounds);
@@ -536,7 +624,7 @@ static double const MAP_REFRESHING_INTERVAL = 120.0;
                                self.descriptionTextView.text,
                                [[NSString alloc] initWithFormat:@"LatLng(%f, %f)", self.currentLocation.latitude, self.currentLocation.longitude],
                                @"NEW",
-                               [NSNumber numberWithInt:[self.categoryPicker selectedRowInComponent:0]],
+                               [NSNumber numberWithLong:[self.categoryPicker selectedRowInComponent:0]],
                                self.attachmentFilename,
                                nil];
     NSArray *addIssueKeys = [[NSArray alloc] initWithObjects:
@@ -835,6 +923,119 @@ static double const MAP_REFRESHING_INTERVAL = 120.0;
     self.attachmentProgressView.frame = CGRectInset(self.attachmentProgressView.frame, -borderWidth, -borderWidth);
     self.attachmentProgressView.layer.borderColor = [UIColor grayColor].CGColor;
     self.attachmentProgressView.layer.borderWidth = borderWidth;
+}
+
+-(void)retrievePlaceInfoByPlaceId:(NSString *)placeId andData:(NSData *)data
+{
+    GMSPlacesClient *placesClient = [GMSPlacesClient sharedClient];
+    [placesClient lookUpPlaceID:placeId callback:^(GMSPlace *place, NSError *error) {
+        if (error != nil) {
+            NSLog(@"Place Details error %@", [error localizedDescription]);
+            return;
+        }
+        
+        if (place != nil) {
+            NSString *regionName;
+            NSString *streetName;
+            NSString *placeAddressString = place.formattedAddress;
+            NSArray *placeAddressArray = [placeAddressString componentsSeparatedByString:@","];
+
+            if ([placeAddressArray[1] rangeOfCharacterFromSet:[NSCharacterSet decimalDigitCharacterSet]].location == NSNotFound){
+                regionName = placeAddressArray[1];
+                streetName = placeAddressArray[0];
+            } else {
+                regionName = placeAddressArray[2];
+                streetName = placeAddressArray[0];
+            }
+            
+            self.tapLocationLabel.numberOfLines = 5;
+            self.tapLocationLabel.lineBreakMode = NSLineBreakByCharWrapping;
+            self.tapLocationLabel.text = @"";
+            self.tapLocationLabel.text = [self.tapLocationLabel.text stringByAppendingFormat:@"Location of issue:\n%@, %@",
+                                          regionName,
+                                          streetName];
+        } else {
+            NSLog(@"No place details for %@", placeId);
+        }
+    }];
+}
+
+-(void)customizeGeolocationButton
+{
+    self.geolocationButton.layer.cornerRadius = self.geolocationButton.bounds.size.width / 2.0;
+    self.geolocationButton.layer.shadowColor = [UIColor blackColor].CGColor;
+    self.geolocationButton.layer.shadowOpacity = 0.7;
+    self.geolocationButton.layer.shadowRadius = 6;
+    self.geolocationButton.layer.shadowOffset = CGSizeMake(6.0f, 6.0f);
+}
+
+-(IBAction)buttonGeolocationPressed:(id)sender
+{
+    self.isMarkerSelected = NO;
+    self.mapView.selectedMarker = nil;
+    [self hideTabBar];
+    [self pullDownGeolocationButton];
+    [self.tabBarController.tabBar setHidden:YES];
+    [self.view layoutIfNeeded];
+    
+    self.placesClient_ = [GMSPlacesClient sharedClient];
+    [self.placesClient_ currentPlaceWithCallback:^(GMSPlaceLikelihoodList *likelihoodList, NSError *error) {
+        if (error != nil) {
+            NSLog(@"Current Place error %@", [error localizedDescription]);
+            return;
+        }
+        
+        // First element because it has the highest accuracy of user place detection.
+        GMSPlaceLikelihood *likelyhood = likelihoodList.likelihoods[0];
+        GMSPlace *place = likelyhood.place;
+        [self showClosestMarkersToGeolocation:place.coordinate];
+    }];
+}
+
+-(double)arcDistance:(CLLocationCoordinate2D)loc1 andSecondPoint:(CLLocationCoordinate2D)loc2 {
+    double rad  = M_PI / 180.0,
+    earth_radius = 6371.009, // close enough
+    lat1 = loc1.latitude * rad,
+    lat2 = loc2.latitude * rad,
+    dlon = fabs(loc1.longitude - loc2.longitude) * rad;
+    
+    return earth_radius * acos((sin(lat1) * sin(lat2)) + (cos(lat1) * cos(lat2) * cos(dlon)));
+}
+
+-(void)showClosestMarkersToGeolocation:(CLLocationCoordinate2D)geolocation
+{
+    CGRect screenRect = [[UIScreen mainScreen] bounds];
+    [self.mapView moveCamera:[GMSCameraUpdate zoomTo:[GMSCameraPosition zoomAtCoordinate:geolocation forMeters:5000.0 perPoints:screenRect.size.width]]];
+    [self.mapView animateToLocation:geolocation];
+}
+
+-(int)calculateZoomLevel:(int)screenWidth
+{
+    double equatorLength = 40075004.0; // in meters
+    double widthInPixels = screenWidth;
+    double metersPerPixel = equatorLength / 256.0;
+    int zoomLevel = 1;
+    while ((metersPerPixel * widthInPixels) > 10000) {
+        metersPerPixel /= 2;
+        ++zoomLevel;
+    }
+    NSLog(@"Zoom level is %d", zoomLevel);
+    return zoomLevel;
+}
+
+double getDistanceMetresBetweenLocationCoordinates(CLLocationCoordinate2D coord1,
+                                                   CLLocationCoordinate2D coord2)
+{
+    CLLocation* location1 =
+    [[CLLocation alloc]
+     initWithLatitude: coord1.latitude
+     longitude: coord1.longitude];
+    CLLocation* location2 =
+    [[CLLocation alloc]
+     initWithLatitude: coord2.latitude
+     longitude: coord2.longitude];
+    
+    return [location1 distanceFromLocation: location2];
 }
 
 @end
