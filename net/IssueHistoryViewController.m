@@ -112,13 +112,6 @@ static NSString * const kSimpleTableIdentifier = @"SampleTableCell";
     self.tabBarController.tabBar.hidden = NO;
 }
 
-- (void) viewWillDisappear:(BOOL)animated {
-    [super viewWillDisappear:YES];
-    
-    [self.issueHistory removeAllObjects];
-    [self.issueTable reloadData];
-}
-
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
     return [self.issueHistory count];
 }
