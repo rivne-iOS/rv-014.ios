@@ -11,6 +11,7 @@
 #import "ProfileViewController.h"
 #import "IssueHistory.h"
 #import "CurrentItems.h"
+#import "NSMutableArray+isEmpty.h"
 
 static NSString * const kSimpleTableIdentifier = @"SampleTableCell";
 
@@ -111,7 +112,6 @@ static NSString * const kSimpleTableIdentifier = @"SampleTableCell";
     self.tabBarController.tabBar.hidden = NO;
 }
 
-
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
     return [self.issueHistory count];
 }
@@ -137,9 +137,10 @@ static NSString * const kSimpleTableIdentifier = @"SampleTableCell";
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
 {
     // Return the number of sections.
-    if (self.issueHistory) {
+    if (![self.issueHistory isEmpty]) {
         
         self.issueTable.separatorStyle = UITableViewCellSeparatorStyleSingleLine;
+        self.issueTable.backgroundView = nil;
         return 1;
         
     } else {
@@ -179,7 +180,6 @@ static NSString * const kSimpleTableIdentifier = @"SampleTableCell";
             ProfileViewController *profileViewController = (ProfileViewController*)segue.destinationViewController;
             profileViewController.userID = self.userID;
             profileViewController.isLogged = self.isLogged;
-            profileViewController.currentUser = self.currentUser;
             profileViewController.dataSorce = self.dataSorce;
             profileViewController.mapViewDelegate = self.mapDelegate;
         }

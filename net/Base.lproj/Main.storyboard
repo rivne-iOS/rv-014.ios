@@ -1010,7 +1010,7 @@
                             <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="ibI-TV-PAc">
                                 <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
                                 <subviews>
-                                    <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="traffic_light_issue" translatesAutoresizingMaskIntoConstraints="NO" id="lVY-SF-ay3">
+                                    <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="lVY-SF-ay3">
                                         <rect key="frame" x="230" y="20" width="140" height="140"/>
                                         <constraints>
                                             <constraint firstAttribute="height" constant="140" id="4q8-tH-LyT"/>
@@ -1018,7 +1018,7 @@
                                         </constraints>
                                     </imageView>
                                     <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" enabled="NO" contentHorizontalAlignment="left" contentVerticalAlignment="center" text="Kris Evans" textAlignment="center" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="Cvb-45-iu3">
-                                        <rect key="frame" x="0.0" y="180" width="600" height="24"/>
+                                        <rect key="frame" x="20" y="180" width="560" height="24"/>
                                         <color key="textColor" red="0.83529411764705885" green="0.22352941176470589" blue="0.3411764705882353" alpha="1" colorSpace="calibratedRGB"/>
                                         <fontDescription key="fontDescription" type="system" pointSize="20"/>
                                         <textInputTraits key="textInputTraits"/>
@@ -1121,11 +1121,18 @@
                                             <action selector="changeAvatar:" destination="7ZL-qH-qc6" eventType="touchUpInside" id="bdq-ai-Lja"/>
                                         </connections>
                                     </button>
+                                    <progressView opaque="NO" contentMode="scaleToFill" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="fi2-2A-bD9">
+                                        <rect key="frame" x="230" y="170" width="140" height="2"/>
+                                        <constraints>
+                                            <constraint firstAttribute="width" constant="140" id="kae-c7-g7w"/>
+                                        </constraints>
+                                    </progressView>
                                 </subviews>
                                 <constraints>
+                                    <constraint firstItem="fi2-2A-bD9" firstAttribute="top" secondItem="lVY-SF-ay3" secondAttribute="bottom" constant="10" id="0Vv-Fa-rAw"/>
                                     <constraint firstItem="Fk6-jn-N7K" firstAttribute="centerX" secondItem="ibI-TV-PAc" secondAttribute="centerX" id="15E-hO-Xxf"/>
                                     <constraint firstItem="5mg-m6-GgF" firstAttribute="top" secondItem="ICv-Sc-PHI" secondAttribute="bottom" constant="10" id="4NY-yL-mwM"/>
-                                    <constraint firstItem="Cvb-45-iu3" firstAttribute="leading" secondItem="ibI-TV-PAc" secondAttribute="leading" id="Boe-bg-yGw"/>
+                                    <constraint firstItem="Cvb-45-iu3" firstAttribute="leading" secondItem="ibI-TV-PAc" secondAttribute="leading" constant="20" id="Boe-bg-yGw"/>
                                     <constraint firstItem="Cvb-45-iu3" firstAttribute="top" secondItem="lVY-SF-ay3" secondAttribute="bottom" constant="20" id="BuY-mi-5pm"/>
                                     <constraint firstItem="Cvb-45-iu3" firstAttribute="centerX" secondItem="ibI-TV-PAc" secondAttribute="centerX" id="D7W-Tx-Paw"/>
                                     <constraint firstItem="gLf-Px-Gmy" firstAttribute="centerX" secondItem="ibI-TV-PAc" secondAttribute="centerX" id="Du2-bW-OLo"/>
@@ -1139,7 +1146,8 @@
                                     <constraint firstItem="ICv-Sc-PHI" firstAttribute="centerX" secondItem="ibI-TV-PAc" secondAttribute="centerX" id="rIp-zs-Pij"/>
                                     <constraint firstItem="fny-Oy-5Q6" firstAttribute="top" secondItem="5mg-m6-GgF" secondAttribute="bottom" constant="10" id="rc2-4p-h7C"/>
                                     <constraint firstItem="gLf-Px-Gmy" firstAttribute="top" secondItem="fny-Oy-5Q6" secondAttribute="bottom" constant="40" id="tBJ-oz-zUk"/>
-                                    <constraint firstAttribute="trailing" secondItem="Cvb-45-iu3" secondAttribute="trailing" id="vbd-95-Eq7"/>
+                                    <constraint firstItem="fi2-2A-bD9" firstAttribute="centerX" secondItem="ibI-TV-PAc" secondAttribute="centerX" id="vTd-kO-CH1"/>
+                                    <constraint firstAttribute="trailing" secondItem="Cvb-45-iu3" secondAttribute="trailing" constant="20" id="vbd-95-Eq7"/>
                                     <constraint firstItem="5mg-m6-GgF" firstAttribute="centerX" secondItem="ibI-TV-PAc" secondAttribute="centerX" id="yoh-T4-ici"/>
                                 </constraints>
                             </scrollView>
@@ -1178,6 +1186,7 @@
                         <outlet property="labelUserEmail" destination="omW-d2-6Os" id="5HA-SB-oDV"/>
                         <outlet property="labelUserLogin" destination="fXZ-Ug-hZD" id="AjQ-S4-BjW"/>
                         <outlet property="profileImage" destination="lVY-SF-ay3" id="Aaf-yi-Xuy"/>
+                        <outlet property="progressView" destination="fi2-2A-bD9" id="puJ-Hd-nzS"/>
                         <outlet property="systemRole" destination="VUL-dV-fxY" id="Ryd-s4-BeE"/>
                         <outlet property="userEmail" destination="7qw-nW-dNb" id="nri-nj-CZa"/>
                         <outlet property="userLogin" destination="sJA-Js-PEb" id="cgI-fs-rd5"/>
@@ -1254,7 +1263,6 @@
         <image name="more" width="43" height="34"/>
         <image name="photo_attachment" width="190" height="141"/>
         <image name="tittle" width="284" height="152"/>
-        <image name="traffic_light_issue" width="164" height="92"/>
     </resources>
     <inferredMetricsTieBreakers>
         <segue reference="TLl-qh-wdc"/>
