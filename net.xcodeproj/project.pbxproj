@@ -36,6 +36,7 @@
 		CEC6F6301C5B6FA2002321AA /* IssueHistoryViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = CEC6F62F1C5B6FA2002321AA /* IssueHistoryViewController.m */; };
 		CEC6F6351C5B6FB6002321AA /* CustomTableCell.m in Sources */ = {isa = PBXBuildFile; fileRef = CEC6F6331C5B6FB6002321AA /* CustomTableCell.m */; };
 		CEC6F6361C5B6FB6002321AA /* CustomTableCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = CEC6F6341C5B6FB6002321AA /* CustomTableCell.xib */; };
+		CECCC90B1C8058F800CD3228 /* NSMutableArray+isEmpty.m in Sources */ = {isa = PBXBuildFile; fileRef = CECCC90A1C8058F800CD3228 /* NSMutableArray+isEmpty.m */; };
 		CEF2B61D1C74761000F4B2F5 /* UIView+Addition.m in Sources */ = {isa = PBXBuildFile; fileRef = CEF2B61C1C74761000F4B2F5 /* UIView+Addition.m */; };
 		CEF2B6201C75D96700F4B2F5 /* UIViewController+backViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = CEF2B61F1C75D96700F4B2F5 /* UIViewController+backViewController.m */; };
 		CEF2B6231C771BAB00F4B2F5 /* NSString+stringIsEmpry.m in Sources */ = {isa = PBXBuildFile; fileRef = CEF2B6221C771BAB00F4B2F5 /* NSString+stringIsEmpry.m */; };
@@ -108,6 +109,8 @@
 		CEC6F6321C5B6FB6002321AA /* CustomTableCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CustomTableCell.h; sourceTree = "<group>"; };
 		CEC6F6331C5B6FB6002321AA /* CustomTableCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CustomTableCell.m; sourceTree = "<group>"; };
 		CEC6F6341C5B6FB6002321AA /* CustomTableCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = CustomTableCell.xib; sourceTree = "<group>"; };
+		CECCC9091C8058F800CD3228 /* NSMutableArray+isEmpty.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSMutableArray+isEmpty.h"; sourceTree = "<group>"; };
+		CECCC90A1C8058F800CD3228 /* NSMutableArray+isEmpty.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSMutableArray+isEmpty.m"; sourceTree = "<group>"; };
 		CEF2B61B1C74761000F4B2F5 /* UIView+Addition.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIView+Addition.h"; sourceTree = "<group>"; };
 		CEF2B61C1C74761000F4B2F5 /* UIView+Addition.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIView+Addition.m"; sourceTree = "<group>"; };
 		CEF2B61E1C75D96700F4B2F5 /* UIViewController+backViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIViewController+backViewController.h"; sourceTree = "<group>"; };
@@ -252,6 +255,8 @@
 				CEF2B61F1C75D96700F4B2F5 /* UIViewController+backViewController.m */,
 				CEF2B6211C771BAB00F4B2F5 /* NSString+stringIsEmpry.h */,
 				CEF2B6221C771BAB00F4B2F5 /* NSString+stringIsEmpry.m */,
+				CECCC9091C8058F800CD3228 /* NSMutableArray+isEmpty.h */,
+				CECCC90A1C8058F800CD3228 /* NSMutableArray+isEmpty.m */,
 			);
 			name = model;
 			sourceTree = "<group>";
@@ -451,6 +456,7 @@
 				CEF2B6231C771BAB00F4B2F5 /* NSString+stringIsEmpry.m in Sources */,
 				8460F9761C3C531E00ECB3A4 /* LogInViewController.m in Sources */,
 				8460F99C1C3C5E1A00ECB3A4 /* IssueHistory.m in Sources */,
+				CECCC90B1C8058F800CD3228 /* NSMutableArray+isEmpty.m in Sources */,
 				84E7BF461C430AA600E66585 /* NetworkDataSorce.m in Sources */,
 				CE8BAD001C6B39B4006951D7 /* ProfileViewController.m in Sources */,
 				84D93FC91C5A245800D4E96D /* IssueChangeStatus.m in Sources */,

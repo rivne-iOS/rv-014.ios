@@ -229,12 +229,12 @@ static NSInteger const HTTP_RESPONSE_CODE_OK = 200;
         [self.dataSorce requestSignOutWithHandler:^(NSString *stringAnswer) {
             dispatch_async(dispatch_get_main_queue(), ^{
                 
-                if([stringAnswer isEqualToString:[@"Bye " stringByAppendingString:self.currentUser.name]])
+                if([stringAnswer isEqualToString:[@"Bye " stringByAppendingString:[CurrentItems sharedItems].user.name]])
                 {
                     // alert - good
                     self.title = [NSString stringWithFormat:@"Bowl"];
                     self.navigationItem.rightBarButtonItem.title = @"Log In";
-                    self.currentUser=nil;
+                    [CurrentItems sharedItems].user = nil;
                     UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Log Out"
                                                                     message:@"You loged out successfully!"
                                                                    delegate:nil
