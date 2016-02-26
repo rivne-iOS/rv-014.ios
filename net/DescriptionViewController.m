@@ -316,6 +316,7 @@
 
 -(void)sendCommentPressed
 {
+    NSString *message = self.addCommentDynamicTextField.text;
     [self.addCommentDynamicTextField resignFirstResponder];
     [self.addCommentDynamicButton removeFromSuperview];
     [self.addCommentDynamicGreyView removeFromSuperview];
@@ -324,6 +325,14 @@
     self.addCommentDynamicButton = nil;
     self.addCommentDynamicButton = nil;
     self.addCommentDynamicButton = nil;
+    
+    [self.dataSorce requestSendNewComment:message
+                               forIssueID:[CurrentItems sharedItems].issue.issueId
+    andHandler:^(NSArray<NSDictionary<NSString *,id> *> *commentDics, NSError *error) {
+       
+        
+    }];
+    
     
 }
 

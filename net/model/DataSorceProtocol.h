@@ -26,6 +26,10 @@
                        andHandler:(void (^)(NSArray <NSDictionary <NSString*,id> *> *commentDics, NSError *error))handler;
 
 
+-(void)requestSendNewComment:(NSString*)strComment forIssueID:(NSNumber*)issueID
+                  andHandler:(void (^)(NSArray <NSDictionary <NSString*,id> *> *commentDics, NSError *error))handler;
+
+
 -(void)requestImageWithName:(NSString*)name andHandler:(void (^)(UIImage *image))viewControllerHandler withErrorHandler:(void(^)(NSError *error)) errorHandler;
 
 -(void)requestLogInWithUser:(NSString*)user

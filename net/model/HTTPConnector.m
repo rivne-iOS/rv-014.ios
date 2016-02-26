@@ -64,6 +64,8 @@
 }
 
 
+
+
 -(void)requestUsers:(void(^)(NSData* data, NSError *error))dataSorceHandler
 {
     [self getRequestBlankToUrl:[self.globalURL stringByAppendingString:self.allPersURL] andHandler:dataSorceHandler];
@@ -90,6 +92,15 @@
     NSString *strUrl = [[self.globalURL stringByAppendingString:self.getComments] stringByReplacingOccurrencesOfString:@"commentIDNumber" withString:strID];
     [self getRequestBlankToUrl:strUrl andHandler:dataSorceHandler];
 }
+
+-(void)requestSendNewCommentWithIssueID:(NSString*)strID
+                             andPosData:(NSData*)data
+                    andDatasorceHandler:(void(^)(NSData* data, NSError *error))dataSorceHandler
+{
+    NSString *strUrl = [[self.globalURL stringByAppendingString:self.getComments] stringByReplacingOccurrencesOfString:@"commentIDNumber" withString:strID];
+    [self postRequest:data toURL:strUrl andHandler:dataSorceHandler];
+}
+
 
 -(void)requestSignOutWithHandler:(void (^)(NSData *data, NSError *error))dataSorceHandler
 {

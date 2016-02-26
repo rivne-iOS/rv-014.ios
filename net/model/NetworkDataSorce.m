@@ -78,15 +78,36 @@
         }
         
         NSArray <NSDictionary<NSString*,id>*> *commentDics = [NSJSONSerialization JSONObjectWithData:data options:0 error:&error];
-        if (![commentDics isKindOfClass:[NSArray class]] || error != nil)
-        {
-            commentDics=nil;
-        }
         handler(commentDics, error);
 
     }];
     
 }
+
+-(void)requestSendNewComment:(NSString*)strComment forIssueID:(NSNumber*)issueID
+                  andHandler:(void (^)(NSArray <NSDictionary <NSString*,id> *> *commentDics, NSError *error))handler
+{
+    NSDictionary *dictionary = @{@"comment" : strComment};
+    NSError *err;
+    NSData *postData = [NSJSONSerialization dataWithJSONObject:dictionary
+                                                       options:0
+                                                         error:&err];
+    
+    HTTPConnector *con = [[HTTPConnector alloc] init];
+    [con requestSendNewCommentWithIssueID:[issueID stringValue] andPosData:postData andDatasorceHandler:^(NSData *data, NSError *error) {
+        if(error!=nil || data==nil)
+        {
+            handler(nil, error);
+            return;
+        }
+        
+        NSArray <NSDictionary<NSString*,id>*> *commentDics = [NSJSONSerialization JSONObjectWithData:data options:0 error:&error];
+        handler(commentDics, error);
+    }];
+    
+
+}
+
 
 -(void)requestImageWithName:(NSString*)name andHandler:(void (^)(UIImage *image))viewControllerHandler withErrorHandler:(void(^)(NSError *error)) errorHandler
 {
