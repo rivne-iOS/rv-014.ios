@@ -64,32 +64,29 @@
     }];
 }
 
--(void)requestComment:(void (^)(NSDictionary <NSString*,id> *commentDic))handler withErrorHandler:(void(^)(NSError *error)) errorHandler
+
+
+-(void)requestCommentsWithIssueID:(NSNumber*)issueID
+                       andHandler:(void (^)(NSArray <NSDictionary <NSString*,id> *> *commentDics, NSError *error))handler;
 {
-    NSError *tError = nil;
-    NSDictionary <NSString*,id> *tCommentDic = @{ @"USER_ID": @1,
-                                                         @"COMMENT": @"Text of comment Text of comment Text of comment Text of comment ",
-                                                         @"DATE": @"01/01/2016"};
-    handler(tCommentDic);
-    errorHandler(tError);
+    HTTPConnector *connector = [[HTTPConnector alloc] init];
+    [connector requestCommentWithID:[issueID stringValue] andDataSorceHandler:^(NSData *data, NSError *error) {
+        if(error!=nil || data==nil)
+        {
+            handler(nil, error);
+            return;
+        }
+        
+        NSArray <NSDictionary<NSString*,id>*> *commentDics = [NSJSONSerialization JSONObjectWithData:data options:0 error:&error];
+        if (![commentDics isKindOfClass:[NSArray class]] || error != nil)
+        {
+            commentDics=nil;
+        }
+        handler(commentDics, error);
+
+    }];
     
 }
-
--(void)requestComments:(void (^)(NSArray <NSDictionary <NSString*,id> *> *commentDics))handler withErrorHandler:(void(^)(NSError *error)) errorHandler;
-{
-    NSError *tError = nil;
-    NSDictionary <NSString*,id> *tCommentDic = @{ @"USER_ID": @1,
-                                                  @"COMMENT": @"Quartz 2D is an advanced, two-dimensional drawing engine available for iOS application development and to all Mac OS X application environments outside of the kernel. Quartz 2D provides low-level, lightweight 2D rendering with unmatched output fidelity regardless of display or printing device. Quartz 2D is resolution- and device-independent; you don’t need to think about the final destination when you use the Quartz 2D application programming interface (API) for drawing. ",
-                                                  @"DATE": @"01/01/2016"};
-    
-    NSArray <NSDictionary <NSString*,id> *> *listDics = @[tCommentDic, tCommentDic, tCommentDic, tCommentDic, tCommentDic, tCommentDic, tCommentDic, tCommentDic, tCommentDic];
-    
-    handler(listDics);
-    errorHandler(tError);
-    
-}
-
-
 
 -(void)requestImageWithName:(NSString*)name andHandler:(void (^)(UIImage *image))viewControllerHandler withErrorHandler:(void(^)(NSError *error)) errorHandler
 {

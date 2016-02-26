@@ -39,7 +39,6 @@
 @property (strong, nonatomic) IBOutlet UIButton *changeButton;
 
 
-
 @property (strong, nonatomic) IssueChangeStatus *statusChanger;
 @property (strong, nonatomic) id <DataSorceProtocol> dataSorce;
 
@@ -53,6 +52,11 @@
 @property(nonatomic) CGFloat avatarSize;
 @property(nonatomic) CGFloat contentStaticHeight;
 @property(nonatomic) CGFloat contentDynamicHeight;
+
+
+@property(strong,nonatomic) UITextField *addCommentDynamicTextField;
+@property(strong, nonatomic) UIView *addCommentDynamicGreyView;
+@property(strong, nonatomic) UIButton *addCommentDynamicButton;
 
 @end
 
@@ -130,11 +134,29 @@
     }
     
     [self requestUsersAndComments];
+    
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(keyboardDidShow:)
+                                                 name:UIKeyboardDidShowNotification
+                                               object:nil];
+    
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(keyboardWillHide)
+                                                 name:UIKeyboardWillHideNotification
+                                               object:nil];
 }
 
 -(void)viewWillDisappear:(BOOL)animated
 {
     [[NSNotificationCenter defaultCenter] removeObserver:self name:UIDeviceOrientationDidChangeNotification object:nil];
+
+    [[NSNotificationCenter defaultCenter] removeObserver:self
+                                                    name:UIKeyboardDidShowNotification
+                                                  object:nil];
+    
+    [[NSNotificationCenter defaultCenter] removeObserver:self
+                                                    name:UIKeyboardWillHideNotification
+                                                  object:nil];
 }
 
 -(void)viewDidAppear:(BOOL)animated
@@ -192,13 +214,121 @@
 }
 
 
-#pragma mark - Dynamic elements
+#pragma mark - actions
 
 - (IBAction)changeStatus:(UIButton *)sender
 {
     [self showNewStatuses];
 }
 
+- (IBAction)addNewComment:(UIButton *)sender
+{
+    UITextField *addCommentTextField = [[UITextField alloc] init];
+    addCommentTextField.translatesAutoresizingMaskIntoConstraints = NO;
+    addCommentTextField.backgroundColor = [UIColor whiteColor];
+
+    self.addCommentDynamicTextField = addCommentTextField;
+    [self.view addSubview:addCommentTextField];
+    [addCommentTextField becomeFirstResponder];
+}
+
+-(NSLayoutConstraint*)scrollBottomConstraint
+{
+    for(NSLayoutConstraint *constraint in self.view.constraints)
+    {
+        if ([constraint.identifier isEqualToString:@"BottomScrollViewConstraint"])
+        {
+            return constraint;
+            
+        }
+    }
+    return nil;
+    
+}
+
+-(void)keyboardDidShow:(NSNotification *)notification
+{
+    if (self.addCommentDynamicTextField == nil)
+        return;
+    
+    UIView *grayView = [[UIView alloc] init];
+    grayView.translatesAutoresizingMaskIntoConstraints = NO;
+    grayView.backgroundColor = [[UIColor grayColor] colorWithAlphaComponent:0.5];
+    self.addCommentDynamicGreyView = grayView;
+    
+    UIButton *addCommentButton = [[UIButton alloc] init];
+    addCommentButton.translatesAutoresizingMaskIntoConstraints = NO;
+    [addCommentButton addTarget:self action:@selector(sendCommentPressed) forControlEvents:UIControlEventTouchUpInside];
+    NSString *buttonTitle = @"Send";
+    [addCommentButton setTitle:buttonTitle forState:UIControlStateNormal];
+    [addCommentButton setTitleColor:self.view.tintColor forState:UIControlStateNormal];
+    self.addCommentDynamicButton = addCommentButton;
+    
+    NSDictionary *dic = notification.userInfo;
+    NSValue *keyboardFrame = dic[UIKeyboardFrameEndUserInfoKey];
+    CGRect frame = [keyboardFrame CGRectValue];
+    CGRect viewFrame = [self.view convertRect:frame fromView:nil];
+    CGFloat keyboardHeight = viewFrame.size.height;
+    
+    CGFloat textFieldHeight = 60;
+    CGFloat tabBarHeight = self.tabBarController.tabBar.frame.size.height;
+    CGSize buttonTittleSize = [buttonTitle sizeWithAttributes:@{NSFontAttributeName : addCommentButton.titleLabel.font}];
+    
+    self.addCommentDynamicTextField.layer.cornerRadius = self.addCommentDynamicTextField.frame.size.height / 4;
+    
+    [self scrollBottomConstraint].constant = keyboardHeight + textFieldHeight - tabBarHeight;
+    [self.view layoutIfNeeded];
+    
+    [self.view insertSubview:grayView belowSubview:self.addCommentDynamicTextField];
+    [self.view addSubview:addCommentButton];
+    [addCommentButton sizeToFit];
+    
+    [grayView.topAnchor constraintEqualToAnchor:self.ScrollView.bottomAnchor].active = YES;
+    [grayView.leadingAnchor constraintEqualToAnchor:self.view.leadingAnchor].active = YES;
+    [grayView.trailingAnchor constraintEqualToAnchor:self.view.trailingAnchor].active = YES;
+    [grayView.heightAnchor constraintEqualToConstant:textFieldHeight].active = YES;
+    
+    [self.addCommentDynamicTextField.topAnchor constraintEqualToAnchor:grayView.topAnchor constant:2].active = YES;
+    [self.addCommentDynamicTextField.leadingAnchor constraintEqualToAnchor:grayView.leadingAnchor constant:8].active = YES;
+    [self.addCommentDynamicTextField.trailingAnchor constraintEqualToAnchor:addCommentButton.leadingAnchor constant:-8].active = YES;
+    [self.addCommentDynamicTextField.bottomAnchor constraintEqualToAnchor:grayView.bottomAnchor constant:-2].active = YES;
+    
+    [addCommentButton.trailingAnchor constraintEqualToAnchor:grayView.trailingAnchor constant:-8].active = YES;
+    [addCommentButton.centerYAnchor constraintEqualToAnchor:self.addCommentDynamicTextField.centerYAnchor].active = YES;
+    [addCommentButton.widthAnchor constraintEqualToConstant:buttonTittleSize.width+4].active = YES;
+    
+    
+    [UIView animateWithDuration:0.3 animations:^{
+        self.ScrollView.contentOffset = CGPointMake(0, self.contentView.frame.size.height - self.ScrollView.frame.size.height);
+    }];
+    
+    
+    
+    
+}
+
+-(void)keyboardWillHide
+{
+    [self scrollBottomConstraint].constant = 0;
+    [self.view layoutIfNeeded];
+    
+}
+
+-(void)sendCommentPressed
+{
+    [self.addCommentDynamicTextField resignFirstResponder];
+    [self.addCommentDynamicButton removeFromSuperview];
+    [self.addCommentDynamicGreyView removeFromSuperview];
+    [self.addCommentDynamicGreyView removeFromSuperview];
+    
+    self.addCommentDynamicButton = nil;
+    self.addCommentDynamicButton = nil;
+    self.addCommentDynamicButton = nil;
+    
+}
+
+
+#pragma mark - Dynamic elements
 
 -(void)requestUsersAndComments
 {
@@ -216,8 +346,11 @@
     __weak DescriptionViewController *weakSelf = self;
     self.viewToConnectDynamicItems = self.viewBetweenCommentAndChare;
     
-    [self.dataSorce requestComments:^(NSArray<NSDictionary<NSString *,id> *> *commentDics) {
+    [self.dataSorce requestCommentsWithIssueID:[CurrentItems sharedItems].issue.issueId
+                                    andHandler:^(NSArray<NSDictionary<NSString *,id> *> *commentDics, NSError *error) {
        dispatch_async(dispatch_get_main_queue(), ^{
+           if(commentDics==nil || error != nil)
+               return;
            weakSelf.contentDynamicHeight = 0;
            weakSelf.contentView.restorationIdentifier = @"contentView";
            for (NSInteger index=0; index<commentDics.count; ++index)
@@ -387,9 +520,6 @@
            NSLog(@"weakSelf.viewBetweenCommentAndChare %@",weakSelf.viewBetweenCommentAndChare);
            weakSelf.contentViewHeightConstraint.constant = weakSelf.contentDynamicHeight + weakSelf.contentStaticHeight;
        });
-        
-    } withErrorHandler:^(NSError *error) {
-        // error
     }];
     
 }

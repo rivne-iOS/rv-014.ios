@@ -16,6 +16,8 @@
 -(void)requestCategories:(void(^)(NSData *data, NSError *error))dataSorceHandler;
 -(void)requestImageWithName:(NSString*)name andDataSorceHandler:(void(^)(NSData *data, NSError *error))dataSorceHandler;
 
+-(void)requestCommentWithID:(NSString*)strID andDataSorceHandler:(void(^)(NSData *data, NSError *error))dataSorceHandler;
+
 -(void)requestLogInWithData:(NSData*)data
         andDataSorceHandler:(void(^)(NSData *data, NSError *error))dataSorceHandler;
 
