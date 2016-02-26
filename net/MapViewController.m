@@ -45,6 +45,7 @@ static int const MARKER_HIDING_RADIUS = 10;
 @property (strong, nonatomic) NSString *attachmentFilename;
 @property (strong, nonatomic) NSMutableArray *arrayOfMarkers;
 @property (assign, nonatomic) BOOL isGeolocationButtonPressed;
+@property (assign, nonatomic) int heightOfStatusBarInCurrentOrientation;
 
 @property (strong, nonatomic) UIBarButtonItem *leftItem;
 
@@ -60,6 +61,7 @@ static int const MARKER_HIDING_RADIUS = 10;
     
     self.title = @"Bowl";
     self.isMarkerSelected = NO;
+    self.heightOfStatusBarInCurrentOrientation = [UIApplication sharedApplication].statusBarFrame.size.height;
     self.dataSorce = [[NetworkDataSorce alloc] init];
     self.navigationController.navigationBar.tintColor = [UIColor whiteColor];
     self.navigationController.navigationBar.barTintColor = [UIColor bawlRedColor];
@@ -71,7 +73,7 @@ static int const MARKER_HIDING_RADIUS = 10;
 
     self.scrollViewLeadingConstraint.constant = CGRectGetWidth(self.mapView.bounds);
     CGRect screenRect = [[UIScreen mainScreen] bounds];
-    self.addingIssueViewHeightConstraint.constant = screenRect.size.height;
+    self.addingIssueViewHeightConstraint.constant = screenRect.size.height - self.navigationController.navigationBar.frame.size.height - self.heightOfStatusBarInCurrentOrientation;
     
     self.tabBarController.delegate = self;
     [self hideTabBar];
@@ -862,6 +864,10 @@ static int const MARKER_HIDING_RADIUS = 10;
 {
     [super viewWillTransitionToSize:size withTransitionCoordinator:coordinator];
     self.scrollViewLeadingConstraint.constant = size.width;
+    if (size.width > size.height)
+        self.heightOfStatusBarInCurrentOrientation = 0;
+    else
+        self.heightOfStatusBarInCurrentOrientation = [UIApplication sharedApplication].statusBarFrame.size.height;
     
     [coordinator animateAlongsideTransition:^(id<UIViewControllerTransitionCoordinatorContext> context) {
         
@@ -960,11 +966,12 @@ static int const MARKER_HIDING_RADIUS = 10;
             }
             
             self.tapLocationLabel.numberOfLines = 5;
-            self.tapLocationLabel.lineBreakMode = NSLineBreakByCharWrapping;
+            self.tapLocationLabel.lineBreakMode = NSLineBreakByWordWrapping;
             self.tapLocationLabel.text = @"";
-            self.tapLocationLabel.text = [self.tapLocationLabel.text stringByAppendingFormat:@"Location of issue:\n%@, %@",
-                                          regionName,
-                                          streetName];
+            if (![streetName isEqual:@"Unnamed Road"])
+                self.tapLocationLabel.text = [self.tapLocationLabel.text stringByAppendingFormat:@"Location of issue:\n%@, %@", regionName, streetName];
+            else
+                self.tapLocationLabel.text = [self.tapLocationLabel.text stringByAppendingFormat:@"Location of issue:\n%@", regionName];
         } else {
             NSLog(@"No place details for %@", placeId);
         }
