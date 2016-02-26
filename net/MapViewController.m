@@ -46,6 +46,8 @@ static int const MARKER_HIDING_RADIUS = 10;
 @property (strong, nonatomic) NSMutableArray *arrayOfMarkers;
 @property (assign, nonatomic) BOOL isGeolocationButtonPressed;
 
+@property (strong, nonatomic) UIBarButtonItem *leftItem;
+
 @end
 
 @implementation MapViewController
@@ -63,6 +65,8 @@ static int const MARKER_HIDING_RADIUS = 10;
     self.navigationController.navigationBar.barTintColor = [UIColor bawlRedColor];
     self.navigationController.navigationBar.titleTextAttributes = @{NSForegroundColorAttributeName : [UIColor whiteColor]};
     self.navigationController.navigationBar.barStyle = UIBarStyleBlack;
+    self.navigationItem.leftBarButtonItem.title = @"Profile";
+    self.leftItem = self.navigationItem.leftBarButtonItem;
     [self checkCurrentUser];
 
     self.scrollViewLeadingConstraint.constant = CGRectGetWidth(self.mapView.bounds);
@@ -127,6 +131,10 @@ static int const MARKER_HIDING_RADIUS = 10;
     
     NSRunLoop *runner = [NSRunLoop currentRunLoop];
     [runner addTimer:self.timerForMapRenew forMode: NSDefaultRunLoopMode];
+    
+    if ([CurrentItems sharedItems].user)
+        self.navigationItem.leftBarButtonItem = self.leftItem;
+    else self.navigationItem.leftBarButtonItem = nil;
 }
 
 -(void)selectCurrentMarker
@@ -158,6 +166,7 @@ static int const MARKER_HIDING_RADIUS = 10;
     {
         self.title = [NSString stringWithFormat:@"Bawl"];
         self.navigationItem.rightBarButtonItem.title = @"Log In";
+        self.navigationItem.leftBarButtonItem = nil;
         self.userLogined=NO;
 
     }
@@ -166,6 +175,7 @@ static int const MARKER_HIDING_RADIUS = 10;
         self.title = [NSString stringWithFormat:@"Bawl(%@)", user.name];
         [self.tabBarController.tabBar.items objectAtIndex:0].title = @"Location";
         self.navigationItem.rightBarButtonItem.title = @"Sign Out";
+        self.navigationItem.leftBarButtonItem = self.leftItem;
         self.userLogined = YES;
     }
 }
@@ -188,6 +198,7 @@ static int const MARKER_HIDING_RADIUS = 10;
                 // alert - good
                 self.title = [NSString stringWithFormat:@"Bowl"];
                 self.navigationItem.rightBarButtonItem.title = @"Log In";
+                self.navigationItem.leftBarButtonItem = nil;
                 self.currentUser=nil;
                 [[NSUserDefaults standardUserDefaults] objectForKey:@"userDictionary"];
                 UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Log Out"
