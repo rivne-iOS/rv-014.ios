@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="9531" systemVersion="14F1509" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="U7z-LT-7dR">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="9531" systemVersion="14F27" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="U7z-LT-7dR">
     <dependencies>
         <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="9529"/>
@@ -257,7 +257,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="moO-sj-bko" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="981" y="-361.5"/>
+            <point key="canvasLocation" x="1086" y="-413"/>
         </scene>
         <!--new sign up-->
         <scene sceneID="JRA-cD-xgc">
@@ -478,7 +478,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="noz-iG-6Js" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1646" y="-361"/>
+            <point key="canvasLocation" x="1800" y="-413"/>
         </scene>
         <!--Map-->
         <scene sceneID="Ue2-xT-0yB">
@@ -710,6 +710,17 @@
                                                 <color key="textColor" red="1" green="0.14103584960000001" blue="0.2987094502" alpha="1" colorSpace="calibratedRGB"/>
                                                 <nil key="highlightedColor"/>
                                             </label>
+                                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="oxc-Sj-Imj">
+                                                <rect key="frame" x="417" y="384" width="45" height="276"/>
+                                                <constraints>
+                                                    <constraint firstAttribute="height" constant="45" id="PqW-Y1-LxL"/>
+                                                    <constraint firstAttribute="width" constant="45" id="f3g-zz-p2F"/>
+                                                </constraints>
+                                                <state key="normal" title="G" image="geolocation_button"/>
+                                                <connections>
+                                                    <action selector="buttonGeolocationPressed:" destination="exP-kZ-Qky" eventType="touchUpInside" id="GVK-zd-UpC"/>
+                                                </connections>
+                                            </button>
                                         </subviews>
                                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                         <constraints>
@@ -760,22 +771,10 @@
                                     <outlet property="delegate" destination="exP-kZ-Qky" id="PmD-gR-pg6"/>
                                 </connections>
                             </scrollView>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="oxc-Sj-Imj">
-                                <rect key="frame" x="417" y="383" width="45" height="276"/>
-                                <constraints>
-                                    <constraint firstAttribute="height" constant="45" id="PqW-Y1-LxL"/>
-                                    <constraint firstAttribute="width" constant="45" id="f3g-zz-p2F"/>
-                                </constraints>
-                                <state key="normal" title="G" image="geolocation_button"/>
-                                <connections>
-                                    <action selector="buttonGeolocationPressed:" destination="exP-kZ-Qky" eventType="touchUpInside" id="GVK-zd-UpC"/>
-                                </connections>
-                            </button>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <constraints>
                             <constraint firstItem="K9v-RP-I0I" firstAttribute="top" secondItem="BZy-CD-oPZ" secondAttribute="bottom" id="6R8-xS-6LD"/>
-                            <constraint firstAttribute="trailing" secondItem="oxc-Sj-Imj" secondAttribute="trailing" constant="15" id="APM-mH-2EM"/>
                             <constraint firstItem="mxJ-z8-iEP" firstAttribute="top" secondItem="K9v-RP-I0I" secondAttribute="bottom" id="Bcl-vw-67I"/>
                             <constraint firstItem="mxJ-z8-iEP" firstAttribute="top" secondItem="Mm0-xY-FEs" secondAttribute="bottom" id="Bcx-zv-ViQ"/>
                             <constraint firstItem="NYS-ZF-PWz" firstAttribute="top" secondItem="BZy-CD-oPZ" secondAttribute="bottom" id="BnB-ue-fyA"/>
@@ -788,7 +787,6 @@
                             <constraint firstAttribute="trailing" secondItem="Mm0-xY-FEs" secondAttribute="trailing" id="lsS-Ie-51J"/>
                             <constraint firstItem="Mm0-xY-FEs" firstAttribute="top" secondItem="BZy-CD-oPZ" secondAttribute="bottom" constant="400" id="rbj-wR-ZSE"/>
                             <constraint firstAttribute="trailingMargin" secondItem="K9v-RP-I0I" secondAttribute="trailing" constant="-20" id="u0F-bY-OK0"/>
-                            <constraint firstAttribute="bottomMargin" secondItem="oxc-Sj-Imj" secondAttribute="bottom" constant="15" id="uli-6T-43b"/>
                             <constraint firstItem="Yqo-zb-mFR" firstAttribute="width" secondItem="A24-z5-pzn" secondAttribute="width" id="vCV-EZ-nSn"/>
                             <constraint firstItem="vkK-dD-ver" firstAttribute="top" secondItem="BZy-CD-oPZ" secondAttribute="bottom" id="vFy-Qm-0HN"/>
                             <constraint firstItem="Mm0-xY-FEs" firstAttribute="leading" secondItem="A24-z5-pzn" secondAttribute="leading" id="ydW-Rj-uDQ"/>
@@ -825,7 +823,6 @@
                         <outlet property="descriptionButton" destination="KjE-Sg-4CH" id="UZT-4m-6Eu"/>
                         <outlet property="descriptionTextView" destination="Dor-qQ-OyS" id="DxR-fx-OM4"/>
                         <outlet property="geolocationButton" destination="oxc-Sj-Imj" id="5De-dN-SPA"/>
-                        <outlet property="geolocationButtonBottomConstraint" destination="uli-6T-43b" id="UuQ-TZ-VlS"/>
                         <outlet property="historyButton" destination="pYb-he-n0v" id="hYy-dP-LTL"/>
                         <outlet property="indicator" destination="nJs-Dt-hcU" id="yac-rI-QlN"/>
                         <outlet property="locationButton" destination="kLF-3I-Iln" id="5Wk-BZ-jwp"/>
@@ -957,7 +954,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="fzt-he-aEq" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="347" y="320"/>
+            <point key="canvasLocation" x="361" y="548"/>
         </scene>
         <!--Issue History View Controller-->
         <scene sceneID="deE-fx-zmW">
@@ -1239,24 +1236,6 @@
                 <placeholder placeholderIdentifier="IBFirstResponder" id="POH-CO-mfq" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="-363" y="1209"/>
-        </scene>
-        <!--View Controller-->
-        <scene sceneID="Yyu-Qx-hPo">
-            <objects>
-                <viewController id="Dq4-D1-w4y" sceneMemberID="viewController">
-                    <layoutGuides>
-                        <viewControllerLayoutGuide type="top" id="GaP-U1-CLc"/>
-                        <viewControllerLayoutGuide type="bottom" id="viY-MD-yab"/>
-                    </layoutGuides>
-                    <view key="view" contentMode="scaleToFill" id="4zY-qZ-3N5">
-                        <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
-                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                    </view>
-                </viewController>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="5eR-WP-vx4" userLabel="First Responder" sceneMemberID="firstResponder"/>
-            </objects>
-            <point key="canvasLocation" x="1008" y="320"/>
         </scene>
     </scenes>
     <resources>
