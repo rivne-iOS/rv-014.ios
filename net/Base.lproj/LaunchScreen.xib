@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="9531" systemVersion="14F27" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" launchScreen="YES" useTraitCollections="YES">
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="9529"/>
+        <capability name="Aspect ratio constraints" minToolsVersion="5.1"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <view contentMode="scaleToFill" id="iN0-l3-epB">
+            <rect key="frame" x="0.0" y="0.0" width="480" height="480"/>
+            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+            <subviews>
+                <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="launch_view" translatesAutoresizingMaskIntoConstraints="NO" id="OCc-W4-9ma">
+                    <rect key="frame" x="80" y="0.0" width="320" height="480"/>
+                    <constraints>
+                        <constraint firstAttribute="width" secondItem="OCc-W4-9ma" secondAttribute="height" multiplier="512:768" id="rKS-O2-N00"/>
+                    </constraints>
+                </imageView>
+            </subviews>
+            <color key="backgroundColor" red="0.9137254901960784" green="0.30980392156862746" blue="0.40784313725490196" alpha="1" colorSpace="calibratedRGB"/>
+            <constraints>
+                <constraint firstItem="OCc-W4-9ma" firstAttribute="top" secondItem="iN0-l3-epB" secondAttribute="top" id="1eg-iU-Dsw"/>
+                <constraint firstItem="OCc-W4-9ma" firstAttribute="leading" secondItem="iN0-l3-epB" secondAttribute="leading" id="aTW-Lk-egW"/>
+                <constraint firstAttribute="bottom" secondItem="OCc-W4-9ma" secondAttribute="bottom" id="osm-nQ-wfT"/>
+                <constraint firstItem="OCc-W4-9ma" firstAttribute="centerX" secondItem="iN0-l3-epB" secondAttribute="centerX" id="x99-PQ-ZOj"/>
+            </constraints>
+            <nil key="simulatedStatusBarMetrics"/>
+            <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
+            <variation key="default">
+                <mask key="constraints">
+                    <exclude reference="aTW-Lk-egW"/>
+                </mask>
+            </variation>
+            <point key="canvasLocation" x="548" y="455"/>
+        </view>
+    </objects>
+    <resources>
+        <image name="launch_view" width="512" height="768"/>
+    </resources>
+</document>
