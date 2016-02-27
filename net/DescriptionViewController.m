@@ -581,6 +581,16 @@
     [commentView2.trailingAnchor constraintEqualToAnchor:commentLabelMessage.trailingAnchor constant:8].active = YES;
 }
 
+-(void)commentAvatarTapped:(UIButton*)sender
+{
+}
+
+-(void)commentNameTapped:(UIButton*)sender
+{
+
+}
+
+
 -(void)commentMessageTapped:(UIButton*)sender
 {
     
