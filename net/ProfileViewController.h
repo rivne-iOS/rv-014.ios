@@ -22,7 +22,7 @@
 @property (nonatomic, weak) IBOutlet UIImageView *profileImage;
 @property (nonatomic, weak) IBOutlet UIActivityIndicatorView *activityIndicatorView;
 
-@property (nonatomic, weak) MapViewController *mapViewDelegate;
+// @property (nonatomic, weak) MapViewController *mapViewDelegate;
 @property NSUInteger userID;
 @property (strong, nonatomic) User *currentUser;
 @property (strong, nonatomic) id <DataSorceProtocol> dataSorce;

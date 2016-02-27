@@ -282,6 +282,14 @@
 				84378ACD1C75C3640063CC0F /* IssueCategories.m */,
 				84E2CF0F1C766E5C0032F444 /* Comment.h */,
 				84E2CF101C766E5C0032F444 /* Comment.m */,
+				CEF2B61B1C74761000F4B2F5 /* UIView+Addition.h */,
+				CEF2B61C1C74761000F4B2F5 /* UIView+Addition.m */,
+				CEF2B61E1C75D96700F4B2F5 /* UIViewController+backViewController.h */,
+				CEF2B61F1C75D96700F4B2F5 /* UIViewController+backViewController.m */,
+				CEF2B6211C771BAB00F4B2F5 /* NSString+stringIsEmpry.h */,
+				CEF2B6221C771BAB00F4B2F5 /* NSString+stringIsEmpry.m */,
+				CECCC9091C8058F800CD3228 /* NSMutableArray+isEmpty.h */,
+				CECCC90A1C8058F800CD3228 /* NSMutableArray+isEmpty.m */,
 			);
 			name = model;
 			sourceTree = "<group>";
@@ -485,9 +493,11 @@
 				84E7BF461C430AA600E66585 /* NetworkDataSorce.m in Sources */,
 				84378ACE1C75C3640063CC0F /* IssueCategories.m in Sources */,
 				84E2CF111C766E5C0032F444 /* Comment.m in Sources */,
+				CE8BAD001C6B39B4006951D7 /* ProfileViewController.m in Sources */,
 				84D93FC91C5A245800D4E96D /* IssueChangeStatus.m in Sources */,
 				84114C691C61503B0092F507 /* UIColor+Bawl.m in Sources */,
 				84E2CF141C7722230032F444 /* AvatarMaskView.m in Sources */,
+				CEF2B6201C75D96700F4B2F5 /* UIViewController+backViewController.m in Sources */,
 				8460F99F1C3C651500ECB3A4 /* HTTPConnector.m in Sources */,
 				841429551C5FEEDE0092C0C5 /* Reachability.m in Sources */,
 				8460F9731C3C531E00ECB3A4 /* AppDelegate.m in Sources */,

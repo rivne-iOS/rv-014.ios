@@ -109,7 +109,7 @@ static NSString * const kSimpleTableIdentifier = @"SampleTableCell";
     [self.issueTitle setText:self.issue.issueDescription];
     [self requestIssueHistory];
     [self.mapDelegate showTabBar];
-    self.tabBarController.tabBar.hidden = NO;
+//    self.tabBarController.tabBar.hidden = NO;
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
@@ -181,7 +181,7 @@ static NSString * const kSimpleTableIdentifier = @"SampleTableCell";
             profileViewController.userID = self.userID;
             profileViewController.isLogged = self.isLogged;
             profileViewController.dataSorce = self.dataSorce;
-            profileViewController.mapViewDelegate = self.mapDelegate;
+//            profileViewController.mapViewDelegate = self.mapDelegate;
         }
     }
 }

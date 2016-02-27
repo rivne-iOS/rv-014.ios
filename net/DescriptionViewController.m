@@ -16,6 +16,7 @@
 #import "AvatarView.h"
 #import "Comment.h"
 #import "CommentBox.h"
+#import "ProfileViewController.h"
 
 
 
@@ -58,6 +59,8 @@
 @property(strong, nonatomic) UIView *addCommentDynamicGreyView;
 @property(strong, nonatomic) UIButton *addCommentDynamicButton;
 
+
+@property(strong, nonatomic)NSNumber *callingSegueToProfileUserId;
 @end
 
 @implementation DescriptionViewController
@@ -483,6 +486,7 @@
     //button Avatar
     buttonAvatar.translatesAutoresizingMaskIntoConstraints = NO;
     buttonAvatar.restorationIdentifier = @"buttonAvatarImageView";
+    buttonAvatar.tag = index;
     box.buttonImage = buttonAvatar;
     [buttonAvatar addTarget:self action:@selector(commentAvatarTapped:) forControlEvents:UIControlEventTouchUpInside];
     
@@ -494,6 +498,11 @@
     
     //comment init with image View
     Comment *comment = [[Comment alloc] initWithCommentDictionary:commentDic andAllUsersDictionaries:allUsersDictionaries andUIImageView:(UIImageView*)avatar];
+    
+    // id
+    box.userID = comment.userId;
+    box.issueID = [CurrentItems sharedItems].issue.issueId;
+    
     
     // Name label
     commentLabelName.translatesAutoresizingMaskIntoConstraints = NO;
@@ -522,6 +531,7 @@
     // Name button
     buttonCommentName.translatesAutoresizingMaskIntoConstraints = NO;
     buttonCommentName.restorationIdentifier = @"commentNameButton";
+    buttonCommentName.tag = index;
     box.buttonName = buttonCommentName;
     [buttonCommentName addTarget:self action:@selector(commentNameTapped:) forControlEvents:UIControlEventTouchUpInside];
     
@@ -583,11 +593,33 @@
 
 -(void)commentAvatarTapped:(UIButton*)sender
 {
+    [self callSegueToProfileWitTappedButton:sender];
 }
 
 -(void)commentNameTapped:(UIButton*)sender
 {
+    [self callSegueToProfileWitTappedButton:sender];
+}
 
+-(void)callSegueToProfileWitTappedButton:(UIButton*) sender
+{
+    NSInteger index = sender.tag;
+    CommentBox *box = self.commentBoxArr[index];
+    self.callingSegueToProfileUserId = box.userID;
+    [self performSegueWithIdentifier:@"fromDescriptionToProfile" sender:self];
+}
+
+-(void) prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
+    if ([[segue identifier] isEqualToString:@"fromDescriptionToProfile"]) {
+        if([segue.destinationViewController isKindOfClass:[ProfileViewController class]])
+        {
+            ProfileViewController *profileViewController = (ProfileViewController*)segue.destinationViewController;
+            profileViewController.userID = self.callingSegueToProfileUserId.integerValue;
+            profileViewController.isLogged = ([CurrentItems sharedItems].user != nil);
+            profileViewController.dataSorce = self.dataSorce;
+            //            profileViewController.mapViewDelegate = self.mapDelegate;
+        }
+    }
 }
 
 

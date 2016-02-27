@@ -17,6 +17,7 @@
 #import "IssueHistoryViewController.h"
 #import "NSString+stringIsEmpry.h"
 #import "User.h"
+#import "DescriptionViewController.h"
 
 static NSString const * const AVATAR_NO_IMAGE = @"no_avatar.png";
 static NSString const * const DOMAIN_CHANGE_USER_DETAILS = @"https://bawl-rivne.rhcloud.com/users/";
@@ -67,7 +68,8 @@ static NSInteger const HTTP_RESPONSE_CODE_OK = 200;
     self.activityIndicatorView.hidden = NO;
     [self.activityIndicatorView startAnimating];
     
-    if ([[self backViewController] isKindOfClass:[IssueHistoryViewController class]]) {
+    if ([[self backViewController] isKindOfClass:[IssueHistoryViewController class]] ||
+        [[self backViewController] isKindOfClass:[DescriptionViewController class]]) {
     
         if ([CurrentItems sharedItems].user && (self.userID == [CurrentItems sharedItems].user.userId)) {
             [self setUserProfileDetails:[CurrentItems sharedItems].user isLoggedUser:YES];
@@ -92,7 +94,7 @@ static NSInteger const HTTP_RESPONSE_CODE_OK = 200;
         [self revealAllViews];
     }
     
-    [self.mapViewDelegate hideTabBar];
+//    [self.mapViewDelegate hideTabBar];
     self.tabBarController.tabBar.hidden = YES;
     
     self.profileImage.layer.cornerRadius = self.profileImage.frame.size.width / 2.0f;
@@ -100,10 +102,12 @@ static NSInteger const HTTP_RESPONSE_CODE_OK = 200;
     
 }
 
-- (void)didReceiveMemoryWarning {
-    [super didReceiveMemoryWarning];
-    // Dispose of any resources that can be recreated.
+-(void)viewWillDisappear:(BOOL)animated
+{
+    if([CurrentItems sharedItems].issue != nil)
+        self.tabBarController.tabBar.hidden = NO;
 }
+
 
 - (void) setUserProfileDetails: (User *)user isLoggedUser:(BOOL) isLoggedUser{
     
@@ -153,7 +157,8 @@ static NSInteger const HTTP_RESPONSE_CODE_OK = 200;
         [self.labelSystemRole setHidden:NO];
         [self.systemRole setHidden:NO];
         
-        if ([[self backViewController] isKindOfClass:[IssueHistoryViewController class]]) {
+        if ([[self backViewController] isKindOfClass:[IssueHistoryViewController class]] ||
+            [[self backViewController] isKindOfClass:[DescriptionViewController class]]) {
             if (self.userID == [CurrentItems sharedItems].user.userId) {
                 [self.changeUserDetails setHidden:NO];
                 [self.changeAvatar setHidden:NO];

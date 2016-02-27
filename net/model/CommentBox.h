@@ -12,6 +12,10 @@
 
 @interface CommentBox : NSObject
 
+
+@property(strong, nonatomic)NSNumber *userID;
+@property(nonatomic)NSNumber *issueID;
+
 @property(strong, nonatomic) UIView *commentView;
 @property(strong, nonatomic) UIView *commentView2;
 @property(strong, nonatomic) UILabel *commentLabelName;

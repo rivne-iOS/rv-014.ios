@@ -1104,11 +1104,12 @@
                         <outletCollection property="constraintsVertical" destination="mVu-Qw-9tG" id="wXH-hN-HaL"/>
                         <outletCollection property="constraintsVertical" destination="ULr-xV-Ott" id="ia8-0c-7IM"/>
                         <outletCollection property="constraintsVertical" destination="dZI-VR-Pa5" id="XfO-yH-8hc"/>
+                        <segue destination="7ZL-qH-qc6" kind="show" identifier="fromDescriptionToProfile" id="375-AO-ajD"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="fzt-he-aEq" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="334" y="390"/>
+            <point key="canvasLocation" x="328" y="382"/>
         </scene>
         <!--Issue History View Controller-->
         <scene sceneID="deE-fx-zmW">
@@ -1149,7 +1150,7 @@
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="wkA-eu-Srp" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="334" y="1231"/>
+            <point key="canvasLocation" x="449" y="1209"/>
         </scene>
         <!--Profile-->
         <scene sceneID="kBc-FR-lwf">
@@ -1166,13 +1167,6 @@
                             <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="ibI-TV-PAc">
                                 <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
                                 <subviews>
-                                    <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="lVY-SF-ay3">
-                                        <rect key="frame" x="230" y="20" width="140" height="140"/>
-                                        <constraints>
-                                            <constraint firstAttribute="height" constant="140" id="4q8-tH-LyT"/>
-                                            <constraint firstAttribute="width" constant="140" id="SST-yP-5sn"/>
-                                        </constraints>
-                                    </imageView>
                                     <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" enabled="NO" contentHorizontalAlignment="left" contentVerticalAlignment="center" text="Kris Evans" textAlignment="center" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="Cvb-45-iu3">
                                         <rect key="frame" x="20" y="180" width="560" height="24"/>
                                         <color key="textColor" red="0.83529411764705885" green="0.22352941176470589" blue="0.3411764705882353" alpha="1" colorSpace="calibratedRGB"/>
@@ -1283,6 +1277,13 @@
                                             <constraint firstAttribute="width" constant="140" id="kae-c7-g7w"/>
                                         </constraints>
                                     </progressView>
+                                    <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="lVY-SF-ay3">
+                                        <rect key="frame" x="230" y="22" width="140" height="140"/>
+                                        <constraints>
+                                            <constraint firstAttribute="height" constant="140" id="4q8-tH-LyT"/>
+                                            <constraint firstAttribute="width" constant="140" id="SST-yP-5sn"/>
+                                        </constraints>
+                                    </imageView>
                                 </subviews>
                                 <constraints>
                                     <constraint firstItem="fi2-2A-bD9" firstAttribute="top" secondItem="lVY-SF-ay3" secondAttribute="bottom" constant="10" id="0Vv-Fa-rAw"/>
@@ -1330,7 +1331,6 @@
                         <barButtonItem key="rightBarButtonItem" title="Item" id="Bqf-Ox-f82">
                             <connections>
                                 <action selector="sequeToLogInButton:" destination="7ZL-qH-qc6" id="TNT-FL-vja"/>
-                                <segue destination="Wyx-PR-bqC" kind="show" identifier="fromProfileToLogIn" id="TLl-qh-wdc"/>
                             </connections>
                         </barButtonItem>
                     </navigationItem>
@@ -1347,11 +1347,12 @@
                         <outlet property="userEmail" destination="7qw-nW-dNb" id="nri-nj-CZa"/>
                         <outlet property="userLogin" destination="sJA-Js-PEb" id="cgI-fs-rd5"/>
                         <outlet property="userName" destination="Cvb-45-iu3" id="fXs-9L-LPW"/>
+                        <segue destination="Wyx-PR-bqC" kind="show" identifier="fromProfileToLogIn" id="IRB-9q-JHA"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Wbz-p1-FN3" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1128" y="1209"/>
+            <point key="canvasLocation" x="1116" y="418"/>
         </scene>
         <!--description-->
         <scene sceneID="94d-3r-Fnu">
@@ -1397,6 +1398,7 @@
         <image name="comment" width="16" height="13"/>
         <image name="description_disabled" width="57" height="42"/>
         <image name="galka" width="20" height="16"/>
+        <image name="geolocation_button" width="276" height="276"/>
         <image name="history_disabled" width="50" height="43"/>
         <image name="location_enabled" width="48" height="45"/>
         <image name="more" width="43" height="34"/>
