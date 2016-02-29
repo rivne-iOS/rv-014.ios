@@ -17,7 +17,6 @@
 @property(nonatomic)NSNumber *issueID;
 
 @property(strong, nonatomic) UIView *commentView;
-@property(strong, nonatomic) UIView *commentView2;
 @property(strong, nonatomic) UILabel *commentLabelName;
 @property(strong, nonatomic) UILabel *commentLabelMessage;
 @property(strong, nonatomic) AvatarView *avatar;
@@ -26,22 +25,17 @@
 @property(strong, nonatomic) UIButton *buttonMessage;
 @property(strong, nonatomic) UIButton *buttonImage;
 
-@property(strong, nonatomic) NSMutableArray <NSLayoutConstraint*> *messageConstraints;
-@property(strong, nonatomic) NSMutableArray <NSLayoutConstraint*> *messageConstraintsBig;
-
-@property(strong, nonatomic) NSMutableArray <NSLayoutConstraint*> *nameConstraints;
-@property(strong, nonatomic) NSMutableArray <NSLayoutConstraint*> *nameConstraintsBig;
-
-@property(strong, nonatomic) NSMutableArray <NSLayoutConstraint*> *avatarConstraints;
-@property(strong, nonatomic) NSMutableArray <NSLayoutConstraint*> *avatarConstraintsBig;
+@property(strong, nonatomic) NSLayoutConstraint *commentMessageHeightConstraint;
 
 @property(nonatomic)BOOL isBig;
+@property(nonatomic)BOOL isNeedResize;
+@property(nonatomic)CGFloat messageBigHeight;
+@property(nonatomic)CGFloat messageSmallHeight;
 
 @property(nonatomic)CGFloat firstZPos;
 @property(nonatomic)CGFloat lastZPos;
 
 -(instancetype)initWithView:(UIView*)view
-                   andView2:(UIView*)view2
                 andUserName:(UILabel*)name
                 andButtonName:(UIButton*)buttonName
              andUserMessage:(UILabel*)message
