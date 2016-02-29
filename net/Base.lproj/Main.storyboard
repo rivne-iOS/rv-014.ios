@@ -825,6 +825,7 @@
                         <outlet property="descriptionButton" destination="KjE-Sg-4CH" id="UZT-4m-6Eu"/>
                         <outlet property="descriptionTextView" destination="Dor-qQ-OyS" id="DxR-fx-OM4"/>
                         <outlet property="geolocationButton" destination="oxc-Sj-Imj" id="5De-dN-SPA"/>
+                        <outlet property="geolocationButtonBottomConstraint" destination="sj2-or-008" id="swj-uN-6VP"/>
                         <outlet property="historyButton" destination="pYb-he-n0v" id="hYy-dP-LTL"/>
                         <outlet property="indicator" destination="nJs-Dt-hcU" id="yac-rI-QlN"/>
                         <outlet property="locationButton" destination="kLF-3I-Iln" id="5Wk-BZ-jwp"/>
@@ -833,6 +834,7 @@
                         <outlet property="moreButton" destination="bEb-G0-MTV" id="3Cn-PF-ZMg"/>
                         <outlet property="nameTextField" destination="Yfl-g3-YHX" id="AUB-3V-NH1"/>
                         <outlet property="scrollView" destination="NYS-ZF-PWz" id="u3t-hy-KAG"/>
+                        <outlet property="scrollViewBottomConstraint" destination="epB-wT-ePI" id="prw-ER-fTf"/>
                         <outlet property="scrollViewLeadingConstraint" destination="VMc-ez-U8k" id="5Dw-9c-Zc8"/>
                         <outlet property="tapLocationLabel" destination="Seo-CW-BkQ" id="UiV-1T-hnw"/>
                         <segue destination="Wyx-PR-bqC" kind="show" identifier="fromMapToLogIn" id="JER-bu-PYI"/>
@@ -1410,6 +1412,6 @@
     </resources>
     <inferredMetricsTieBreakers>
         <segue reference="JER-bu-PYI"/>
-        <segue reference="375-AO-ajD"/>
+        <segue reference="asR-3F-p9I"/>
     </inferredMetricsTieBreakers>
 </document>
