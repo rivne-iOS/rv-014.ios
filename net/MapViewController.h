@@ -26,6 +26,7 @@
 @property (weak, nonatomic) IBOutlet NSLayoutConstraint *addingIssueViewHeightConstraint;
 @property (weak, nonatomic) IBOutlet NSLayoutConstraint *geolocationButtonBottomConstraint;
 @property (weak, nonatomic) IBOutlet NSLayoutConstraint *scrollViewBottomConstraint;
+@property (weak, nonatomic) IBOutlet NSLayoutConstraint *buttonAddBottomConstraint;
 
 @property (weak, nonatomic) IBOutlet UILabel *tapLocationLabel;
 @property (strong, nonatomic) NSMutableArray *categoryClassArray;

@@ -1056,10 +1056,26 @@ static int const MARKER_HIDING_RADIUS = 10;
                 self.tapLocationLabel.text = [self.tapLocationLabel.text stringByAppendingFormat:@"Location of issue:\n%@, %@", regionName, streetName];
             else
                 self.tapLocationLabel.text = [self.tapLocationLabel.text stringByAppendingFormat:@"Location of issue:\n%@", regionName];
+            [self fixDescriptionTextViewHeight];
         } else {
             NSLog(@"No place details for %@", placeId);
         }
     }];
+}
+
+-(void)fixDescriptionTextViewHeight
+{
+    [self.view layoutIfNeeded];
+    [self.addingIssueView addConstraint:[NSLayoutConstraint constraintWithItem:self.descriptionTextView
+                                                                     attribute:NSLayoutAttributeHeight
+                                                                     relatedBy:NSLayoutRelationEqual
+                                                                        toItem:nil
+                                                                     attribute:NSLayoutAttributeNotAnAttribute
+                                                                    multiplier:1.0
+                                                                      constant:self.descriptionTextView.frame.size.height]];
+    
+    [self.addingIssueView removeConstraint:self.buttonAddBottomConstraint];
+    [self.view layoutIfNeeded];
 }
 
 -(void)customizeGeolocationButton
