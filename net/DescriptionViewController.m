@@ -273,11 +273,11 @@
     CGRect viewFrame = [self.view convertRect:frame fromView:nil];
     CGFloat keyboardHeight = viewFrame.size.height;
     
-    CGFloat textFieldHeight = 60;
+    CGFloat textFieldHeight = 30;
     CGFloat tabBarHeight = self.tabBarController.tabBar.frame.size.height;
     CGSize buttonTittleSize = [buttonTitle sizeWithAttributes:@{NSFontAttributeName : addCommentButton.titleLabel.font}];
     
-    self.addCommentDynamicTextView.layer.cornerRadius = self.addCommentDynamicTextView.frame.size.height / 4;
+    self.addCommentDynamicTextView.layer.cornerRadius = 4;
     
     [self scrollBottomConstraint].constant = keyboardHeight + textFieldHeight - tabBarHeight;
     [self.view layoutIfNeeded];
@@ -425,7 +425,6 @@
 {
     CommentBox *box = [[CommentBox alloc] init];
     UIView *commentView = [[UIView alloc] init];
-    UIView *commentView2 = [[UIView alloc] init];
     AvatarView *avatar = [[AvatarView alloc] init];
     UIButton *buttonAvatar = [[UIButton alloc] init];
     UILabel *commentLabelName = [[UILabel alloc] init];
@@ -436,140 +435,64 @@
     [self.commentBoxArr addObject:box];
     
     box.isBig = NO;
+
     //commentView
     commentView.translatesAutoresizingMaskIntoConstraints = NO;
     commentView.restorationIdentifier = @"commentView";
     box.commentView = commentView;
     
     [self.contentView addSubview:commentView];
-    box.firstZPos = commentView.layer.zPosition;
-    [commentView.topAnchor constraintEqualToAnchor:self.viewToConnectDynamicItems.bottomAnchor].active = YES;
-    [commentView.leadingAnchor constraintEqualToAnchor:self.contentView.leadingAnchor constant:8].active = YES;
-    [commentView.heightAnchor constraintEqualToConstant:self.avatarSize+10].active = YES;
-    [commentView.trailingAnchor constraintEqualToAnchor:self.contentView.trailingAnchor constant:-8].active = YES;
-    self.viewToConnectDynamicItems = commentView;
     self.contentDynamicHeight += self.avatarSize+10;
-    
-    //commentView2
-    commentView2.hidden = YES;
-    commentView2.alpha = 0;
-    commentView2.translatesAutoresizingMaskIntoConstraints = NO;
-    commentView2.backgroundColor = [UIColor whiteColor];
-    commentView2.layer.borderColor = [[[UIColor blackColor] colorWithAlphaComponent:0.4] CGColor];
-    commentView2.layer.borderWidth = 1;
-    box.commentView2 = commentView2;
-    
-    [self.contentView addSubview:commentView2];
-    
+    box.firstZPos = commentView.layer.zPosition;
+
     //Avatar
     avatar.translatesAutoresizingMaskIntoConstraints = NO;
     avatar.restorationIdentifier = @"AvatarImageView";
-    //               avatar.backgroundColor = [UIColor yellowColor];
     box.avatar = avatar;
-    
     [self.contentView addSubview:avatar];
-    [avatar.widthAnchor constraintEqualToConstant:self.avatarSize].active = YES;
-    [avatar.heightAnchor constraintEqualToConstant:self.avatarSize].active = YES;
     
-    NSMutableArray <NSLayoutConstraint*> *avatarConstraints = [[NSMutableArray alloc] init];
-    [avatarConstraints addObject:[avatar.leadingAnchor constraintEqualToAnchor:commentView.leadingAnchor]];
-    [avatarConstraints addObject:[avatar.centerYAnchor constraintEqualToAnchor:commentView.centerYAnchor]];
-    for (NSLayoutConstraint *con in avatarConstraints)
-        con.active=YES;
-    box.avatarConstraints = avatarConstraints;
-    
-    NSMutableArray <NSLayoutConstraint*> *avatarConstraintsBig = [[NSMutableArray alloc] init];
-    [avatarConstraintsBig addObject:[avatar.bottomAnchor constraintEqualToAnchor:commentLabelMessage.topAnchor constant:-8]];
-    [avatarConstraintsBig addObject:[avatar.leadingAnchor constraintEqualToAnchor:commentLabelMessage.leadingAnchor]];
-    box.avatarConstraintsBig = avatarConstraintsBig;
-    
+    //comment init with image View
+    Comment *comment = [[Comment alloc] initWithCommentDictionary:commentDic andAllUsersDictionaries:allUsersDictionaries andUIImageView:(UIImageView*)avatar];
+
+    // id
+    box.userID = comment.userId;
+    box.issueID = [CurrentItems sharedItems].issue.issueId;
+
     //button Avatar
     buttonAvatar.translatesAutoresizingMaskIntoConstraints = NO;
     buttonAvatar.restorationIdentifier = @"buttonAvatarImageView";
     buttonAvatar.tag = index;
     box.buttonImage = buttonAvatar;
     [buttonAvatar addTarget:self action:@selector(commentAvatarTapped:) forControlEvents:UIControlEventTouchUpInside];
-    
     [self.contentView addSubview:buttonAvatar];
-    [buttonAvatar.topAnchor constraintEqualToAnchor:avatar.topAnchor].active=YES;
-    [buttonAvatar.bottomAnchor constraintEqualToAnchor:avatar.bottomAnchor].active=YES;
-    [buttonAvatar.leadingAnchor constraintEqualToAnchor:avatar.leadingAnchor].active=YES;
-    [buttonAvatar.trailingAnchor constraintEqualToAnchor:avatar.trailingAnchor].active=YES;
-    
-    //comment init with image View
-    Comment *comment = [[Comment alloc] initWithCommentDictionary:commentDic andAllUsersDictionaries:allUsersDictionaries andUIImageView:(UIImageView*)avatar];
-    
-    // id
-    box.userID = comment.userId;
-    box.issueID = [CurrentItems sharedItems].issue.issueId;
-    
     
     // Name label
     commentLabelName.translatesAutoresizingMaskIntoConstraints = NO;
     commentLabelName.restorationIdentifier = @"commentNameLabel";
     commentLabelName.text = comment.userName;
-    //               commentLabelName.backgroundColor = [UIColor yellowColor];
     box.commentLabelName = commentLabelName;
-    
     [self.contentView addSubview:commentLabelName];
-    
-    
-    NSMutableArray <NSLayoutConstraint*> *nameConstraints = [[NSMutableArray alloc] init];
-    [nameConstraints addObject:[commentLabelName.topAnchor constraintEqualToAnchor:avatar.topAnchor]];
-    [nameConstraints addObject:[commentLabelName.leadingAnchor constraintEqualToAnchor:avatar.trailingAnchor constant:5]];
-    [nameConstraints addObject:[commentLabelName.trailingAnchor constraintEqualToAnchor:commentView.trailingAnchor]];
-    for(NSLayoutConstraint *con in nameConstraints)
-        con.active = YES;
-    box.nameConstraints = nameConstraints;
-    
-    NSMutableArray <NSLayoutConstraint*> *nameConstraintsBig = [[NSMutableArray alloc] init];
-    [nameConstraintsBig addObject:[commentLabelName.centerYAnchor constraintEqualToAnchor:avatar.centerYAnchor]];
-    [nameConstraintsBig addObject:[commentLabelName.leadingAnchor constraintEqualToAnchor:avatar.trailingAnchor constant:20]];
-    [nameConstraintsBig addObject:[commentLabelName.trailingAnchor constraintEqualToAnchor:commentLabelMessage.trailingAnchor]];
-    box.nameConstraintsBig = nameConstraintsBig;
-    
+
     // Name button
     buttonCommentName.translatesAutoresizingMaskIntoConstraints = NO;
     buttonCommentName.restorationIdentifier = @"commentNameButton";
     buttonCommentName.tag = index;
     box.buttonName = buttonCommentName;
     [buttonCommentName addTarget:self action:@selector(commentNameTapped:) forControlEvents:UIControlEventTouchUpInside];
-    
     [self.contentView addSubview:buttonCommentName];
-    [buttonCommentName.topAnchor constraintEqualToAnchor:commentLabelName.topAnchor].active=YES;
-    [buttonCommentName.bottomAnchor constraintEqualToAnchor:commentLabelName.bottomAnchor].active=YES;
-    [buttonCommentName.leadingAnchor constraintEqualToAnchor:commentLabelName.leadingAnchor].active=YES;
-    [buttonCommentName.trailingAnchor constraintEqualToAnchor:commentLabelName.trailingAnchor].active=YES;
-    
+
     // Message label
     commentLabelMessage.translatesAutoresizingMaskIntoConstraints = NO;
     commentLabelMessage.restorationIdentifier = @"commentMessageLabel";
     commentLabelMessage.text = comment.userMessage;
     commentLabelMessage.numberOfLines = 0;
-    //               commentLabelMessage.backgroundColor = [UIColor yellowColor];
     UIFont *oldFont = commentLabelMessage.font;
     commentLabelMessage.font = [UIFont fontWithName:oldFont.fontName size:oldFont.pointSize-5];
     [commentLabelMessage sizeToFit];
     commentLabelMessage.userInteractionEnabled = NO;
     box.commentLabelMessage = commentLabelMessage;
-    
     [self.contentView addSubview:commentLabelMessage];
-    
-    box.messageConstraints = [[NSMutableArray alloc] init];
-    [box.messageConstraints addObject:[commentLabelMessage.leadingAnchor constraintEqualToAnchor:avatar.trailingAnchor constant:5]];
-    [box.messageConstraints addObject:[commentLabelMessage.topAnchor constraintEqualToAnchor:commentLabelName.bottomAnchor]];
-    [box.messageConstraints addObject:[commentLabelMessage.trailingAnchor constraintEqualToAnchor:commentView.trailingAnchor]];
-    [box.messageConstraints addObject:[commentLabelMessage.bottomAnchor constraintEqualToAnchor:avatar.bottomAnchor]];
-    for (NSLayoutConstraint *con in box.messageConstraints)
-        con.active = YES;
-    
-    box.messageConstraintsBig = [[NSMutableArray alloc] init];
-    [box.messageConstraintsBig addObject:[commentLabelMessage.topAnchor constraintEqualToAnchor:self.contentView.topAnchor constant:0]];
-    [box.messageConstraintsBig addObject:[commentLabelMessage.leadingAnchor constraintEqualToAnchor:self.contentView.leadingAnchor constant:60]];
-    [box.messageConstraintsBig addObject:[commentLabelMessage.trailingAnchor constraintEqualToAnchor:self.contentView.trailingAnchor constant:-60]];
-    
-    
-    
+
     // Message button
     buttonCommentMessage.translatesAutoresizingMaskIntoConstraints = NO;
     buttonCommentMessage.restorationIdentifier = @"commentMessageButton";
@@ -579,16 +502,85 @@
     
     [self.contentView addSubview:buttonCommentMessage];
     box.lastZPos = buttonCommentMessage.layer.zPosition;
+
+    
+    CGFloat avatarLeadingOffset = 4;
+    CGFloat avatarAndNameTopOffset = 5;
+    CGFloat nameAndMessageLeadingOffset = 4;
+    CGFloat messageTrailingOffset = 4;
+    CGFloat messageBottomOffset = 5;
+    CGFloat commentViewOffset = 8;
+    CGFloat messageAndNameLabelWidth = self.contentView.frame.size.width
+                                        - commentViewOffset*2
+                                        - avatarLeadingOffset
+                                        - self.avatarSize
+                                        - nameAndMessageLeadingOffset
+                                        - messageTrailingOffset;
+    
+    
+    
+    CGRect nameLabelRect = [commentLabelName.text boundingRectWithSize:CGSizeMake(messageAndNameLabelWidth, MAXFLOAT)
+                                                                options:NSStringDrawingUsesLineFragmentOrigin
+                                                             attributes:@{NSFontAttributeName : commentLabelName.font}
+                                                                context:nil];
+    CGFloat nameLabelHeight = nameLabelRect.size.height;
+    
+    
+    CGRect messageLabelRect =  [commentLabelMessage.text boundingRectWithSize:CGSizeMake(messageAndNameLabelWidth, MAXFLOAT)
+                                                                      options:NSStringDrawingUsesLineFragmentOrigin
+                                                                   attributes:@{NSFontAttributeName : commentLabelMessage.font}
+                                                                      context:nil];
+    CGFloat messageLabelHeight = messageLabelRect.size.height;
+    
+    box.messageSmallHeight = self.avatarSize - nameLabelHeight;
+    if (messageLabelHeight > self.avatarSize - nameLabelHeight)
+    {
+        box.isNeedResize = YES;
+        box.isBig = NO;
+        box.messageBigHeight = messageLabelHeight;
+    }
+    else
+    {
+        box.isNeedResize = NO;
+    }
+    
+    [commentView.topAnchor constraintEqualToAnchor:self.viewToConnectDynamicItems.bottomAnchor].active = YES;
+    self.viewToConnectDynamicItems = commentView;
+    [commentView.leadingAnchor constraintEqualToAnchor:self.contentView.leadingAnchor constant:commentViewOffset].active = YES;
+    [commentView.trailingAnchor constraintEqualToAnchor:self.contentView.trailingAnchor constant:-commentViewOffset].active = YES;
+    [commentView.bottomAnchor constraintEqualToAnchor:commentLabelMessage.bottomAnchor constant:messageBottomOffset].active = YES;
+    
+    [avatar.widthAnchor constraintEqualToConstant:self.avatarSize].active = YES;
+    [avatar.heightAnchor constraintEqualToConstant:self.avatarSize].active = YES;
+    [avatar.leadingAnchor constraintEqualToAnchor:commentView.leadingAnchor].active = YES;
+    [avatar.topAnchor constraintEqualToAnchor:commentView.topAnchor constant:avatarAndNameTopOffset].active = YES;
+    
+    [buttonAvatar.topAnchor constraintEqualToAnchor:avatar.topAnchor].active=YES;
+    [buttonAvatar.bottomAnchor constraintEqualToAnchor:avatar.bottomAnchor].active=YES;
+    [buttonAvatar.leadingAnchor constraintEqualToAnchor:avatar.leadingAnchor].active=YES;
+    [buttonAvatar.trailingAnchor constraintEqualToAnchor:avatar.trailingAnchor].active=YES;
+    
+    [commentLabelName.topAnchor constraintEqualToAnchor:avatar.topAnchor].active=YES;
+    [commentLabelName.leadingAnchor constraintEqualToAnchor:avatar.trailingAnchor constant:nameAndMessageLeadingOffset].active = YES;
+    [commentLabelName.trailingAnchor constraintEqualToAnchor:commentView.trailingAnchor].active = YES;
+    [commentLabelName.heightAnchor constraintEqualToConstant:nameLabelHeight].active = YES;
+    
+    [buttonCommentName.topAnchor constraintEqualToAnchor:commentLabelName.topAnchor].active=YES;
+    [buttonCommentName.leadingAnchor constraintEqualToAnchor:commentLabelName.leadingAnchor].active=YES;
+    [buttonCommentName.trailingAnchor constraintEqualToAnchor:commentLabelName.trailingAnchor].active=YES;
+    
+    
+    [commentLabelMessage.leadingAnchor constraintEqualToAnchor:avatar.trailingAnchor constant:nameAndMessageLeadingOffset].active = YES;
+    [commentLabelMessage.topAnchor constraintEqualToAnchor:commentLabelName.bottomAnchor].active = YES;
+    [commentLabelMessage.widthAnchor constraintEqualToConstant:messageAndNameLabelWidth].active=YES;
+    box.commentMessageHeightConstraint = [commentLabelMessage.heightAnchor constraintEqualToConstant:self.avatarSize - nameLabelHeight];
+    box.commentMessageHeightConstraint.active = YES;
+    
     [buttonCommentMessage.topAnchor constraintEqualToAnchor:commentLabelMessage.topAnchor].active=YES;
     [buttonCommentMessage.bottomAnchor constraintEqualToAnchor:commentLabelMessage.bottomAnchor].active=YES;
     [buttonCommentMessage.leadingAnchor constraintEqualToAnchor:commentLabelMessage.leadingAnchor].active=YES;
     [buttonCommentMessage.trailingAnchor constraintEqualToAnchor:commentLabelMessage.trailingAnchor].active=YES;
     
-    //commentView2 constrains
-    [commentView2.topAnchor constraintEqualToAnchor:avatar.topAnchor constant:-8].active = YES;
-    [commentView2.leadingAnchor constraintEqualToAnchor:avatar.leadingAnchor constant:-8].active = YES;
-    [commentView2.bottomAnchor constraintEqualToAnchor:commentLabelMessage.bottomAnchor constant:8].active = YES;
-    [commentView2.trailingAnchor constraintEqualToAnchor:commentLabelMessage.trailingAnchor constant:8].active = YES;
 }
 
 -(void)commentAvatarTapped:(UIButton*)sender
@@ -617,7 +609,6 @@
             profileViewController.userID = self.callingSegueToProfileUserId.integerValue;
             profileViewController.isLogged = ([CurrentItems sharedItems].user != nil);
             profileViewController.dataSorce = self.dataSorce;
-            //            profileViewController.mapViewDelegate = self.mapDelegate;
         }
     }
 }
@@ -625,73 +616,37 @@
 
 -(void)commentMessageTapped:(UIButton*)sender
 {
-    
     NSInteger index = sender.tag;
     CommentBox *box = self.commentBoxArr[index];
 
-    CGFloat screenHeight = self.ScrollView.frame.size.height;
-    CGPoint scrollOffset = self.ScrollView.contentOffset;
-    box.messageConstraintsBig.firstObject.constant = screenHeight / 2 + scrollOffset.y - box.commentLabelMessage.frame.size.height /2;
     
-    box.isBig = !box.isBig;
+    if (box.isNeedResize==NO)
+        return;
+    
+   box.isBig = !box.isBig;
     
     __weak DescriptionViewController *weakSelf = self;
     if(box.isBig==YES)
     {
-        box.commentView2.hidden = NO;
-        [box takeElementsToTop];
+        CGFloat newContentViewHeightConstraint = self.contentViewHeightConstraint.constant - box.messageSmallHeight + box.messageBigHeight;
+        
         [UIView animateWithDuration:0.2 animations:^{
-            [weakSelf commentBoxFirstConstraintsSwitchwithButton:sender];
-            [weakSelf commentBoxSecondConstraintswitchwithButton:sender];
+            box.commentMessageHeightConstraint.constant = box.messageBigHeight;
+            weakSelf.contentViewHeightConstraint.constant = newContentViewHeightConstraint;
             [weakSelf.contentView layoutIfNeeded];
-            box.commentView2.alpha=1;
-            
         }];
     }
     else
     {
+        CGFloat newContentViewHeightConstraint = self.contentViewHeightConstraint.constant - box.messageBigHeight + box.messageSmallHeight;
         [UIView animateWithDuration:0.2 animations:^{
-            [weakSelf commentBoxSecondConstraintswitchwithButton:sender];
-            [weakSelf commentBoxFirstConstraintsSwitchwithButton:sender];
+            box.commentMessageHeightConstraint.constant = box.messageSmallHeight;
+            weakSelf.contentViewHeightConstraint.constant = newContentViewHeightConstraint;
             [weakSelf.contentView layoutIfNeeded];
-            box.commentView2.alpha=0;
-        } completion:^(BOOL finished) {
-            if(finished==YES)
-                box.commentView2.hidden = YES;
         }];
     }
 
 }
-
--(void)commentBoxFirstConstraintsSwitchwithButton:(UIButton*)sender
-{
-    NSInteger index = sender.tag;
-    CommentBox *box = self.commentBoxArr[index];
-    BOOL isActive = !box.isBig;
-    
-    for(NSLayoutConstraint *con in box.avatarConstraints)
-        con.active = isActive;
-    for(NSLayoutConstraint *con in box.nameConstraints)
-        con.active = isActive;
-    for(NSLayoutConstraint *con in box.messageConstraints)
-        con.active = isActive;
-
-}
-
--(void)commentBoxSecondConstraintswitchwithButton:(UIButton*)sender
-{
-    NSInteger index = sender.tag;
-    CommentBox *box = self.commentBoxArr[index];
-    BOOL isActive = box.isBig;
-
-    for(NSLayoutConstraint *con in box.avatarConstraintsBig)
-        con.active = isActive;
-    for(NSLayoutConstraint *con in box.nameConstraintsBig)
-        con.active = isActive;
-    for(NSLayoutConstraint *con in box.messageConstraintsBig)
-        con.active = isActive;
-}
-
 
 -(void)clearOldDynamicElements
 {
