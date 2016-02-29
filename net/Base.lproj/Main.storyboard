@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="9531" systemVersion="14F1509" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="U7z-LT-7dR">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="9531" systemVersion="14F27" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="U7z-LT-7dR">
     <dependencies>
         <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="9529"/>
@@ -609,7 +609,7 @@
                                 </connections>
                             </button>
                             <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" bounces="NO" translatesAutoresizingMaskIntoConstraints="NO" id="NYS-ZF-PWz">
-                                <rect key="frame" x="0.0" y="64" width="600" height="536"/>
+                                <rect key="frame" x="0.0" y="64" width="600" height="487"/>
                                 <subviews>
                                     <view clipsSubviews="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Yqo-zb-mFR">
                                         <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
@@ -762,10 +762,10 @@
                                     </view>
                                 </subviews>
                                 <constraints>
-                                    <constraint firstAttribute="bottom" secondItem="Yqo-zb-mFR" secondAttribute="bottom" id="HXq-kL-AZa"/>
-                                    <constraint firstItem="Yqo-zb-mFR" firstAttribute="leading" secondItem="NYS-ZF-PWz" secondAttribute="leading" id="ZeZ-iJ-IhR"/>
-                                    <constraint firstAttribute="trailing" secondItem="Yqo-zb-mFR" secondAttribute="trailing" id="hUb-i4-h6e"/>
-                                    <constraint firstItem="Yqo-zb-mFR" firstAttribute="top" secondItem="NYS-ZF-PWz" secondAttribute="top" id="tLX-jK-z39"/>
+                                    <constraint firstItem="Yqo-zb-mFR" firstAttribute="leading" secondItem="NYS-ZF-PWz" secondAttribute="leading" id="6g8-zz-VhM"/>
+                                    <constraint firstAttribute="bottom" secondItem="Yqo-zb-mFR" secondAttribute="bottom" id="Khg-xU-SMJ"/>
+                                    <constraint firstItem="Yqo-zb-mFR" firstAttribute="top" secondItem="NYS-ZF-PWz" secondAttribute="top" id="R7O-9Q-mIq"/>
+                                    <constraint firstAttribute="trailing" secondItem="Yqo-zb-mFR" secondAttribute="trailing" id="XRk-Mn-x6M"/>
                                 </constraints>
                                 <connections>
                                     <outlet property="delegate" destination="exP-kZ-Qky" id="PmD-gR-pg6"/>
@@ -781,16 +781,16 @@
                             <constraint firstItem="K9v-RP-I0I" firstAttribute="leading" secondItem="A24-z5-pzn" secondAttribute="leading" id="M0T-hk-bhC"/>
                             <constraint firstAttribute="bottomMargin" secondItem="K9v-RP-I0I" secondAttribute="bottom" id="Mec-KS-p0x"/>
                             <constraint firstItem="NYS-ZF-PWz" firstAttribute="leading" secondItem="A24-z5-pzn" secondAttribute="leading" id="VMc-ez-U8k"/>
-                            <constraint firstItem="NYS-ZF-PWz" firstAttribute="bottom" secondItem="A24-z5-pzn" secondAttribute="bottomMargin" id="epB-wT-ePI"/>
-                            <constraint firstItem="NYS-ZF-PWz" firstAttribute="width" secondItem="A24-z5-pzn" secondAttribute="width" id="gMJ-Xo-KHq"/>
                             <constraint firstItem="mxJ-z8-iEP" firstAttribute="top" secondItem="Mm0-xY-FEs" secondAttribute="bottom" constant="-120" id="jTX-PT-rWC"/>
                             <constraint firstAttribute="trailing" secondItem="Mm0-xY-FEs" secondAttribute="trailing" id="lsS-Ie-51J"/>
+                            <constraint firstItem="mxJ-z8-iEP" firstAttribute="top" secondItem="NYS-ZF-PWz" secondAttribute="bottom" id="qlL-M7-0Qk"/>
                             <constraint firstItem="Mm0-xY-FEs" firstAttribute="top" secondItem="BZy-CD-oPZ" secondAttribute="bottom" constant="400" id="rbj-wR-ZSE"/>
                             <constraint firstAttribute="bottomMargin" secondItem="oxc-Sj-Imj" secondAttribute="bottom" constant="15" id="sj2-or-008"/>
                             <constraint firstAttribute="trailing" secondItem="oxc-Sj-Imj" secondAttribute="trailing" constant="15" id="thn-8G-HF4"/>
                             <constraint firstAttribute="trailingMargin" secondItem="K9v-RP-I0I" secondAttribute="trailing" constant="-20" id="u0F-bY-OK0"/>
                             <constraint firstItem="Yqo-zb-mFR" firstAttribute="width" secondItem="A24-z5-pzn" secondAttribute="width" id="vCV-EZ-nSn"/>
                             <constraint firstItem="vkK-dD-ver" firstAttribute="top" secondItem="BZy-CD-oPZ" secondAttribute="bottom" id="vFy-Qm-0HN"/>
+                            <constraint firstAttribute="trailing" secondItem="NYS-ZF-PWz" secondAttribute="trailing" id="wGh-Hc-pKb"/>
                             <constraint firstItem="Mm0-xY-FEs" firstAttribute="leading" secondItem="A24-z5-pzn" secondAttribute="leading" id="ydW-Rj-uDQ"/>
                         </constraints>
                         <variation key="default">
@@ -834,7 +834,7 @@
                         <outlet property="moreButton" destination="bEb-G0-MTV" id="3Cn-PF-ZMg"/>
                         <outlet property="nameTextField" destination="Yfl-g3-YHX" id="AUB-3V-NH1"/>
                         <outlet property="scrollView" destination="NYS-ZF-PWz" id="u3t-hy-KAG"/>
-                        <outlet property="scrollViewBottomConstraint" destination="epB-wT-ePI" id="prw-ER-fTf"/>
+                        <outlet property="scrollViewBottomConstraint" destination="qlL-M7-0Qk" id="rQg-PK-G8K"/>
                         <outlet property="scrollViewLeadingConstraint" destination="VMc-ez-U8k" id="5Dw-9c-Zc8"/>
                         <outlet property="tapLocationLabel" destination="Seo-CW-BkQ" id="UiV-1T-hnw"/>
                         <segue destination="Wyx-PR-bqC" kind="show" identifier="fromMapToLogIn" id="JER-bu-PYI"/>
@@ -1411,7 +1411,7 @@
         <image name="tittle" width="284" height="152"/>
     </resources>
     <inferredMetricsTieBreakers>
-        <segue reference="JER-bu-PYI"/>
         <segue reference="asR-3F-p9I"/>
+        <segue reference="JER-bu-PYI"/>
     </inferredMetricsTieBreakers>
 </document>

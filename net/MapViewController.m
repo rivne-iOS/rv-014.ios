@@ -79,7 +79,7 @@ static int const MARKER_HIDING_RADIUS = 10;
     self.addingIssueViewHeightConstraint.constant = screenRect.size.height - self.navigationController.navigationBar.frame.size.height - self.heightOfStatusBarInCurrentOrientation;
     
     self.tabBarController.delegate = self;
-    // Set delegate to textView !!!
+    self.descriptionTextView.delegate = self;
     [self hideTabBar];
     [self customizeTabBar];
     [self customizeGeolocationButton];
@@ -132,7 +132,6 @@ static int const MARKER_HIDING_RADIUS = 10;
     
     CGRect visibleRect = [self.scrollView convertRect:self.scrollView.bounds toView:self.addingIssueView];
     
-    
 //    NSLog(@"TextField frame : %@\n\n", [self pringRectforDebug:self.currentEditField.frame]);
 //    NSLog(@"TextField bounds : %@\n\n", [self pringRectforDebug:self.currentEditField.bounds]);
     
@@ -160,7 +159,6 @@ static int const MARKER_HIDING_RADIUS = 10;
     [self.view layoutIfNeeded];
 }
 
--(void)textViewDidBeginEditing:(UITextView *)textView;
 -(void)textViewDidBeginEditing:(UITextView *)textView
 {
     self.currentEditView = textView;
