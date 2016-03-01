@@ -45,6 +45,7 @@
 		CEF2B61D1C74761000F4B2F5 /* UIView+Addition.m in Sources */ = {isa = PBXBuildFile; fileRef = CEF2B61C1C74761000F4B2F5 /* UIView+Addition.m */; };
 		CEF2B6201C75D96700F4B2F5 /* UIViewController+backViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = CEF2B61F1C75D96700F4B2F5 /* UIViewController+backViewController.m */; };
 		CEF2B6231C771BAB00F4B2F5 /* NSString+stringIsEmpry.m in Sources */ = {isa = PBXBuildFile; fileRef = CEF2B6221C771BAB00F4B2F5 /* NSString+stringIsEmpry.m */; };
+		CEFEC2181C85DF0600822013 /* UIScrollView+getContentSize.m in Sources */ = {isa = PBXBuildFile; fileRef = CEFEC2171C85DF0600822013 /* UIScrollView+getContentSize.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -132,6 +133,8 @@
 		CEF2B61F1C75D96700F4B2F5 /* UIViewController+backViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIViewController+backViewController.m"; sourceTree = "<group>"; };
 		CEF2B6211C771BAB00F4B2F5 /* NSString+stringIsEmpry.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSString+stringIsEmpry.h"; sourceTree = "<group>"; };
 		CEF2B6221C771BAB00F4B2F5 /* NSString+stringIsEmpry.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSString+stringIsEmpry.m"; sourceTree = "<group>"; };
+		CEFEC2161C85DF0600822013 /* UIScrollView+getContentSize.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIScrollView+getContentSize.h"; sourceTree = "<group>"; };
+		CEFEC2171C85DF0600822013 /* UIScrollView+getContentSize.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIScrollView+getContentSize.m"; sourceTree = "<group>"; };
 		F4AC75DBD87C887E9CEC39A4 /* Pods.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.release.xcconfig; path = "Pods/Target Support Files/Pods/Pods.release.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -290,6 +293,8 @@
 				CEF2B6221C771BAB00F4B2F5 /* NSString+stringIsEmpry.m */,
 				CECCC9091C8058F800CD3228 /* NSMutableArray+isEmpty.h */,
 				CECCC90A1C8058F800CD3228 /* NSMutableArray+isEmpty.m */,
+				CEFEC2161C85DF0600822013 /* UIScrollView+getContentSize.h */,
+				CEFEC2171C85DF0600822013 /* UIScrollView+getContentSize.m */,
 			);
 			name = model;
 			sourceTree = "<group>";
@@ -501,6 +506,7 @@
 				8460F99F1C3C651500ECB3A4 /* HTTPConnector.m in Sources */,
 				841429551C5FEEDE0092C0C5 /* Reachability.m in Sources */,
 				8460F9731C3C531E00ECB3A4 /* AppDelegate.m in Sources */,
+				CEFEC2181C85DF0600822013 /* UIScrollView+getContentSize.m in Sources */,
 				CEC6F6351C5B6FB6002321AA /* CustomTableCell.m in Sources */,
 				845245A71C4E5923000755AC /* DescriptionViewController.m in Sources */,
 				8460F9A21C3C666100ECB3A4 /* Parser.m in Sources */,

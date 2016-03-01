@@ -14,10 +14,14 @@
 #import "CurrentItems.h"
 #import "UIView+Addition.h"
 #import "UIViewController+backViewController.h"
+
 #import "IssueHistoryViewController.h"
 #import "NSString+stringIsEmpry.h"
 #import "User.h"
 #import "DescriptionViewController.h"
+#import "UIScrollView+getContentSize.h"
+#import "NetworkDataSorce.h"
+#import "DataSorceProtocol.h"
 
 static NSString const * const AVATAR_NO_IMAGE = @"no_avatar.png";
 static NSString const * const DOMAIN_CHANGE_USER_DETAILS = @"https://bawl-rivne.rhcloud.com/users/";
@@ -34,6 +38,7 @@ static NSInteger const HTTP_RESPONSE_CODE_OK = 200;
 @property (strong, nonatomic) UIImage *avatarImage;
 @property (strong, nonatomic) NSString *avatarImageURL;
 @property (strong, nonatomic) UITextField *activeField;
+@property (strong, nonatomic) id <DataSorceProtocol> dataSorce;
 
 @end
 
@@ -41,6 +46,8 @@ static NSInteger const HTTP_RESPONSE_CODE_OK = 200;
 
 - (void)viewDidLoad {
     [super viewDidLoad];
+    
+    self.dataSorce = [[NetworkDataSorce alloc] init];
     
     [self.changeUserDetails setBackgroundColor:[UIColor bawlRedColor]];
     [self.changeAvatar setBackgroundColor:[UIColor bawlRedColor]];
@@ -232,7 +239,7 @@ static NSInteger const HTTP_RESPONSE_CODE_OK = 200;
 - (IBAction)sequeToLogInButton:(UIBarButtonItem *)sender {
     
     
-    if (!self.isLogged)
+    if (![CurrentItems sharedItems].user)
     {
         [self performSegueWithIdentifier:@"fromProfileToLogIn" sender:self];
     }
@@ -248,7 +255,6 @@ static NSInteger const HTTP_RESPONSE_CODE_OK = 200;
                     self.navigationItem.rightBarButtonItem.title = @"Log In";
                     [self.changeUserDetails setHidden:YES];
                     [self.changeAvatar setHidden:YES];
-                    [CurrentItems sharedItems].user = nil;
                     UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Log Out"
                                                                     message:@"You loged out successfully!"
                                                                    delegate:nil

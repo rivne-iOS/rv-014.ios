@@ -47,7 +47,6 @@
         textField.layer.borderWidth = 1;
         textField.layer.cornerRadius = 6;
         
-        
         NSMutableAttributedString *attrStr = [[NSMutableAttributedString alloc] initWithString:textField.restorationIdentifier
                                                                                     attributes:@{NSForegroundColorAttributeName : [UIColor bawlRedColor03alpha]}];
         textField.attributedPlaceholder = attrStr;
@@ -95,7 +94,6 @@
         }
     }
     return nil;
-    
 }
 
 -(NSString*)pringRectforDebug:(CGRect) rect
@@ -128,7 +126,6 @@
     
     CGRect visibleRect = [self.scrollView convertRect:self.scrollView.bounds toView:self.contentView];
     NSLog(@"VisibleRect : %@\n\n", [self pringRectforDebug:visibleRect]);
-    
     
     NSLog(@"TextField frame : %@\n\n", [self pringRectforDebug:self.currentEditField.frame]);
     NSLog(@"TextField bounds : %@\n\n", [self pringRectforDebug:self.currentEditField.bounds]);

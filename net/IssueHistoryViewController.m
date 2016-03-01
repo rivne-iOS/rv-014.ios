@@ -179,8 +179,6 @@ static NSString * const kSimpleTableIdentifier = @"SampleTableCell";
         {
             ProfileViewController *profileViewController = (ProfileViewController*)segue.destinationViewController;
             profileViewController.userID = self.userID;
-            profileViewController.isLogged = self.isLogged;
-            profileViewController.dataSorce = self.dataSorce;
 //            profileViewController.mapViewDelegate = self.mapDelegate;
         }
     }
