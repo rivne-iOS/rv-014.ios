@@ -484,7 +484,13 @@
     // Message label
     commentLabelMessage.translatesAutoresizingMaskIntoConstraints = NO;
     commentLabelMessage.restorationIdentifier = @"commentMessageLabel";
-    commentLabelMessage.text = comment.userMessage;
+    
+    NSMutableParagraphStyle *paragraph= [[NSMutableParagraphStyle alloc] init];
+    paragraph.alignment = NSTextAlignmentJustified;
+    NSDictionary *attributes = @{NSParagraphStyleAttributeName : paragraph,
+                                 NSBaselineOffsetAttributeName : [NSNumber numberWithFloat:0]};
+    commentLabelMessage.attributedText = [[NSAttributedString alloc] initWithString:comment.userMessage
+                                                                         attributes:attributes];
     commentLabelMessage.numberOfLines = 0;
     UIFont *oldFont = commentLabelMessage.font;
     commentLabelMessage.font = [UIFont fontWithName:oldFont.fontName size:oldFont.pointSize-5];
