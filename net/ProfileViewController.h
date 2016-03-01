@@ -9,7 +9,7 @@
 #import <UIKit/UIKit.h>
 #import "DataSorceProtocol.h"
 
-@interface ProfileViewController : UIViewController <UIImagePickerControllerDelegate>
+@interface ProfileViewController : UIViewController <UIImagePickerControllerDelegate, UITextFieldDelegate>
 
 @property (nonatomic, weak) IBOutlet UIButton *changeUserDetails;
 @property (nonatomic, weak) IBOutlet UIButton *changeAvatar;

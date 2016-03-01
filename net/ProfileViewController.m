@@ -29,9 +29,11 @@ static NSInteger const HTTP_RESPONSE_CODE_OK = 200;
 @property (nonatomic, weak) IBOutlet UILabel *labelSystemRole;
 @property (nonatomic, weak) IBOutlet UILabel *labelUserEmail;
 @property (nonatomic, weak) IBOutlet UIProgressView *progressView;
+@property (nonatomic, weak) IBOutlet UIScrollView *scrollView;
 
 @property (strong, nonatomic) UIImage *avatarImage;
 @property (strong, nonatomic) NSString *avatarImageURL;
+@property (strong, nonatomic) UITextField *activeField;
 
 @end
 
@@ -44,6 +46,11 @@ static NSInteger const HTTP_RESPONSE_CODE_OK = 200;
     [self.changeAvatar setBackgroundColor:[UIColor bawlRedColor]];
     
     [self.progressView setAlpha:0.0];
+    
+    [self registerForKeyboardNotifications];
+    
+    self.userEmail.delegate = self;
+    self.userName.delegate = self;
     
     [self hideAllViews];
     // Do any additional setup after loading the view.
@@ -239,6 +246,8 @@ static NSInteger const HTTP_RESPONSE_CODE_OK = 200;
                     // alert - good
                     self.title = [NSString stringWithFormat:@"Bowl"];
                     self.navigationItem.rightBarButtonItem.title = @"Log In";
+                    [self.changeUserDetails setHidden:YES];
+                    [self.changeAvatar setHidden:YES];
                     [CurrentItems sharedItems].user = nil;
                     UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Log Out"
                                                                     message:@"You loged out successfully!"
@@ -297,27 +306,27 @@ static NSInteger const HTTP_RESPONSE_CODE_OK = 200;
                           //Update the progress view
                           [weakSelf.progressView setProgress:uploadProgress.fractionCompleted animated:YES];
                           if (uploadProgress.fractionCompleted == 1.0) {
-                              // do something
+                              
                           }
                       });
                   }
                   completionHandler:^(NSURLResponse * _Nonnull response, id  _Nullable responseObject, NSError * _Nullable error) {
                       
                       if (error) {
+                          [weakSelf.progressView setProgress:0.0];
                           [UIView animateWithDuration:1.0 animations:^(void) {
                               [weakSelf.progressView  setAlpha:0.0];
                           }];
                           NSLog(@"Error: %@", error);
                       } else {
                           NSLog(@"%@ %@", response, responseObject);
-                          NSArray *value = [[NSArray alloc] initWithObjects:responseObject[@"filename"], nil];
-                          NSArray *key = [[NSArray alloc] initWithObjects:@"avatar", nil];
-                          NSDictionary *JSONdic = [[NSDictionary alloc] initWithObjects:value forKeys:key];
+                          NSDictionary *JSONdic = [[NSDictionary alloc] initWithObjectsAndKeys: responseObject[@"filename"],@"avatar", nil];
                           
                           [weakSelf requestChangeUserDetails:JSONdic completionHandler:^(void){
                               dispatch_async(dispatch_get_main_queue(), ^{
                                   [CurrentItems sharedItems].userImage = profileImage;
                                   [weakSelf.profileImage setImage:profileImage];
+                                  [weakSelf.progressView setProgress:0.0];
                                   
                                   [UIView animateWithDuration:1.0 animations:^(void) {
                                       [weakSelf.progressView  setAlpha:0.0];
@@ -424,6 +433,59 @@ static NSInteger const HTTP_RESPONSE_CODE_OK = 200;
             [CurrentItems sharedItems].user.email = self.userEmail.text;
         }];
     }
+}
+
+#pragma mark - Keyboard
+- (void)registerForKeyboardNotifications
+{
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(keyboardWasShown:)
+                                                 name:UIKeyboardDidShowNotification object:nil];
+    
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(keyboardWillBeHidden:)
+                                                 name:UIKeyboardWillHideNotification object:nil];
+    
+}
+
+- (void)keyboardWasShown:(NSNotification*)aNotification
+{
+    NSDictionary* info = [aNotification userInfo];
+    CGSize kbSize = [[info objectForKey:UIKeyboardFrameBeginUserInfoKey] CGRectValue].size;
+    
+    UIEdgeInsets contentInsets = UIEdgeInsetsMake(0.0, 0.0, kbSize.height, 0.0);
+    self.scrollView.contentInset = contentInsets;
+    self.scrollView.scrollIndicatorInsets = contentInsets;
+    
+    CGRect aRect = self.view.frame;
+    aRect.size.height -= kbSize.height;
+    if (!CGRectContainsPoint(aRect, self.activeField.frame.origin) ) {
+        [self.scrollView scrollRectToVisible:self.activeField.frame animated:YES];
+    }
+}
+
+- (void)keyboardWillBeHidden:(NSNotification*)aNotification
+{
+    UIEdgeInsets contentInsets = UIEdgeInsetsZero;
+    contentInsets.top = 80;
+    self.scrollView.contentInset = contentInsets;
+    self.scrollView.scrollIndicatorInsets = contentInsets;
+}
+
+- (void)textFieldDidBeginEditing:(UITextField *)textField
+{
+    self.activeField = textField;
+    //NSLog([NSString stringWithFormat:@"%@",self.activeField.text]);
+}
+
+- (void)textFieldDidEndEditing:(UITextField *)textField
+{
+    self.activeField = nil;
+}
+
+- (IBAction)dismissKeyboard:(id)sender
+{
+    [self.activeField resignFirstResponder];
 }
 
 @end
