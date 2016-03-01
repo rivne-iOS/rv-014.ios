@@ -20,6 +20,7 @@
 @import MobileCoreServices;
 
 #define TEXTFIELD_OFFSET 5
+#define TEXT_LABEL_HEIGHT 21
 
 static NSString * const GOOGLE_WEB_API_KEY = @"AIzaSyB7InJ3J2AoxlHjsYtde9BNawMINCaHykg";
 static NSString * const DOMAIN_NAME_ALL_ISSUES = @"https://bawl-rivne.rhcloud.com/issue/all";
@@ -116,6 +117,7 @@ static int const MARKER_HIDING_RADIUS = 10;
 
 -(void)keyboardDidShow:(NSNotification*)notification
 {
+    CGFloat bottomCurrentFieldByScrollView;
     NSLog(@"ScrollView before: %@\n\n", self.scrollView);
     NSDictionary *dic = notification.userInfo;
     NSValue *keyboardFrame = dic[UIKeyboardFrameEndUserInfoKey];
@@ -132,10 +134,10 @@ static int const MARKER_HIDING_RADIUS = 10;
     
     CGRect visibleRect = [self.scrollView convertRect:self.scrollView.bounds toView:self.addingIssueView];
     
-//    NSLog(@"TextField frame : %@\n\n", [self pringRectforDebug:self.currentEditField.frame]);
-//    NSLog(@"TextField bounds : %@\n\n", [self pringRectforDebug:self.currentEditField.bounds]);
-    
-    CGFloat bottomCurrentFieldByScrollView = self.currentEditView.frame.origin.y - visibleRect.origin.y + self.currentEditView.bounds.size.height + TEXTFIELD_OFFSET;
+    if (visibleRect.size.height < self.descriptionTextView.frame.size.height)
+        bottomCurrentFieldByScrollView = self.currentEditView.frame.origin.y - visibleRect.origin.y + visibleRect.size.height - TEXTFIELD_OFFSET - TEXT_LABEL_HEIGHT;
+    else
+        bottomCurrentFieldByScrollView = self.currentEditView.frame.origin.y - visibleRect.origin.y + self.currentEditView.bounds.size.height + TEXTFIELD_OFFSET;
     CGFloat bottomScrollView = self.scrollView.bounds.size.height;
     
     if(bottomCurrentFieldByScrollView != bottomScrollView)

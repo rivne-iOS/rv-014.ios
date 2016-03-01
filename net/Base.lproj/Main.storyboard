@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="9531" systemVersion="14F1509" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="U7z-LT-7dR">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="9531" systemVersion="14F27" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="U7z-LT-7dR">
     <dependencies>
         <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="9529"/>
@@ -784,13 +784,13 @@
                             <constraint firstItem="NYS-ZF-PWz" firstAttribute="leading" secondItem="A24-z5-pzn" secondAttribute="leading" id="VMc-ez-U8k"/>
                             <constraint firstItem="mxJ-z8-iEP" firstAttribute="top" secondItem="Mm0-xY-FEs" secondAttribute="bottom" constant="-120" id="jTX-PT-rWC"/>
                             <constraint firstAttribute="trailing" secondItem="Mm0-xY-FEs" secondAttribute="trailing" id="lsS-Ie-51J"/>
+                            <constraint firstItem="NYS-ZF-PWz" firstAttribute="width" secondItem="A24-z5-pzn" secondAttribute="width" id="qRj-dE-SCs"/>
                             <constraint firstItem="mxJ-z8-iEP" firstAttribute="top" secondItem="NYS-ZF-PWz" secondAttribute="bottom" id="qlL-M7-0Qk"/>
                             <constraint firstItem="Mm0-xY-FEs" firstAttribute="top" secondItem="BZy-CD-oPZ" secondAttribute="bottom" constant="400" id="rbj-wR-ZSE"/>
                             <constraint firstAttribute="bottomMargin" secondItem="oxc-Sj-Imj" secondAttribute="bottom" constant="15" id="sj2-or-008"/>
                             <constraint firstAttribute="trailing" secondItem="oxc-Sj-Imj" secondAttribute="trailing" constant="15" id="thn-8G-HF4"/>
                             <constraint firstAttribute="trailingMargin" secondItem="K9v-RP-I0I" secondAttribute="trailing" constant="-20" id="u0F-bY-OK0"/>
                             <constraint firstItem="Yqo-zb-mFR" firstAttribute="width" secondItem="A24-z5-pzn" secondAttribute="width" id="vCV-EZ-nSn"/>
-                            <constraint firstAttribute="trailing" secondItem="NYS-ZF-PWz" secondAttribute="trailing" id="wGh-Hc-pKb"/>
                             <constraint firstItem="Mm0-xY-FEs" firstAttribute="leading" secondItem="A24-z5-pzn" secondAttribute="leading" id="ydW-Rj-uDQ"/>
                         </constraints>
                         <variation key="default">
