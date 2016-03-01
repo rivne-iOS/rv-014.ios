@@ -19,6 +19,8 @@
 #import "UIColor+Bawl.h"
 @import MobileCoreServices;
 
+#define TEXTFIELD_OFFSET 5
+
 static NSString * const GOOGLE_WEB_API_KEY = @"AIzaSyB7InJ3J2AoxlHjsYtde9BNawMINCaHykg";
 static NSString * const DOMAIN_NAME_ALL_ISSUES = @"https://bawl-rivne.rhcloud.com/issue/all";
 static NSString * const DOMAIN_NAME_GOOGLE_PLACE_INFO = @"https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=%f,%f&radius=%d&key=%@";
@@ -30,10 +32,11 @@ static NSInteger const HTTP_RESPONSE_CODE_OK = 200;
 static double const MAP_REFRESHING_INTERVAL = 120.0;
 static int const MARKER_HIDING_RADIUS = 10;
 
-@interface MapViewController () <GMSMapViewDelegate, UITabBarControllerDelegate, UIImagePickerControllerDelegate, UINavigationControllerDelegate>
+@interface MapViewController () <GMSMapViewDelegate, UITabBarControllerDelegate, UIImagePickerControllerDelegate, UINavigationControllerDelegate, UITextViewDelegate>
 
 @property (weak, nonatomic) IBOutlet GMSMapView *mapView;
 @property (weak, nonatomic) IBOutlet UIActivityIndicatorView *indicator;
+@property (strong, nonatomic) UITextView *currentEditView;
 
 @property (strong,nonatomic) NSArray *arrayOfPoints;
 @property (strong, nonatomic) id <DataSorceProtocol> dataSorce;
@@ -76,8 +79,8 @@ static int const MARKER_HIDING_RADIUS = 10;
     self.addingIssueViewHeightConstraint.constant = screenRect.size.height - self.navigationController.navigationBar.frame.size.height - self.heightOfStatusBarInCurrentOrientation;
     
     self.tabBarController.delegate = self;
+    self.descriptionTextView.delegate = self;
     [self hideTabBar];
-//    self.scrollView.preservesSuperviewLayoutMargins = YES;
     [self customizeTabBar];
     [self customizeGeolocationButton];
     [self createAndShowMap];
@@ -87,6 +90,84 @@ static int const MARKER_HIDING_RADIUS = 10;
     [self requestCategories];
 }
 
+-(void)addKeyboardObserver
+{
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(keyboardDidShow:)
+                                                 name:UIKeyboardDidShowNotification
+                                               object:nil];
+    
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(keyboardWillHide)
+                                                 name:UIKeyboardWillHideNotification
+                                               object:nil];
+}
+
+-(void)removeKeyboardObserver
+{
+    [[NSNotificationCenter defaultCenter] removeObserver:self
+                                                    name:UIKeyboardDidShowNotification
+                                                  object:nil];
+    
+    [[NSNotificationCenter defaultCenter] removeObserver:self
+                                                    name:UIKeyboardWillHideNotification
+                                                  object:nil];
+}
+
+-(void)keyboardDidShow:(NSNotification*)notification
+{
+    NSLog(@"ScrollView before: %@\n\n", self.scrollView);
+    NSDictionary *dic = notification.userInfo;
+    NSValue *keyboardFrame = dic[UIKeyboardFrameEndUserInfoKey];
+    CGRect frame = [keyboardFrame CGRectValue];
+    CGRect viewFrame = [self.view convertRect:frame fromView:nil];
+    CGFloat keyboardHeight = viewFrame.size.height;
+    NSLog(@"keyboard height = %f", keyboardHeight);
+    
+    self.scrollViewBottomConstraint.constant = keyboardHeight;
+    [self.view layoutIfNeeded];
+    
+    if (self.currentEditView == nil)
+        return;
+    
+    CGRect visibleRect = [self.scrollView convertRect:self.scrollView.bounds toView:self.addingIssueView];
+    
+//    NSLog(@"TextField frame : %@\n\n", [self pringRectforDebug:self.currentEditField.frame]);
+//    NSLog(@"TextField bounds : %@\n\n", [self pringRectforDebug:self.currentEditField.bounds]);
+    
+    CGFloat bottomCurrentFieldByScrollView = self.currentEditView.frame.origin.y - visibleRect.origin.y + self.currentEditView.bounds.size.height + TEXTFIELD_OFFSET;
+    CGFloat bottomScrollView = self.scrollView.bounds.size.height;
+    
+    if(bottomCurrentFieldByScrollView != bottomScrollView)
+    {
+        CGFloat yMove = bottomCurrentFieldByScrollView - bottomScrollView;
+        CGFloat newY = (visibleRect.origin.y + yMove < 0) ? 0 : visibleRect.origin.y + yMove;
+        
+        [UIView animateWithDuration:0.3 animations:^{
+            self.scrollView.contentOffset = CGPointMake(visibleRect.origin.x, newY);
+        }];
+        
+        NSLog(@"--------------------------------------\n\n\n\n");
+    }
+    
+}
+
+-(void)keyboardWillHide
+{
+    NSLog(@"-(void)keyboardWillHide");
+    self.scrollViewBottomConstraint.constant = 0;
+    [self.view layoutIfNeeded];
+}
+
+-(void)textViewDidBeginEditing:(UITextView *)textView
+{
+    self.currentEditView = textView;
+}
+
+-(void)textViewDidEndEditing:(UITextView *)textView
+{
+    self.currentEditView = nil;
+}
 
 -(void)checkCurrentUser
 {
@@ -115,6 +196,7 @@ static int const MARKER_HIDING_RADIUS = 10;
 
 -(void)viewWillAppear:(BOOL)animated
 {
+    [self addKeyboardObserver];
     [self.geolocationButton setHidden:NO];
     
     if(self.currentUser==nil)
@@ -159,6 +241,7 @@ static int const MARKER_HIDING_RADIUS = 10;
 
 -(void)viewWillDisappear:(BOOL)animated
 {
+    [self removeKeyboardObserver];
     [self.timerForMapRenew invalidate];
 }
 
@@ -310,7 +393,6 @@ static int const MARKER_HIDING_RADIUS = 10;
         [self showTabBar];
         [self liftUpGeolocationButton];
         [self.view layoutIfNeeded];
-        
     }];
     self.isMarkerSelected = YES;
     
