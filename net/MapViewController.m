@@ -180,14 +180,12 @@ static int const MARKER_HIDING_RADIUS = 10;
         self.navigationItem.rightBarButtonItem.title = @"Log in...";
         [self.dataSorce requestLogInWithUser:[userDictionary objectForKey:@"LOGIN"]
                                      andPass:[userDictionary objectForKey:@"PASSWORD"]
-                    andViewControllerHandler:^(User *resUser)
+                    andViewControllerHandler:^(User *resUser, NSError *error)
          {
                  dispatch_async(dispatch_get_main_queue(), ^ {
                      self.currentUser = resUser;
                      [CurrentItems sharedItems].user = resUser;
                  });
-         } andErrorHandler:^(NSError *error) {
-             // error!
          }];
     }
     else
@@ -279,7 +277,7 @@ static int const MARKER_HIDING_RADIUS = 10;
     }
     else
     {
-        [self.dataSorce requestSignOutWithHandler:^(NSString *stringAnswer) {
+        [self.dataSorce requestSignOutWithHandler:^(NSString *stringAnswer, NSError *error) {
             dispatch_async(dispatch_get_main_queue(), ^{
             
             if([stringAnswer isEqualToString:[@"Bye " stringByAppendingString:self.currentUser.name]])
@@ -309,15 +307,6 @@ static int const MARKER_HIDING_RADIUS = 10;
 
             }
             });
-        } andErrorHandler:^(NSError *error) {
-            // alert - bad
-            UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Log Out"
-                                                            message:@"Problem with internet connection"
-                                                           delegate:nil
-                                                  cancelButtonTitle:@"OK"
-                                                  otherButtonTitles:nil];
-            [alert show];
-
         }];
         
     }

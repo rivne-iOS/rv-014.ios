@@ -52,14 +52,12 @@
 {
     _user = user;
     NSString *unchangedName = self.user.avatar;
-    [self.dataSorce requestImageWithName:self.user.avatar andHandler:^(UIImage *image) {
+    [self.dataSorce requestImageWithName:self.user.avatar andHandler:^(UIImage *image, NSError *error) {
         if ([unchangedName isEqualToString:self.user.avatar])
         {
             self.userImage = image;
             [self.userImageDelegates makeObjectsPerformSelector:@selector(userImageDidLoad)];
         }
-    } withErrorHandler:^(NSError *error) {
-        // handle error
     }];
 
     
@@ -70,15 +68,12 @@
     self.user = user;
     
     NSString *unchangedName = self.user.avatar;
-    [self.dataSorce requestImageWithName:self.user.avatar andHandler:^(UIImage *image) {
+    [self.dataSorce requestImageWithName:self.user.avatar andHandler:^(UIImage *image, NSError *error) {
         if ([unchangedName isEqualToString:self.user.avatar])
         {
             self.userImage = image;
             changinImageView();
-            
         }
-    } withErrorHandler:^(NSError *error) {
-        // handle error
     }];
     
 }
@@ -87,7 +82,7 @@
 {
     _issue = issue;
     NSString *unchangedName = self.issue.attachments;
-    [self.dataSorce requestImageWithName:self.issue.attachments andHandler:^(UIImage *image) {
+    [self.dataSorce requestImageWithName:self.issue.attachments andHandler:^(UIImage *image, NSError *error) {
         if ([unchangedName isEqualToString:self.issue.attachments])
         {
             self.issueImage = image;
@@ -95,8 +90,6 @@
             NSLog(@"issueImageDelegates: %@", self.issueImageDelegates);
             [self.issueImageDelegates makeObjectsPerformSelector:@selector(issueImageDidLoad)];
         }
-    } withErrorHandler:^(NSError *error) {
-        // handle error
     }];
 }
 
@@ -105,15 +98,13 @@
     self.issue = issue;
     
     NSString *unchangedName = self.issue.attachments;
-    [self.dataSorce requestImageWithName:self.issue.attachments andHandler:^(UIImage *image) {
+    [self.dataSorce requestImageWithName:self.issue.attachments andHandler:^(UIImage *image, NSError *error) {
         if ([unchangedName isEqualToString:self.issue.attachments])
         {
             self.issueImage = image;
             changinImageView();
             
         }
-    } withErrorHandler:^(NSError *error) {
-        // handle error
     }];
     
 }

@@ -231,7 +231,7 @@ static NSInteger const HTTP_RESPONSE_CODE_OK = 200;
     }
     else
     {
-        [self.dataSorce requestSignOutWithHandler:^(NSString *stringAnswer) {
+        [self.dataSorce requestSignOutWithHandler:^(NSString *stringAnswer, NSError *error) {
             dispatch_async(dispatch_get_main_queue(), ^{
                 
                 if([stringAnswer isEqualToString:[@"Bye " stringByAppendingString:[CurrentItems sharedItems].user.name]])
@@ -259,15 +259,6 @@ static NSInteger const HTTP_RESPONSE_CODE_OK = 200;
                     
                 }
             });
-        } andErrorHandler:^(NSError *error) {
-            // alert - bad
-            UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Log Out"
-                                                            message:@"Problem with internet connection"
-                                                           delegate:nil
-                                                  cancelButtonTitle:@"OK"
-                                                  otherButtonTitles:nil];
-            [alert show];
-            
         }];
         
     }

@@ -227,7 +227,7 @@
     
 
     [self.dataSorce requestSingUpWithUser:tempUser
-                 andViewControllerHandler:^(User *resUser)
+                 andViewControllerHandler:^(User *resUser, NSError *error) 
     {
         if (resUser == nil)
         {
@@ -255,13 +255,6 @@
         }
         
     
-    } andErrorHandler:^(NSError *error) {
-        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Sign Up!"
-                                                        message:@"Fail to Sign Up (problem with internet connection)!"
-                                                       delegate:nil
-                                              cancelButtonTitle:@"I understood"
-                                              otherButtonTitles:nil];
-        [alert show];
     }];
 }
 

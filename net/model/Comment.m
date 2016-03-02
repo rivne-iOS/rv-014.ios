@@ -55,13 +55,11 @@
         if ([imageName isEqual:[NSNull null]])
             imageName = @"defaultUser";
         
-        [datasorce requestImageWithName:imageName andHandler:^(UIImage *image) {
+        [datasorce requestImageWithName:imageName andHandler:^(UIImage *image, NSError *error) {
             _userImage = image;
             dispatch_async(dispatch_get_main_queue(), ^{
                 imageView.image = image;
             });
-        } withErrorHandler:^(NSError *error) {
-            // error
         }];
     }
     

@@ -24,43 +24,43 @@
 
 
 
--(void)requestCategories:(void (^)(NSArray<IssueCategory*> * issueCategories))viewControllerHandler withErrorHandler:(void(^)(NSError *error)) errorHandler
+-(void)requestCategories:(void (^)(NSArray<IssueCategory*> * issueCategories, NSError *error))viewControllerHandler
 {
     HTTPConnector *connector = [[HTTPConnector alloc] init];
     [connector requestCategories:^(NSData *data, NSError *error) {
+        NSMutableArray <IssueCategory*> *issueCategories = nil;
         if (data.length > 0 && error==nil)
         {
             NSArray <NSDictionary*> *issueCategoryDics = [NSJSONSerialization JSONObjectWithData:data options:0 error:NULL];
-            NSMutableArray <IssueCategory*> *issueCategories = [[NSMutableArray alloc] init];
+            issueCategories = [[NSMutableArray alloc] init];
             
             for(NSDictionary *issueCategoryDic in issueCategoryDics)
             {
                 IssueCategory *issueCategory = [[IssueCategory alloc] initWithDictionary:issueCategoryDic];
                 [issueCategories addObject:issueCategory];
             }
-            viewControllerHandler(issueCategories);
         }
-        else if(error != nil)
-        {
-            errorHandler(error);
-        }
+        viewControllerHandler(issueCategories, error);
 
     }];
 
 }
 
 
--(void)requestAllUsers:(void (^)(NSArray <NSDictionary <NSString*,NSString*> *> *userDictionaries))handler withErrorHandler:(void(^)(NSError *error)) errorHandler
+-(void)requestAllUsers:(void (^)(NSArray <NSDictionary <NSString*,NSString*> *> *userDictionaries, NSError *error))handler
 {
     HTTPConnector *connector = [[HTTPConnector alloc] init];
     [connector requestUsers:^(NSData *data, NSError *error) {
-        NSArray <NSDictionary<NSString*,NSString*>*> *userDics = [NSJSONSerialization JSONObjectWithData:data options:0 error:NULL];
-        if (![userDics isKindOfClass:[NSArray class]] || error != nil)
+        NSArray <NSDictionary<NSString*,NSString*>*> *userDics = nil;
+        if(data.length>0 && error!=nil)
         {
-            userDics=nil;
+            userDics= [NSJSONSerialization JSONObjectWithData:data options:0 error:NULL];
+            if (![userDics isKindOfClass:[NSArray class]] || error != nil)
+            {
+                userDics=nil;
+            }
         }
-        handler(userDics);
-        errorHandler(error);
+        handler(userDics, error);
     }];
 }
 
@@ -109,48 +109,41 @@
 }
 
 
--(void)requestImageWithName:(NSString*)name andHandler:(void (^)(UIImage *image))viewControllerHandler withErrorHandler:(void(^)(NSError *error)) errorHandler
+-(void)requestImageWithName:(NSString*)name andHandler:(void (^)(UIImage *image, NSError *error))viewControllerHandler
 {
     HTTPConnector *connector = [[HTTPConnector alloc] init];
     [connector requestImageWithName:name andDataSorceHandler:^(NSData *data, NSError *error) {
+        UIImage *image = nil;
         if (data.length > 0 && error==nil)
         {
-            UIImage *image = [[UIImage alloc] initWithData:data];
-            viewControllerHandler(image);
+            image = [[UIImage alloc] initWithData:data];
+            
         }
-        else if(error != nil)
-        {
-            errorHandler(error);
-        }
-        
+        viewControllerHandler(image, error);
     }];
 
 }
 
 
--(void)requestSignOutWithHandler:(void (^)(NSString * stringAnswer))viewControllerHandler andErrorHandler:(void(^)(NSError *error)) errorHandler
+-(void)requestSignOutWithHandler:(void (^)(NSString * stringAnswer, NSError *error))viewControllerHandler
 {
     HTTPConnector *wizard = [[HTTPConnector alloc] init];
     [wizard requestSignOutWithHandler:^(NSData *data, NSError *error) {
+        NSString *resStr = nil;
         if (data.length > 0 && error==nil)
         {
-            NSString *resStr = [Parser parseAnswer:data andReturnObjectForKey:@"message"];
+            resStr = [Parser parseAnswer:data andReturnObjectForKey:@"message"];
             [[NSUserDefaults standardUserDefaults] removeObjectForKey:@"userDictionary"];
-            viewControllerHandler(resStr);
         }
-        else if(error != nil)
-        {
-            errorHandler(error);
-        }
+        viewControllerHandler(resStr, error);
+
     }];
 }
 
 
 -(void)requestLogInWithUser:(NSString*)login
                     andPass:(NSString*)password
-   andViewControllerHandler:(void (^)(User *user))viewControllerHandler
-            andErrorHandler:(void(^)(NSError *error)) errorHandler;
-{
+   andViewControllerHandler:(void (^)(User *resPerson, NSError *error))viewControllerHandler{
     
     NSDictionary *dictionary = [[NSDictionary alloc] initWithObjectsAndKeys:
                                 login, @"login",
@@ -163,13 +156,13 @@
     HTTPConnector *connector = [[HTTPConnector alloc] init];
     [connector requestLogInWithData:postData
              andDataSorceHandler:^(NSData *data, NSError *error) {
+                 User *tempUser = nil;
         if(data.length >0 && error == nil)
         {
             
             NSMutableDictionary *userDic = [[NSJSONSerialization JSONObjectWithData:data
                                                                             options:0
                                                                               error:NULL] mutableCopy];
-            User *tempUser = nil;
             if([userDic count]>1)
             {
                 if ([[userDic objectForKey:@"AVATAR"] isEqual:[NSNull null]])
@@ -177,20 +170,17 @@
                 [[NSUserDefaults standardUserDefaults] setObject:userDic forKey:@"userDictionary"];
                 tempUser = [[User alloc] initWitDictionary:userDic];
             }
-            viewControllerHandler(tempUser);
         }
-        else
-        {
-            errorHandler(error);
-        }
-             }];
+             
+        viewControllerHandler(tempUser, error);
+
+        }];
     
 }
 
 
 -(void)requestSingUpWithUser:(User*)user
-    andViewControllerHandler:(void (^)(User *user))viewControllerHandler
-             andErrorHandler:(void(^)(NSError *error)) errorHandler
+    andViewControllerHandler:(void (^)(User *resPerson, NSError *error))viewControllerHandler
 {
     NSDictionary *dictionary = [user puckToDictionary];
     NSError *err;
@@ -200,12 +190,13 @@
     HTTPConnector *connector = [[HTTPConnector alloc] init];
     [connector requestSingUpWithData:postData
                  andDataSorceHandler:^(NSData *data, NSError *error) {
+                     User *user = nil;
                      if(data.length >0 && error == nil)
                      {
                          NSMutableDictionary *userDic = [[NSJSONSerialization JSONObjectWithData:data
                                                                                    options:0
                                                                                      error:NULL] mutableCopy];
-                         User *user = nil;
+
                          if([userDic count]>1)
                          {
                              [userDic setObject:@"defaultUser" forKey:@"AVATAR"];
@@ -220,22 +211,16 @@
                                  NSLog(@"%@ - %@", str, [userDic objectForKey:str]);
                              }
                          }
-                         viewControllerHandler(user);
                      }
-                     else if (error!=nil)
-                     {
-                         errorHandler(error);
-                     }
+                     viewControllerHandler(user, error);
                  }];
-
 }
 
 
 
 -(void)requestChangeStatusWithID:(NSNumber*)issueIdNumber
                         toStatus:(NSString*)stringStatus
-        andViewControllerHandler:(void (^)(NSString *stringAnswer, Issue *issue))viewControllerHandler // e.g. user is not logined
-                 andErrorHandler:(void(^)(NSError *error)) errorHandler;
+        andViewControllerHandler:(void (^)(NSString *stringAnswer, Issue *issue, NSError *error))viewControllerHandler
 {
     HTTPConnector *wizard = [[HTTPConnector alloc] init];
     NSData *postData = nil;
@@ -252,22 +237,20 @@
                                         toStatus:stringStatus
                                         withData:postData
                              andDataSorceHandler:^(NSData *data, NSError *error) {
+        NSString *stringAnswer = nil;
+        Issue *issue = nil;
         if (data.length > 0 && error==nil)
         {
-            NSString *stringAnswer = [Parser parseAnswer:data andReturnObjectForKey:@"message"];
-            Issue *issue = nil;
+            stringAnswer = [Parser parseAnswer:data andReturnObjectForKey:@"message"];
             
             if(stringAnswer == nil)
             {
                 NSDictionary *issueDictionary = [NSJSONSerialization JSONObjectWithData:data options:0 error:NULL];
                 issue = [[Issue alloc] initWithDictionary:issueDictionary];
             }
-            viewControllerHandler(stringAnswer, issue);
         }
-        else if(error != nil)
-        {
-            errorHandler(error);
-        }
+        viewControllerHandler(stringAnswer, issue, error);
+
     }];
 
 }

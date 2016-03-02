@@ -336,10 +336,8 @@
 -(void)requestUsersAndAddNewCommentsAndSendMessage:(NSString*)message
 {
     __weak DescriptionViewController *weakSelf = self;
-    [self.dataSorce requestAllUsers:^(NSArray<NSDictionary<NSString *,NSString *> *> *userDictionaries) {
+    [self.dataSorce requestAllUsers:^(NSArray<NSDictionary<NSString *,NSString *> *> *userDictionaries, NSError *error) {
         [weakSelf sendMessage:message andAddnewCommentsBlockWithAllUserDictionaries:userDictionaries];
-    } withErrorHandler:^(NSError *error) {
-        //error
     }];
 }
 
@@ -384,10 +382,8 @@
 -(void)requestUsersAndComments
 {
     __weak DescriptionViewController *weakSelf = self;
-    [self.dataSorce requestAllUsers:^(NSArray<NSDictionary<NSString *,NSString *> *> *userDictionaries) {
+    [self.dataSorce requestAllUsers:^(NSArray<NSDictionary<NSString *,NSString *> *> *userDictionaries, NSError *error) {
         [weakSelf commentBlockWithAllUserDictionaries:userDictionaries];
-    } withErrorHandler:^(NSError *error) {
-        //error
     }];
 }
 
@@ -861,7 +857,7 @@
     
     [self.dataSorce requestChangeStatusWithID:[CurrentItems sharedItems].issue.issueId
                                      toStatus:sender.restorationIdentifier
-                     andViewControllerHandler:^(NSString *stringAnswer, Issue *issue) {
+                     andViewControllerHandler:^(NSString *stringAnswer, Issue *issue, NSError *error) {
                          dispatch_async(dispatch_get_main_queue(), ^ {
                              if (stringAnswer == nil)
                              {
@@ -892,8 +888,6 @@
                                  [alert show];
                              }
                          });
-                     } andErrorHandler:^(NSError *error) {
-                         
                      }];
     
 }

@@ -195,8 +195,8 @@
     
     [self.dataSorce requestLogInWithUser:self.userTextFild.text
                                  andPass:self.passTextField.text
-                andViewControllerHandler:^(User *resUser)
-    {
+                andViewControllerHandler:^(User *resUser, NSError *error) {
+                    
         if (resUser == nil)
         {
             NSLog(@"fail!!!!");
@@ -222,14 +222,6 @@
                [weakSelf.navigationController popViewControllerAnimated:YES];
            });
         }
-    } andErrorHandler:^(NSError *error) {
-        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Log In"
-                                                        message:@"Fail yo log in (problem with internet conection)!"
-                                                       delegate:nil
-                                              cancelButtonTitle:@"OK"
-                                              otherButtonTitles:nil];
-        [alert show];
-
-    }];
+    } ];
 }
 @end

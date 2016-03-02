@@ -19,10 +19,8 @@ static IssueCategories *standartCategories_ = nil;
     if(self=[super init])
     {
         id<DataSorceProtocol> dataSorce = [[NetworkDataSorce alloc] init];
-        [dataSorce requestCategories:^(NSArray<IssueCategory *> *issueCategories) {
+        [dataSorce requestCategories:^(NSArray<IssueCategory *> *issueCategories, NSError *error) {
             _categories = issueCategories;
-        } withErrorHandler:^(NSError *error) {
-            // error
         }];
     }
     return self;
