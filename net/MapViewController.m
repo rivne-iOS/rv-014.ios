@@ -393,7 +393,7 @@ static int const MARKER_HIDING_RADIUS = 10;
     [self.tabBarController.tabBar setHidden:NO];
     [UIView animateWithDuration:0.5 animations:^(void){
         [self showTabBar];
-        [self liftUpGeolocationButton];
+        [self changeGeolocationButtonPosition:63.0];
         [self.view layoutIfNeeded];
     }];
     self.isMarkerSelected = YES;
@@ -416,6 +416,10 @@ static int const MARKER_HIDING_RADIUS = 10;
     self.geolocationButtonBottomConstraint.constant = 15;
 }
 
+-(void)changeGeolocationButtonPosition:(double)bottomConstant
+{
+    self.geolocationButtonBottomConstraint.constant = bottomConstant;
+}
 
 -(void)mapView:(GMSMapView *)mapView didChangeCameraPosition:(GMSCameraPosition *)position
 {
@@ -463,7 +467,7 @@ static int const MARKER_HIDING_RADIUS = 10;
     self.isMarkerSelected = NO;
     [UIView animateWithDuration:0.5 animations:^(void){
         [self hideTabBar];
-        [self pullDownGeolocationButton];
+        [self changeGeolocationButtonPosition:15.0];
         [self.view layoutIfNeeded];
     } completion:^(BOOL finished){
         if (finished == YES){
@@ -1094,7 +1098,7 @@ static int const MARKER_HIDING_RADIUS = 10;
     self.isMarkerSelected = NO;
     self.mapView.selectedMarker = nil;
     [self hideTabBar];
-    [self pullDownGeolocationButton];
+    [self changeGeolocationButtonPosition:15.0];
     [self.tabBarController.tabBar setHidden:YES];
     [self.view layoutIfNeeded];
     
