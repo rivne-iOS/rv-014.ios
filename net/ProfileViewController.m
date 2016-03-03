@@ -47,6 +47,11 @@ static NSInteger const HTTP_RESPONSE_CODE_OK = 200;
 - (void)viewDidLoad {
     [super viewDidLoad];
     
+    UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc] initWithTarget:self
+                                                                          action:@selector(dismissKeyboard:)];
+    
+    [self.view addGestureRecognizer:tap];
+    
     self.dataSorce = [[NetworkDataSorce alloc] init];
     
     [self.changeUserDetails setBackgroundColor:[UIColor bawlRedColor]];
@@ -65,13 +70,6 @@ static NSInteger const HTTP_RESPONSE_CODE_OK = 200;
 
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:YES];
-    
-    if ([CurrentItems sharedItems].user) {
-        self.navigationItem.rightBarButtonItem.title = @"Log Out";
-    }
-    else {
-        self.navigationItem.rightBarButtonItem.title = @"Log In";
-    }
 }
 
 - (void)viewDidAppear:(BOOL)animated {
@@ -236,58 +234,6 @@ static NSInteger const HTTP_RESPONSE_CODE_OK = 200;
                                     }] resume];
 }
 
-- (IBAction)sequeToLogInButton:(UIBarButtonItem *)sender {
-    
-    
-    if (![CurrentItems sharedItems].user)
-    {
-        [self performSegueWithIdentifier:@"fromProfileToLogIn" sender:self];
-    }
-    else
-    {
-        [self.dataSorce requestSignOutWithHandler:^(NSString *stringAnswer) {
-            dispatch_async(dispatch_get_main_queue(), ^{
-                
-                if([stringAnswer isEqualToString:[@"Bye " stringByAppendingString:[CurrentItems sharedItems].user.name]])
-                {
-                    // alert - good
-                    self.title = [NSString stringWithFormat:@"Bowl"];
-                    self.navigationItem.rightBarButtonItem.title = @"Log In";
-                    [self.changeUserDetails setHidden:YES];
-                    [self.changeAvatar setHidden:YES];
-                    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Log Out"
-                                                                    message:@"You loged out successfully!"
-                                                                   delegate:nil
-                                                          cancelButtonTitle:@"OK"
-                                                          otherButtonTitles:nil];
-                    [alert show];
-                }
-                else
-                {
-                    // alert - bad
-                    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Log Out"
-                                                                    message:[@"Something has gone wrong! (server answer: )" stringByAppendingString:stringAnswer]
-                                                                   delegate:nil
-                                                          cancelButtonTitle:@"OK"
-                                                          otherButtonTitles:nil];
-                    [alert show];
-                    
-                }
-            });
-        } andErrorHandler:^(NSError *error) {
-            // alert - bad
-            UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Log Out"
-                                                            message:@"Problem with internet connection"
-                                                           delegate:nil
-                                                  cancelButtonTitle:@"OK"
-                                                  otherButtonTitles:nil];
-            [alert show];
-            
-        }];
-        
-    }
-}
-
 - (void) sendProfileImage: (UIImage *)profileImage {
     NSString *urlString = [NSString stringWithFormat:@"https://bawl-rivne.rhcloud.com/image/add/avatar"];
     NSData *imageData = UIImageJPEGRepresentation(profileImage, 1.0);
@@ -445,7 +391,7 @@ static NSInteger const HTTP_RESPONSE_CODE_OK = 200;
 - (void)registerForKeyboardNotifications
 {
     [[NSNotificationCenter defaultCenter] addObserver:self
-                                             selector:@selector(keyboardWasShown:)
+                                             selector:@selector(keyboardDidShown:)
                                                  name:UIKeyboardDidShowNotification object:nil];
     
     [[NSNotificationCenter defaultCenter] addObserver:self
@@ -454,19 +400,25 @@ static NSInteger const HTTP_RESPONSE_CODE_OK = 200;
     
 }
 
-- (void)keyboardWasShown:(NSNotification*)aNotification
+- (void)keyboardDidShown:(NSNotification*)aNotification
 {
     NSDictionary* info = [aNotification userInfo];
     CGSize kbSize = [[info objectForKey:UIKeyboardFrameBeginUserInfoKey] CGRectValue].size;
     
-    UIEdgeInsets contentInsets = UIEdgeInsetsMake(0.0, 0.0, kbSize.height, 0.0);
-    self.scrollView.contentInset = contentInsets;
-    self.scrollView.scrollIndicatorInsets = contentInsets;
     
     CGRect aRect = self.view.frame;
     aRect.size.height -= kbSize.height;
-    if (!CGRectContainsPoint(aRect, self.activeField.frame.origin) ) {
-        [self.scrollView scrollRectToVisible:self.activeField.frame animated:YES];
+    
+    UIEdgeInsets contentInsets = UIEdgeInsetsMake(80, 0.0, aRect.size.height, 0.0);
+    self.scrollView.contentInset = contentInsets;
+    self.scrollView.scrollIndicatorInsets = contentInsets;
+
+    CGPoint point = [self.activeField.superview convertPoint:self.activeField.frame.origin toView:nil];
+    
+    point.y += self.activeField.frame.size.height;
+    
+    if (!CGRectContainsPoint(aRect, point) ) {
+        [self.scrollView setContentOffset:CGPointMake(0.0, point.y - aRect.size.height) animated:YES];
     }
 }
 
@@ -481,7 +433,6 @@ static NSInteger const HTTP_RESPONSE_CODE_OK = 200;
 - (void)textFieldDidBeginEditing:(UITextField *)textField
 {
     self.activeField = textField;
-    //NSLog([NSString stringWithFormat:@"%@",self.activeField.text]);
 }
 
 - (void)textFieldDidEndEditing:(UITextField *)textField
