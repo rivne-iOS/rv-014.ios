@@ -52,7 +52,7 @@
     HTTPConnector *connector = [[HTTPConnector alloc] init];
     [connector requestUsers:^(NSData *data, NSError *error) {
         NSArray <NSDictionary<NSString*,NSString*>*> *userDics = nil;
-        if(data.length>0 && error!=nil)
+        if(data.length>0 && error==nil)
         {
             userDics= [NSJSONSerialization JSONObjectWithData:data options:0 error:NULL];
             if (![userDics isKindOfClass:[NSArray class]] || error != nil)

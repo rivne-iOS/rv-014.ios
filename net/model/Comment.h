@@ -17,13 +17,10 @@
 @property(strong, nonatomic) NSString *userMessage;
 
 
-
 -(instancetype)initWithCommentDictionary:(NSDictionary <NSString*,id> *)commentDictionary
-           andAllUsersDictionaries:(NSArray <NSDictionary <NSString*,NSString*> *> *)usersDictionaries
-                          andUIImageView:(UIImageView*)imageView;
-
--(instancetype)initWithCommentDictionary:(NSDictionary <NSString*,id> *)commentDictionary
-                 andAllUsersDictionaries:(NSArray <NSDictionary <NSString*,NSString*> *> *)usersDictionaries;
+                             andUsersDic:(NSDictionary <NSString*,id> *)userDic
+                          andUIImageView:(UIImageView*)imageView
+                      andImageDictionary:(NSMutableDictionary <NSString*, UIImage*> *) dictionary;
 
 
 @end

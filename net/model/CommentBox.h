@@ -19,6 +19,8 @@
 @property(strong, nonatomic) UIView *commentView;
 @property(strong, nonatomic) UILabel *commentLabelName;
 @property(strong, nonatomic) UILabel *commentLabelMessage;
+
+@property(strong, nonatomic) NSString *avatarStringName;
 @property(strong, nonatomic) AvatarView *avatar;
 
 @property(strong, nonatomic) UIButton *buttonName;

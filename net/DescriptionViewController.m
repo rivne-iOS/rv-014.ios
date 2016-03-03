@@ -50,6 +50,9 @@
 @property (strong, nonatomic) NSMutableArray <ChangerBox*> *changerBoxArr;
 @property (strong, nonatomic) NSMutableArray <CommentBox*> *commentBoxArr;
 
+@property (strong,nonatomic) NSMutableDictionary <NSString*, UIImage*> *avatarNamesAndImagesDic;
+// @property (strong,nonatomic) NSMutableDictionary <NSString*, UIImageView*> *avatarNamesAndImageViewsDic;
+
 @property(nonatomic) CGFloat avatarSize;
 @property(nonatomic) CGFloat contentStaticHeight;
 @property(nonatomic) CGFloat contentDynamicHeight;
@@ -69,6 +72,13 @@
 
 #pragma mark - Lasy instantiation
 
+
+-(NSMutableDictionary <NSString*, UIImage*> *)avatarNamesAndImagesDic
+{
+    if(_avatarNamesAndImagesDic==nil)
+        _avatarNamesAndImagesDic = [[NSMutableDictionary alloc] init];
+    return _avatarNamesAndImagesDic;
+}
 
 -(NSMutableArray <CommentBox*> *)commentBoxArr
 {
@@ -121,7 +131,6 @@
     CurrentItems *cItems = [CurrentItems sharedItems];
     self.title = cItems.appTitle;
     [self setDataToView];
-    [self clearOldDynamicElements];
     [self prepareUIChangeStatusElements];
     [self.tabBarController.tabBar.items objectAtIndex:1].title = @"Description";
     
@@ -147,19 +156,28 @@
                                              selector:@selector(keyboardWillHide)
                                                  name:UIKeyboardWillHideNotification
                                                object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(updateAvatarImages:)
+                                                 name:@"updateAvatarImages" object:nil];
+    
+}
+
+-(void)updateAvatarImages:(NSNotification*)notification
+{
+    NSDictionary *userInfo = notification.userInfo;
+    for (CommentBox *box in self.commentBoxArr)
+    {
+        if ([box.avatarStringName isEqualToString:userInfo.allKeys.firstObject])
+        {
+            box.avatar.image = [userInfo objectForKey:box.avatarStringName];
+        }
+    }
 }
 
 -(void)viewWillDisappear:(BOOL)animated
 {
-    [[NSNotificationCenter defaultCenter] removeObserver:self name:UIDeviceOrientationDidChangeNotification object:nil];
-
-    [[NSNotificationCenter defaultCenter] removeObserver:self
-                                                    name:UIKeyboardDidShowNotification
-                                                  object:nil];
-    
-    [[NSNotificationCenter defaultCenter] removeObserver:self
-                                                    name:UIKeyboardWillHideNotification
-                                                  object:nil];
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
+    [self clearOldDynamicElements];
 }
 
 -(void)viewDidAppear:(BOOL)animated
@@ -356,7 +374,8 @@
            {
                
                NSDictionary<NSString *,id> *commentDic = commentDics[index];
-               [weakSelf addOneComment:commentDic withIndex:index allUsersDic:allUserDictionaries];
+               NSDictionary <NSString*,id> *userDic = [self userDicFromAllUsers:allUserDictionaries andUserID:[commentDic objectForKey:@"USER_ID"]];
+               [weakSelf addOneComment:commentDic withIndex:index usersDic:userDic];
            }
            NSLog(@"weakSelf.viewBetweenCommentAndChare %@",weakSelf.viewBetweenCommentAndChare);
            weakSelf.contentViewHeightConstraint.constant = weakSelf.contentDynamicHeight + weakSelf.contentStaticHeight;
@@ -407,7 +426,8 @@
            {
                
                NSDictionary<NSString *,id> *commentDic = commentDics[index];
-               [weakSelf addOneComment:commentDic withIndex:index allUsersDic:allUserDictionaries];
+               NSDictionary <NSString*,id> *userDic = [self userDicFromAllUsers:allUserDictionaries andUserID:[commentDic objectForKey:@"USER_ID"]];
+               [weakSelf addOneComment:commentDic withIndex:index usersDic:userDic];
            }
            NSLog(@"weakSelf.viewBetweenCommentAndChare %@",weakSelf.viewBetweenCommentAndChare);
            weakSelf.contentViewHeightConstraint.constant = weakSelf.contentDynamicHeight + weakSelf.contentStaticHeight;
@@ -417,7 +437,23 @@
     
 }
 
--(void)addOneComment:(NSDictionary <NSString*, id> *)commentDic withIndex:(NSInteger)index allUsersDic:(NSArray <NSDictionary <NSString*,id> *> *)allUsersDictionaries
+-(NSDictionary <NSString*,id> *)userDicFromAllUsers:(NSArray <NSDictionary <NSString*,id> *> *)allUsersDictionaries andUserID:(NSNumber*)userId
+{
+    NSDictionary <NSString*,NSString*> *userDic = nil;
+    for (NSDictionary <NSString*,NSString*> *tUserDic in allUsersDictionaries)
+    {
+        if([tUserDic objectForKey:@"ID"].intValue == [userId intValue])
+        {
+            userDic = tUserDic;
+            break;
+        }
+    }
+    return userDic;
+}
+
+
+
+-(void)addOneComment:(NSDictionary <NSString*, id> *)commentDic withIndex:(NSInteger)index usersDic:(NSDictionary <NSString*,id> *)userDic
 {
     CommentBox *box = [[CommentBox alloc] init];
     UIView *commentView = [[UIView alloc] init];
@@ -445,10 +481,28 @@
     avatar.translatesAutoresizingMaskIntoConstraints = NO;
     avatar.restorationIdentifier = @"AvatarImageView";
     box.avatar = avatar;
+    box.avatarStringName = [userDic objectForKey:@"AVATAR"];
     [self.contentView addSubview:avatar];
     
     //comment init with image View
-    Comment *comment = [[Comment alloc] initWithCommentDictionary:commentDic andAllUsersDictionaries:allUsersDictionaries andUIImageView:(UIImageView*)avatar];
+    NSString *avatarStringName = [userDic objectForKey:@"AVATAR"];
+    UIImage *avatarImage = [self.avatarNamesAndImagesDic objectForKey:avatarStringName];
+    Comment *comment = nil;
+    if(avatarImage!=nil)
+    {
+        if(![avatarImage isEqual:[NSNull null]])
+        {
+            avatar.image = avatarImage;   
+        }
+        comment = [[Comment alloc] initWithCommentDictionary:commentDic andUsersDic:userDic  andUIImageView:nil andImageDictionary:nil];
+    }
+    else
+    {
+        comment = [[Comment alloc] initWithCommentDictionary:commentDic
+                                                 andUsersDic:userDic
+                                              andUIImageView:(UIImageView*)avatar
+                                          andImageDictionary:self.avatarNamesAndImagesDic];
+    }
 
     // id
     box.userID = comment.userId;
@@ -664,6 +718,7 @@
     
     [self.commentBoxArr makeObjectsPerformSelector:@selector(removeElementsFromSuperView)];
     [self.commentBoxArr removeAllObjects];
+    [self.avatarNamesAndImagesDic removeAllObjects];
 }
 
 -(void)prepareUIChangeStatusElements
