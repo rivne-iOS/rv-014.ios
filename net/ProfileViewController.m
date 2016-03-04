@@ -17,11 +17,9 @@
 
 #import "IssueHistoryViewController.h"
 #import "NSString+stringIsEmpry.h"
-#import "User.h"
 #import "DescriptionViewController.h"
 #import "UIScrollView+getContentSize.h"
 #import "NetworkDataSorce.h"
-#import "DataSorceProtocol.h"
 
 static NSString const * const AVATAR_NO_IMAGE = @"no_avatar.png";
 static NSString const * const DOMAIN_CHANGE_USER_DETAILS = @"https://bawl-rivne.rhcloud.com/users/";
@@ -38,7 +36,6 @@ static NSInteger const HTTP_RESPONSE_CODE_OK = 200;
 @property (strong, nonatomic) UIImage *avatarImage;
 @property (strong, nonatomic) NSString *avatarImageURL;
 @property (strong, nonatomic) UITextField *activeField;
-@property (strong, nonatomic) id <DataSorceProtocol> dataSorce;
 
 @end
 
@@ -51,8 +48,6 @@ static NSInteger const HTTP_RESPONSE_CODE_OK = 200;
                                                                           action:@selector(dismissKeyboard:)];
     
     [self.view addGestureRecognizer:tap];
-    
-    self.dataSorce = [[NetworkDataSorce alloc] init];
     
     [self.changeUserDetails setBackgroundColor:[UIColor bawlRedColor]];
     [self.changeAvatar setBackgroundColor:[UIColor bawlRedColor]];
