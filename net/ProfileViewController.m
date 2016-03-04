@@ -257,9 +257,6 @@ static NSInteger const HTTP_RESPONSE_CODE_OK = 200;
                       dispatch_async(dispatch_get_main_queue(), ^{
                           //Update the progress view
                           [weakSelf.progressView setProgress:uploadProgress.fractionCompleted animated:YES];
-                          if (uploadProgress.fractionCompleted == 1.0) {
-                              
-                          }
                       });
                   }
                   completionHandler:^(NSURLResponse * _Nonnull response, id  _Nullable responseObject, NSError * _Nullable error) {
