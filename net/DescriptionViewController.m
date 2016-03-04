@@ -613,8 +613,6 @@
         {
             ProfileViewController *profileViewController = (ProfileViewController*)segue.destinationViewController;
             profileViewController.userID = self.callingSegueToProfileUserId.integerValue;
-            profileViewController.isLogged = ([CurrentItems sharedItems].user != nil);
-            profileViewController.dataSorce = self.dataSorce;
         }
     }
 }

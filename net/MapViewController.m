@@ -288,7 +288,7 @@ static int const MARKER_HIDING_RADIUS = 10;
                 self.title = [NSString stringWithFormat:@"Bowl"];
                 self.navigationItem.rightBarButtonItem.title = @"Log In";
                 self.navigationItem.leftBarButtonItem = nil;
-                self.currentUser=nil;
+                self.currentUser = nil;
                 [[NSUserDefaults standardUserDefaults] objectForKey:@"userDictionary"];
                 UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Log Out"
                                                                 message:@"You loged out successfully!"
@@ -554,8 +554,6 @@ static int const MARKER_HIDING_RADIUS = 10;
         [destController popToRootViewControllerAnimated:NO];
         IssueHistoryViewController *issueHistoryViewController = (IssueHistoryViewController *)destController.topViewController;
         issueHistoryViewController.title = self.title;
-        issueHistoryViewController.isLogged = self.userLogined;
-        issueHistoryViewController.dataSorce = self.dataSorce;
         issueHistoryViewController.mapDelegate = self;
     }
     return YES;
