@@ -8,7 +8,7 @@
 
 #import <UIKit/UIKit.h>
 
-@interface ProfileViewController : UIViewController <UIImagePickerControllerDelegate, UITextFieldDelegate>
+@interface ProfileViewController : UIViewController <UIImagePickerControllerDelegate, UITextFieldDelegate, UINavigationControllerDelegate>
 
 @property (nonatomic, weak) IBOutlet UIButton *changeUserDetails;
 @property (nonatomic, weak) IBOutlet UIButton *changeAvatar;

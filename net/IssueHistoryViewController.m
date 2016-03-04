@@ -120,8 +120,6 @@ static NSString * const kSimpleTableIdentifier = @"SampleTableCell";
     [self.refreshControl addTarget:self action:@selector(requestIssueHistory) forControlEvents:UIControlEventValueChanged];
     
     [self.issueTable registerNib:[UINib nibWithNibName:@"CustomTableCell" bundle:nil] forCellReuseIdentifier:kSimpleTableIdentifier];
-    
-    [self requestIssueHistory];
 }
 
 - (void)viewDidDisappear:(BOOL)animated {

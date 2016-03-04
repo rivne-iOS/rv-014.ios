@@ -63,6 +63,11 @@ static NSInteger const HTTP_RESPONSE_CODE_OK = 200;
     // Do any additional setup after loading the view.
 }
 
+- (void)dealloc
+{
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
+}
+
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:YES];
 }
@@ -397,27 +402,26 @@ static NSInteger const HTTP_RESPONSE_CODE_OK = 200;
     NSDictionary* info = [aNotification userInfo];
     CGSize kbSize = [[info objectForKey:UIKeyboardFrameBeginUserInfoKey] CGRectValue].size;
     
-    
     CGRect aRect = self.view.frame;
     aRect.size.height -= kbSize.height;
     
-    UIEdgeInsets contentInsets = UIEdgeInsetsMake(80, 0.0, aRect.size.height, 0.0);
+    UIEdgeInsets contentInsets = UIEdgeInsetsMake(64.0, 0.0, kbSize.height, 0.0);
     self.scrollView.contentInset = contentInsets;
     self.scrollView.scrollIndicatorInsets = contentInsets;
 
-    CGPoint point = [self.activeField.superview convertPoint:self.activeField.frame.origin toView:nil];
-    
-    point.y += self.activeField.frame.size.height;
-    
-    if (!CGRectContainsPoint(aRect, point) ) {
-        [self.scrollView setContentOffset:CGPointMake(0.0, point.y - aRect.size.height) animated:YES];
-    }
+//    CGPoint point = [self.activeField.superview convertPoint:self.activeField.frame.origin toView:nil];
+//    
+//    point.y += self.activeField.frame.size.height;
+//    
+//    if (!CGRectContainsPoint(aRect, point) ) {
+//        [self.scrollView setContentOffset:CGPointMake(0.0, point.y - aRect.size.height) animated:YES];
+//    }
 }
 
 - (void)keyboardWillBeHidden:(NSNotification*)aNotification
 {
     UIEdgeInsets contentInsets = UIEdgeInsetsZero;
-    contentInsets.top = 80;
+    contentInsets.top = 64;
     self.scrollView.contentInset = contentInsets;
     self.scrollView.scrollIndicatorInsets = contentInsets;
 }
