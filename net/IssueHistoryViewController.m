@@ -56,8 +56,8 @@ static NSString * const kSimpleTableIdentifier = @"SampleTableCell";
                                                 
                                                 [_weakSelf.issueHistory addObject:oneCell];
                                             }
-                                            
-                                            [self performSelectorOnMainThread:@selector(reloadData) withObject:nil waitUntilDone:NO];
+                                            _weakSelf.issueTable.backgroundView = nil;
+                                            [_weakSelf performSelectorOnMainThread:@selector(reloadData) withObject:nil waitUntilDone:NO];
                                         }
                                     }] resume];
     
@@ -78,6 +78,28 @@ static NSString * const kSimpleTableIdentifier = @"SampleTableCell";
         
         [self.refreshControl endRefreshing];
     }
+    
+    if (![self.issueHistory isEmpty]) {
+        
+        self.issueTable.separatorStyle = UITableViewCellSeparatorStyleSingleLine;
+        self.issueTable.backgroundView = nil;
+        
+    } else {
+        
+        // Display a message when the table is empty
+        UILabel *messageLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, self.view.bounds.size.width, self.view.bounds.size.height)];
+        
+        messageLabel.text = @"No data is currently available. Please pull down to refresh.";
+        messageLabel.textColor = [UIColor blackColor];
+        messageLabel.numberOfLines = 0;
+        messageLabel.textAlignment = NSTextAlignmentCenter;
+        messageLabel.font = [UIFont fontWithName:@"Palatino-Italic" size:20];
+        [messageLabel sizeToFit];
+        
+        self.issueTable.backgroundView = messageLabel;
+        self.issueTable.separatorStyle = UITableViewCellSeparatorStyleNone;
+    }
+
 }
 
 - (void)viewDidLoad {
@@ -102,6 +124,14 @@ static NSString * const kSimpleTableIdentifier = @"SampleTableCell";
     [self requestIssueHistory];
 }
 
+- (void)viewDidDisappear:(BOOL)animated {
+    [super viewDidDisappear:YES];
+    
+    [self.issueHistory removeAllObjects];
+    [self.issueTable reloadData];
+    self.issueTable.backgroundView = nil;
+}
+
 - (void) viewWillAppear:(BOOL)animated {
     [super viewWillAppear:YES];
     [self.tabBarController.tabBar.items objectAtIndex:2].title = @"History";
@@ -109,6 +139,10 @@ static NSString * const kSimpleTableIdentifier = @"SampleTableCell";
     [self.issueTitle setText:self.issue.issueDescription];
     [self requestIssueHistory];
     [self.mapDelegate showTabBar];
+    UIActivityIndicatorView *activityindicator = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleWhiteLarge];
+    [activityindicator setColor: [UIColor bawlRedColor]];
+    self.issueTable.backgroundView = activityindicator;
+    [activityindicator startAnimating];
 //    self.tabBarController.tabBar.hidden = NO;
 }
 
@@ -134,7 +168,7 @@ static NSString * const kSimpleTableIdentifier = @"SampleTableCell";
     return cell;
 }
 
-- (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
+/*- (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
 {
     // Return the number of sections.
     if (![self.issueHistory isEmpty]) {
@@ -161,7 +195,7 @@ static NSString * const kSimpleTableIdentifier = @"SampleTableCell";
     }
     
     return 0;
-}
+}*/
 
 -(void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
     NSArray *history = self.issue.history;
@@ -179,7 +213,6 @@ static NSString * const kSimpleTableIdentifier = @"SampleTableCell";
         {
             ProfileViewController *profileViewController = (ProfileViewController*)segue.destinationViewController;
             profileViewController.userID = self.userID;
-//            profileViewController.mapViewDelegate = self.mapDelegate;
         }
     }
 }
