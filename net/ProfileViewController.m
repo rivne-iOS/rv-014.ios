@@ -234,47 +234,6 @@ static NSInteger const HTTP_RESPONSE_CODE_OK = 200;
                                     }] resume];
 }
 
-- (IBAction)sequeToLogInButton:(UIBarButtonItem *)sender {
-    
-    
-    if (!self.isLogged)
-    {
-        [self performSegueWithIdentifier:@"fromProfileToLogIn" sender:self];
-    }
-    else
-    {
-        [self.dataSorce requestSignOutWithHandler:^(NSString *stringAnswer, NSError *error) {
-            dispatch_async(dispatch_get_main_queue(), ^{
-                
-                if([stringAnswer isEqualToString:[@"Bye " stringByAppendingString:[CurrentItems sharedItems].user.name]])
-                {
-                    // alert - good
-                    self.navigationItem.rightBarButtonItem.title = @"Log In";
-                    [CurrentItems sharedItems].user = nil;
-                    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Log Out"
-                                                                    message:@"You loged out successfully!"
-                                                                   delegate:nil
-                                                          cancelButtonTitle:@"OK"
-                                                          otherButtonTitles:nil];
-                    [alert show];
-                }
-                else
-                {
-                    // alert - bad
-                    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Log Out"
-                                                                    message:[@"Something has gone wrong! (server answer: )" stringByAppendingString:stringAnswer]
-                                                                   delegate:nil
-                                                          cancelButtonTitle:@"OK"
-                                                          otherButtonTitles:nil];
-                    [alert show];
-                    
-                }
-            });
-        }];
-        
-    }
-}
-
 - (void) sendProfileImage: (UIImage *)profileImage {
     NSString *urlString = [NSString stringWithFormat:@"https://bawl-rivne.rhcloud.com/image/add/avatar"];
     NSData *imageData = UIImageJPEGRepresentation(profileImage, 1.0);

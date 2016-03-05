@@ -542,8 +542,8 @@ static int const MARKER_HIDING_RADIUS = 10;
         [destController popToRootViewControllerAnimated:NO];
         IssueHistoryViewController *issueHistoryViewController = (IssueHistoryViewController *)destController.topViewController;
 //        issueHistoryViewController.title = self.title;
-        issueHistoryViewController.isLogged = self.userLogined;
-        issueHistoryViewController.dataSorce = self.dataSorce;
+//        issueHistoryViewController.isLogged = self.userLogined;
+//        issueHistoryViewController.dataSorce = self.dataSorce;
         issueHistoryViewController.mapDelegate = self;
     }
     return YES;

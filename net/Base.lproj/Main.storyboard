@@ -7,7 +7,7 @@
         <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
     </dependencies>
     <scenes>
-        <!--bawl-->
+        <!--Log In-->
         <scene sceneID="eUo-En-Lv8">
             <objects>
                 <viewController id="Wyx-PR-bqC" customClass="LogInViewController" sceneMemberID="viewController">
@@ -259,7 +259,7 @@
             </objects>
             <point key="canvasLocation" x="1086" y="-413"/>
         </scene>
-        <!--bawl-->
+        <!--Sign up-->
         <scene sceneID="JRA-cD-xgc">
             <objects>
                 <viewController id="xSJ-uf-0GR" customClass="SingUpViewController" sceneMemberID="viewController">
@@ -480,7 +480,7 @@
             </objects>
             <point key="canvasLocation" x="1800" y="-413"/>
         </scene>
-        <!--map-->
+        <!--Map-->
         <scene sceneID="Ue2-xT-0yB">
             <objects>
                 <viewController title="map" id="exP-kZ-Qky" customClass="MapViewController" sceneMemberID="viewController">
@@ -845,7 +845,7 @@
             </objects>
             <point key="canvasLocation" x="334" y="-361"/>
         </scene>
-        <!--bawl-->
+        <!--map-->
         <scene sceneID="rz9-tR-WYZ">
             <objects>
                 <navigationController title="bawl" automaticallyAdjustsScrollViewInsets="NO" id="B95-7g-rFr" sceneMemberID="viewController">
@@ -883,7 +883,7 @@
             </objects>
             <point key="canvasLocation" x="-1078" y="308"/>
         </scene>
-        <!--bawl-->
+        <!--Description View Controller-->
         <scene sceneID="4nc-Rp-TR5">
             <objects>
                 <viewController id="PW6-qZ-q9d" customClass="DescriptionViewController" sceneMemberID="viewController">
@@ -1116,7 +1116,7 @@
             </objects>
             <point key="canvasLocation" x="328" y="382"/>
         </scene>
-        <!--bawl-->
+        <!--Issue History View Controller-->
         <scene sceneID="deE-fx-zmW">
             <objects>
                 <tableViewController id="7ci-XQ-gFQ" customClass="IssueHistoryViewController" sceneMemberID="viewController">
@@ -1415,5 +1415,6 @@
     <inferredMetricsTieBreakers>
         <segue reference="Chd-uL-rSV"/>
         <segue reference="IRB-9q-JHA"/>
+        <segue reference="asR-3F-p9I"/>
     </inferredMetricsTieBreakers>
 </document>
