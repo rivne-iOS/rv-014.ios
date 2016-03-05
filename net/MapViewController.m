@@ -285,7 +285,7 @@ static int const MARKER_HIDING_RADIUS = 10;
                 // alert - good
                 self.navigationItem.rightBarButtonItem.title = @"Log In";
                 self.navigationItem.leftBarButtonItem = nil;
-                self.currentUser=nil;
+                self.currentUser = nil;
                 [[NSUserDefaults standardUserDefaults] objectForKey:@"userDictionary"];
                 UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Log Out"
                                                                 message:@"You loged out successfully!"

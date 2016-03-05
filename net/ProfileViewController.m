@@ -14,10 +14,12 @@
 #import "CurrentItems.h"
 #import "UIView+Addition.h"
 #import "UIViewController+backViewController.h"
+
 #import "IssueHistoryViewController.h"
 #import "NSString+stringIsEmpry.h"
-#import "User.h"
 #import "DescriptionViewController.h"
+#import "UIScrollView+getContentSize.h"
+#import "NetworkDataSorce.h"
 
 static NSString const * const AVATAR_NO_IMAGE = @"no_avatar.png";
 static NSString const * const DOMAIN_CHANGE_USER_DETAILS = @"https://bawl-rivne.rhcloud.com/users/";
@@ -29,9 +31,11 @@ static NSInteger const HTTP_RESPONSE_CODE_OK = 200;
 @property (nonatomic, weak) IBOutlet UILabel *labelSystemRole;
 @property (nonatomic, weak) IBOutlet UILabel *labelUserEmail;
 @property (nonatomic, weak) IBOutlet UIProgressView *progressView;
+@property (nonatomic, weak) IBOutlet UIScrollView *scrollView;
 
 @property (strong, nonatomic) UIImage *avatarImage;
 @property (strong, nonatomic) NSString *avatarImageURL;
+@property (strong, nonatomic) UITextField *activeField;
 
 @end
 
@@ -40,24 +44,32 @@ static NSInteger const HTTP_RESPONSE_CODE_OK = 200;
 - (void)viewDidLoad {
     [super viewDidLoad];
     
+    UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc] initWithTarget:self
+                                                                          action:@selector(dismissKeyboard:)];
+    
+    [self.view addGestureRecognizer:tap];
+    
     [self.changeUserDetails setBackgroundColor:[UIColor bawlRedColor]];
     [self.changeAvatar setBackgroundColor:[UIColor bawlRedColor]];
     
     [self.progressView setAlpha:0.0];
     
+    [self registerForKeyboardNotifications];
+    
+    self.userEmail.delegate = self;
+    self.userName.delegate = self;
+    
     [self hideAllViews];
     // Do any additional setup after loading the view.
 }
 
+- (void)dealloc
+{
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
+}
+
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:YES];
-    
-    if ([CurrentItems sharedItems].user) {
-        self.navigationItem.rightBarButtonItem.title = @"Log Out";
-    }
-    else {
-        self.navigationItem.rightBarButtonItem.title = @"Log In";
-    }
 }
 
 - (void)viewDidAppear:(BOOL)animated {
@@ -286,28 +298,25 @@ static NSInteger const HTTP_RESPONSE_CODE_OK = 200;
                       dispatch_async(dispatch_get_main_queue(), ^{
                           //Update the progress view
                           [weakSelf.progressView setProgress:uploadProgress.fractionCompleted animated:YES];
-                          if (uploadProgress.fractionCompleted == 1.0) {
-                              // do something
-                          }
                       });
                   }
                   completionHandler:^(NSURLResponse * _Nonnull response, id  _Nullable responseObject, NSError * _Nullable error) {
                       
                       if (error) {
+                          [weakSelf.progressView setProgress:0.0];
                           [UIView animateWithDuration:1.0 animations:^(void) {
                               [weakSelf.progressView  setAlpha:0.0];
                           }];
                           NSLog(@"Error: %@", error);
                       } else {
                           NSLog(@"%@ %@", response, responseObject);
-                          NSArray *value = [[NSArray alloc] initWithObjects:responseObject[@"filename"], nil];
-                          NSArray *key = [[NSArray alloc] initWithObjects:@"avatar", nil];
-                          NSDictionary *JSONdic = [[NSDictionary alloc] initWithObjects:value forKeys:key];
+                          NSDictionary *JSONdic = [[NSDictionary alloc] initWithObjectsAndKeys: responseObject[@"filename"],@"avatar", nil];
                           
                           [weakSelf requestChangeUserDetails:JSONdic completionHandler:^(void){
                               dispatch_async(dispatch_get_main_queue(), ^{
                                   [CurrentItems sharedItems].userImage = profileImage;
                                   [weakSelf.profileImage setImage:profileImage];
+                                  [weakSelf.progressView setProgress:0.0];
                                   
                                   [UIView animateWithDuration:1.0 animations:^(void) {
                                       [weakSelf.progressView  setAlpha:0.0];
@@ -414,6 +423,63 @@ static NSInteger const HTTP_RESPONSE_CODE_OK = 200;
             [CurrentItems sharedItems].user.email = self.userEmail.text;
         }];
     }
+}
+
+#pragma mark - Keyboard
+- (void)registerForKeyboardNotifications
+{
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(keyboardDidShown:)
+                                                 name:UIKeyboardDidShowNotification object:nil];
+    
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(keyboardWillBeHidden:)
+                                                 name:UIKeyboardWillHideNotification object:nil];
+    
+}
+
+- (void)keyboardDidShown:(NSNotification*)aNotification
+{
+    NSDictionary* info = [aNotification userInfo];
+    CGSize kbSize = [[info objectForKey:UIKeyboardFrameBeginUserInfoKey] CGRectValue].size;
+    
+    CGRect aRect = self.view.frame;
+    aRect.size.height -= kbSize.height;
+    
+    UIEdgeInsets contentInsets = UIEdgeInsetsMake(64.0, 0.0, kbSize.height, 0.0);
+    self.scrollView.contentInset = contentInsets;
+    self.scrollView.scrollIndicatorInsets = contentInsets;
+
+//    CGPoint point = [self.activeField.superview convertPoint:self.activeField.frame.origin toView:nil];
+//    
+//    point.y += self.activeField.frame.size.height;
+//    
+//    if (!CGRectContainsPoint(aRect, point) ) {
+//        [self.scrollView setContentOffset:CGPointMake(0.0, point.y - aRect.size.height) animated:YES];
+//    }
+}
+
+- (void)keyboardWillBeHidden:(NSNotification*)aNotification
+{
+    UIEdgeInsets contentInsets = UIEdgeInsetsZero;
+    contentInsets.top = 64;
+    self.scrollView.contentInset = contentInsets;
+    self.scrollView.scrollIndicatorInsets = contentInsets;
+}
+
+- (void)textFieldDidBeginEditing:(UITextField *)textField
+{
+    self.activeField = textField;
+}
+
+- (void)textFieldDidEndEditing:(UITextField *)textField
+{
+    self.activeField = nil;
+}
+
+- (IBAction)dismissKeyboard:(id)sender
+{
+    [self.activeField resignFirstResponder];
 }
 
 @end

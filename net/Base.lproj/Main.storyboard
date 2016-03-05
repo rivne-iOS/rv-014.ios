@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="9531" systemVersion="14F27" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="U7z-LT-7dR">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="9531" systemVersion="14F1509" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="U7z-LT-7dR">
     <dependencies>
         <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="9529"/>
@@ -1266,16 +1266,6 @@
                                             <action selector="changeUserDatails:" destination="7ZL-qH-qc6" eventType="touchUpInside" id="MHu-p3-emg"/>
                                         </connections>
                                     </button>
-                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Fk6-jn-N7K">
-                                        <rect key="frame" x="208" y="420" width="184" height="36"/>
-                                        <fontDescription key="fontDescription" type="system" pointSize="20"/>
-                                        <state key="normal" title="Change Avatar">
-                                            <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                                        </state>
-                                        <connections>
-                                            <action selector="changeAvatar:" destination="7ZL-qH-qc6" eventType="touchUpInside" id="bdq-ai-Lja"/>
-                                        </connections>
-                                    </button>
                                     <progressView opaque="NO" contentMode="scaleToFill" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="fi2-2A-bD9">
                                         <rect key="frame" x="230" y="170" width="140" height="2"/>
                                         <constraints>
@@ -1289,7 +1279,18 @@
                                             <constraint firstAttribute="width" constant="140" id="SST-yP-5sn"/>
                                         </constraints>
                                     </imageView>
+                                    <button opaque="NO" contentMode="scaleToFill" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Fk6-jn-N7K">
+                                        <rect key="frame" x="208" y="418" width="184" height="36"/>
+                                        <fontDescription key="fontDescription" type="system" pointSize="20"/>
+                                        <state key="normal" title="Change Avatar">
+                                            <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                        </state>
+                                        <connections>
+                                            <action selector="changeAvatar:" destination="7ZL-qH-qc6" eventType="touchUpInside" id="bdq-ai-Lja"/>
+                                        </connections>
+                                    </button>
                                 </subviews>
+                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                 <constraints>
                                     <constraint firstItem="fi2-2A-bD9" firstAttribute="top" secondItem="lVY-SF-ay3" secondAttribute="bottom" constant="10" id="0Vv-Fa-rAw"/>
                                     <constraint firstItem="Fk6-jn-N7K" firstAttribute="centerX" secondItem="ibI-TV-PAc" secondAttribute="centerX" id="15E-hO-Xxf"/>
@@ -1302,7 +1303,7 @@
                                     <constraint firstItem="fny-Oy-5Q6" firstAttribute="centerX" secondItem="ibI-TV-PAc" secondAttribute="centerX" id="HMp-cX-ZAJ"/>
                                     <constraint firstItem="ICv-Sc-PHI" firstAttribute="top" secondItem="Cvb-45-iu3" secondAttribute="bottom" constant="20" id="J6O-cJ-TNy"/>
                                     <constraint firstItem="Fk6-jn-N7K" firstAttribute="top" secondItem="gLf-Px-Gmy" secondAttribute="bottom" constant="10" id="Qyj-VV-PdF"/>
-                                    <constraint firstAttribute="bottom" secondItem="Fk6-jn-N7K" secondAttribute="bottom" constant="10" id="RVK-is-u02"/>
+                                    <constraint firstAttribute="bottom" secondItem="Fk6-jn-N7K" secondAttribute="bottom" id="RVK-is-u02"/>
                                     <constraint firstItem="Fk6-jn-N7K" firstAttribute="width" secondItem="gLf-Px-Gmy" secondAttribute="width" id="a5r-Vv-wYh"/>
                                     <constraint firstItem="lVY-SF-ay3" firstAttribute="top" secondItem="ibI-TV-PAc" secondAttribute="top" constant="20" id="kMF-0F-iuV"/>
                                     <constraint firstItem="ICv-Sc-PHI" firstAttribute="centerX" secondItem="ibI-TV-PAc" secondAttribute="centerX" id="rIp-zs-Pij"/>
@@ -1329,7 +1330,7 @@
                             <constraint firstAttribute="trailing" secondItem="ibI-TV-PAc" secondAttribute="trailing" id="cYv-tx-DAb"/>
                             <constraint firstItem="unj-J6-g7L" firstAttribute="centerX" secondItem="qEL-Qk-28G" secondAttribute="centerX" id="qVq-eH-f3b"/>
                             <constraint firstItem="ibI-TV-PAc" firstAttribute="top" secondItem="qEL-Qk-28G" secondAttribute="topMargin" id="td2-mv-vpH"/>
-                            <constraint firstAttribute="bottomMargin" secondItem="ibI-TV-PAc" secondAttribute="bottom" id="wGF-Iv-G3D"/>
+                            <constraint firstAttribute="bottom" secondItem="ibI-TV-PAc" secondAttribute="bottom" id="wGF-Iv-G3D"/>
                         </constraints>
                     </view>
                     <navigationItem key="navigationItem" title="bawl" id="8T7-SA-7gQ">
@@ -1348,11 +1349,11 @@
                         <outlet property="labelUserLogin" destination="fXZ-Ug-hZD" id="AjQ-S4-BjW"/>
                         <outlet property="profileImage" destination="lVY-SF-ay3" id="Aaf-yi-Xuy"/>
                         <outlet property="progressView" destination="fi2-2A-bD9" id="puJ-Hd-nzS"/>
+                        <outlet property="scrollView" destination="ibI-TV-PAc" id="EqU-DY-LWd"/>
                         <outlet property="systemRole" destination="VUL-dV-fxY" id="Ryd-s4-BeE"/>
                         <outlet property="userEmail" destination="7qw-nW-dNb" id="nri-nj-CZa"/>
                         <outlet property="userLogin" destination="sJA-Js-PEb" id="cgI-fs-rd5"/>
                         <outlet property="userName" destination="Cvb-45-iu3" id="fXs-9L-LPW"/>
-                        <segue destination="Wyx-PR-bqC" kind="show" identifier="fromProfileToLogIn" id="IRB-9q-JHA"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Wbz-p1-FN3" userLabel="First Responder" sceneMemberID="firstResponder"/>
