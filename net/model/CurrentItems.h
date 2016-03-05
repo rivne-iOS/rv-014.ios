@@ -32,7 +32,6 @@
 @property(strong, nonatomic) UIImage *issueImage;
 @property(strong, nonatomic) NSMutableArray<id<UserImageDelegate>> *userImageDelegates;
 @property(strong, nonatomic) NSMutableArray<id<IssueImageDelegate>> *issueImageDelegates;
-@property(strong, nonatomic) NSString *appTitle;
 
 
 

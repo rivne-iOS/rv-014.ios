@@ -145,7 +145,6 @@
 {
     [[NSNotificationCenter defaultCenter] addObserver:self  selector:@selector(orientationChanged:)    name:UIDeviceOrientationDidChangeNotification  object:nil];
     CurrentItems *cItems = [CurrentItems sharedItems];
-    self.title = cItems.appTitle;
     [self setDataToView];
     [self prepareUIChangeStatusElements];
     [self.tabBarController.tabBar.items objectAtIndex:1].title = @"Description";
@@ -438,7 +437,6 @@
            weakSelf.contentDynamicHeight = 0;
            if(commentDics==nil || error != nil || [commentDics isKindOfClass: [NSDictionary class]])
                return;
-           weakSelf.contentView.restorationIdentifier = @"contentView";
            for (NSInteger index=0; index<commentDics.count; ++index)
            {
                
@@ -446,7 +444,6 @@
                NSDictionary <NSString*,id> *userDic = [self userDicFromAllUsers:allUserDictionaries andUserID:[commentDic objectForKey:@"USER_ID"]];
                [weakSelf addOneComment:commentDic withIndex:index usersDic:userDic];
            }
-           NSLog(@"weakSelf.viewBetweenCommentAndChare %@",weakSelf.viewBetweenCommentAndChare);
            weakSelf.contentViewHeightConstraint.constant = weakSelf.contentDynamicHeight + weakSelf.contentStaticHeight;
            [weakSelf.view layoutIfNeeded];
        });
