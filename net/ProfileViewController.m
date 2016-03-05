@@ -237,7 +237,6 @@ static NSInteger const HTTP_RESPONSE_CODE_OK = 200;
                 if([stringAnswer isEqualToString:[@"Bye " stringByAppendingString:[CurrentItems sharedItems].user.name]])
                 {
                     // alert - good
-                    self.title = [NSString stringWithFormat:@"Bowl"];
                     self.navigationItem.rightBarButtonItem.title = @"Log In";
                     [CurrentItems sharedItems].user = nil;
                     UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Log Out"

@@ -12,6 +12,8 @@
 #import "Issue.h"
 #import "Parser.h"
 
+#import <CoreText/CTFontManager.h>
+
 @interface NetworkDataSorce()
 
 
@@ -254,5 +256,6 @@
     }];
 
 }
+
 
 @end

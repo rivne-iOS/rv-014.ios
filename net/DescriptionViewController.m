@@ -118,10 +118,14 @@
     [cItems.issueImageDelegates addObject:self];
     self.navigationController.navigationBar.tintColor = [UIColor whiteColor];
     self.navigationController.navigationBar.barTintColor = [UIColor bawlRedColor];
-    self.navigationController.navigationBar.titleTextAttributes = @{NSForegroundColorAttributeName : [UIColor whiteColor]};
+    UIFont *newFont = [UIFont fontWithName:@"ComicSansMS-Italic" size:25];
+    self.navigationController.navigationBar.titleTextAttributes = @{NSForegroundColorAttributeName : [UIColor whiteColor],
+                                                                    NSFontAttributeName : newFont};
     self.navigationController.navigationBar.barStyle = UIBarStyleBlack;
     
     self.avatarSize = self.contentView.frame.size.width / 10;
+    
+    
     
 }
 

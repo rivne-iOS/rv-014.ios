@@ -36,6 +36,7 @@
 		84E2CF401C77742D0032F444 /* AvatarView.m in Sources */ = {isa = PBXBuildFile; fileRef = 84E2CF3F1C77742D0032F444 /* AvatarView.m */; };
 		84E3347F1C4435E800BEE6BA /* MapViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 84E3347E1C4435E800BEE6BA /* MapViewController.m */; };
 		84E334821C4436B200BEE6BA /* SingUpViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 84E334811C4436B200BEE6BA /* SingUpViewController.m */; };
+		84E4C7BC1C8AF16600577215 /* Comic_Sans_MS_i.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 84E4C7BB1C8AF16600577215 /* Comic_Sans_MS_i.ttf */; };
 		84E7BF461C430AA600E66585 /* NetworkDataSorce.m in Sources */ = {isa = PBXBuildFile; fileRef = 84E7BF451C430AA600E66585 /* NetworkDataSorce.m */; };
 		CE8BAD001C6B39B4006951D7 /* ProfileViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = CE8BACFF1C6B39B4006951D7 /* ProfileViewController.m */; };
 		CEC6F6301C5B6FA2002321AA /* IssueHistoryViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = CEC6F62F1C5B6FA2002321AA /* IssueHistoryViewController.m */; };
@@ -95,7 +96,7 @@
 		8460F99E1C3C651500ECB3A4 /* HTTPConnector.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = HTTPConnector.m; path = model/HTTPConnector.m; sourceTree = "<group>"; };
 		8460F9A01C3C666100ECB3A4 /* Parser.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Parser.h; path = model/Parser.h; sourceTree = "<group>"; };
 		8460F9A11C3C666100ECB3A4 /* Parser.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = Parser.m; path = model/Parser.m; sourceTree = "<group>"; };
-		847595451C455C0F00E1BF87 /* Podfile */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = Podfile; sourceTree = "<group>"; };
+		847595451C455C0F00E1BF87 /* Podfile */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = Podfile; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.ruby; };
 		8499309E1C5915E100EDBF5E /* IssueCategory.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = IssueCategory.h; path = model/IssueCategory.h; sourceTree = "<group>"; };
 		8499309F1C5915E100EDBF5E /* IssueCategory.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = IssueCategory.m; path = model/IssueCategory.m; sourceTree = "<group>"; };
 		849E9B191C709BB200DA527E /* CurrentItems.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CurrentItems.h; path = model/CurrentItems.h; sourceTree = "<group>"; };
@@ -114,6 +115,7 @@
 		84E3347E1C4435E800BEE6BA /* MapViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MapViewController.m; sourceTree = "<group>"; };
 		84E334801C4436B200BEE6BA /* SingUpViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SingUpViewController.h; sourceTree = "<group>"; };
 		84E334811C4436B200BEE6BA /* SingUpViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SingUpViewController.m; sourceTree = "<group>"; };
+		84E4C7BB1C8AF16600577215 /* Comic_Sans_MS_i.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = Comic_Sans_MS_i.ttf; path = ressource/Comic_Sans_MS_i.ttf; sourceTree = "<group>"; };
 		84E7BF431C430A3700E66585 /* DataSorceProtocol.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = DataSorceProtocol.h; path = model/DataSorceProtocol.h; sourceTree = "<group>"; };
 		84E7BF441C430AA600E66585 /* NetworkDataSorce.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = NetworkDataSorce.h; path = model/NetworkDataSorce.h; sourceTree = "<group>"; };
 		84E7BF451C430AA600E66585 /* NetworkDataSorce.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = NetworkDataSorce.m; path = model/NetworkDataSorce.m; sourceTree = "<group>"; };
@@ -183,6 +185,7 @@
 		8460F9611C3C531E00ECB3A4 = {
 			isa = PBXGroup;
 			children = (
+				84E4C7BD1C8AF17600577215 /* ressource */,
 				847595451C455C0F00E1BF87 /* Podfile */,
 				8460F96C1C3C531E00ECB3A4 /* net */,
 				8460F9861C3C531E00ECB3A4 /* netTests */,
@@ -292,6 +295,14 @@
 				CECCC90A1C8058F800CD3228 /* NSMutableArray+isEmpty.m */,
 			);
 			name = model;
+			sourceTree = "<group>";
+		};
+		84E4C7BD1C8AF17600577215 /* ressource */ = {
+			isa = PBXGroup;
+			children = (
+				84E4C7BB1C8AF16600577215 /* Comic_Sans_MS_i.ttf */,
+			);
+			name = ressource;
 			sourceTree = "<group>";
 		};
 		8BFDDE7E2FEA6F339BE0F3DC /* Frameworks */ = {
@@ -419,6 +430,7 @@
 				CEC6F6361C5B6FB6002321AA /* CustomTableCell.xib in Resources */,
 				847595461C455C0F00E1BF87 /* Podfile in Resources */,
 				8460F97B1C3C531E00ECB3A4 /* Images.xcassets in Resources */,
+				84E4C7BC1C8AF16600577215 /* Comic_Sans_MS_i.ttf in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -63,13 +63,15 @@ static int const MARKER_HIDING_RADIUS = 10;
     // even if this controller is on back, it has to listen, and perform selector!
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(renewMap) name:@"renewMap" object:nil];
     
-    self.title = @"Bowl";
     self.isMarkerSelected = NO;
     self.heightOfStatusBarInCurrentOrientation = [UIApplication sharedApplication].statusBarFrame.size.height;
     self.dataSorce = [[NetworkDataSorce alloc] init];
     self.navigationController.navigationBar.tintColor = [UIColor whiteColor];
     self.navigationController.navigationBar.barTintColor = [UIColor bawlRedColor];
-    self.navigationController.navigationBar.titleTextAttributes = @{NSForegroundColorAttributeName : [UIColor whiteColor]};
+    
+    UIFont *newFont = [UIFont fontWithName:@"ComicSansMS-Italic" size:25];
+    self.navigationController.navigationBar.titleTextAttributes = @{NSForegroundColorAttributeName : [UIColor whiteColor],
+                                                                    NSFontAttributeName : newFont};
     self.navigationController.navigationBar.barStyle = UIBarStyleBlack;
     self.navigationItem.leftBarButtonItem.title = @"Profile";
     self.leftItem = self.navigationItem.leftBarButtonItem;
@@ -89,6 +91,7 @@ static int const MARKER_HIDING_RADIUS = 10;
     [self customiseProgressBarView];
     [IssueCategories earlyPreparing];
     [self requestCategories];
+    
 }
 
 -(void)addKeyboardObserver
@@ -248,10 +251,8 @@ static int const MARKER_HIDING_RADIUS = 10;
 -(void)setCurrentUser:(User *) user
 {
     _currentUser = user;
-    CurrentItems * cItems = [CurrentItems sharedItems];
     if(user == nil)
     {
-        cItems.appTitle = self.title = [NSString stringWithFormat:@"Bawl"];
         self.navigationItem.rightBarButtonItem.title = @"Log In";
         self.navigationItem.leftBarButtonItem = nil;
         self.userLogined=NO;
@@ -259,9 +260,8 @@ static int const MARKER_HIDING_RADIUS = 10;
     }
     else
     {
-        cItems.appTitle = self.title = [NSString stringWithFormat:@"Bawl(%@)", user.name];
         [self.tabBarController.tabBar.items objectAtIndex:0].title = @"Location";
-        self.navigationItem.rightBarButtonItem.title = @"Sign Out";
+        self.navigationItem.rightBarButtonItem.title = @"Log Out";
         self.navigationItem.leftBarButtonItem = self.leftItem;
         self.userLogined = YES;
     }
@@ -283,7 +283,6 @@ static int const MARKER_HIDING_RADIUS = 10;
             if([stringAnswer isEqualToString:[@"Bye " stringByAppendingString:self.currentUser.name]])
             {
                 // alert - good
-                self.title = [NSString stringWithFormat:@"Bowl"];
                 self.navigationItem.rightBarButtonItem.title = @"Log In";
                 self.navigationItem.leftBarButtonItem = nil;
                 self.currentUser=nil;
@@ -542,7 +541,7 @@ static int const MARKER_HIDING_RADIUS = 10;
         UINavigationController *destController = (UINavigationController *)viewController;
         [destController popToRootViewControllerAnimated:NO];
         IssueHistoryViewController *issueHistoryViewController = (IssueHistoryViewController *)destController.topViewController;
-        issueHistoryViewController.title = self.title;
+//        issueHistoryViewController.title = self.title;
         issueHistoryViewController.isLogged = self.userLogined;
         issueHistoryViewController.dataSorce = self.dataSorce;
         issueHistoryViewController.mapDelegate = self;

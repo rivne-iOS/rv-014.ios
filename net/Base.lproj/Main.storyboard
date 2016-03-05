@@ -7,7 +7,7 @@
         <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
     </dependencies>
     <scenes>
-        <!--Log In-->
+        <!--bawl-->
         <scene sceneID="eUo-En-Lv8">
             <objects>
                 <viewController id="Wyx-PR-bqC" customClass="LogInViewController" sceneMemberID="viewController">
@@ -245,7 +245,7 @@
                             <constraint firstAttribute="trailing" secondItem="ZtN-U8-kCQ" secondAttribute="trailing" id="xWD-s9-J1v"/>
                         </constraints>
                     </view>
-                    <navigationItem key="navigationItem" title="Log In" id="8yP-Mj-9Yf"/>
+                    <navigationItem key="navigationItem" title="bawl" id="8yP-Mj-9Yf"/>
                     <connections>
                         <outlet property="contentView" destination="rLC-AJ-amh" id="oEt-82-fuP"/>
                         <outlet property="loginButton" destination="Jen-pK-Flu" id="Icw-oK-9Vc"/>
@@ -259,7 +259,7 @@
             </objects>
             <point key="canvasLocation" x="1086" y="-413"/>
         </scene>
-        <!--Sign up-->
+        <!--bawl-->
         <scene sceneID="JRA-cD-xgc">
             <objects>
                 <viewController id="xSJ-uf-0GR" customClass="SingUpViewController" sceneMemberID="viewController">
@@ -463,7 +463,7 @@
                             <constraint firstItem="oJh-kA-UTn" firstAttribute="height" secondItem="ZaN-Qo-3fm" secondAttribute="height" id="vLy-Er-aeS"/>
                         </constraints>
                     </view>
-                    <navigationItem key="navigationItem" title="Sign up" id="DJJ-VE-TqD"/>
+                    <navigationItem key="navigationItem" title="bawl" id="DJJ-VE-TqD"/>
                     <connections>
                         <outlet property="backButton" destination="Hpy-AU-8e8" id="kA5-k8-5AV"/>
                         <outlet property="confirmPassword" destination="KhR-9Y-XnU" id="onO-Pg-iVg"/>
@@ -480,10 +480,10 @@
             </objects>
             <point key="canvasLocation" x="1800" y="-413"/>
         </scene>
-        <!--Map-->
+        <!--map-->
         <scene sceneID="Ue2-xT-0yB">
             <objects>
-                <viewController id="exP-kZ-Qky" customClass="MapViewController" sceneMemberID="viewController">
+                <viewController title="map" id="exP-kZ-Qky" customClass="MapViewController" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="BZy-CD-oPZ"/>
                         <viewControllerLayoutGuide type="bottom" id="mxJ-z8-iEP"/>
@@ -801,7 +801,7 @@
                             </mask>
                         </variation>
                     </view>
-                    <navigationItem key="navigationItem" title="Map" id="dV6-o3-yfK">
+                    <navigationItem key="navigationItem" title="bawl" id="dV6-o3-yfK">
                         <barButtonItem key="leftBarButtonItem" title="Item" id="GIE-wX-tXu">
                             <connections>
                                 <segue destination="7ZL-qH-qc6" kind="show" id="asR-3F-p9I"/>
@@ -845,10 +845,10 @@
             </objects>
             <point key="canvasLocation" x="334" y="-361"/>
         </scene>
-        <!--map-->
+        <!--bawl-->
         <scene sceneID="rz9-tR-WYZ">
             <objects>
-                <navigationController automaticallyAdjustsScrollViewInsets="NO" id="B95-7g-rFr" sceneMemberID="viewController">
+                <navigationController title="bawl" automaticallyAdjustsScrollViewInsets="NO" id="B95-7g-rFr" sceneMemberID="viewController">
                     <tabBarItem key="tabBarItem" title="map" image="button_background.png" id="7jq-8v-FzN"/>
                     <toolbarItems/>
                     <navigationBar key="navigationBar" contentMode="scaleToFill" id="IFm-K2-3kq">
@@ -883,7 +883,7 @@
             </objects>
             <point key="canvasLocation" x="-1078" y="308"/>
         </scene>
-        <!--Description View Controller-->
+        <!--bawl-->
         <scene sceneID="4nc-Rp-TR5">
             <objects>
                 <viewController id="PW6-qZ-q9d" customClass="DescriptionViewController" sceneMemberID="viewController">
@@ -1087,7 +1087,7 @@
                             <constraint firstItem="k64-3s-vvK" firstAttribute="top" secondItem="7rX-L3-WUm" secondAttribute="bottom" id="tBh-sE-vZg"/>
                         </constraints>
                     </view>
-                    <navigationItem key="navigationItem" id="pyL-Qo-4km"/>
+                    <navigationItem key="navigationItem" title="bawl" id="pyL-Qo-4km"/>
                     <connections>
                         <outlet property="ScrollView" destination="eSC-Id-pRY" id="tRP-gN-luF"/>
                         <outlet property="categoryImageView" destination="Gl8-Ee-6Wb" id="hLl-hj-7IP"/>
@@ -1116,7 +1116,7 @@
             </objects>
             <point key="canvasLocation" x="328" y="382"/>
         </scene>
-        <!--Issue History View Controller-->
+        <!--bawl-->
         <scene sceneID="deE-fx-zmW">
             <objects>
                 <tableViewController id="7ci-XQ-gFQ" customClass="IssueHistoryViewController" sceneMemberID="viewController">
@@ -1146,7 +1146,7 @@
                             <outlet property="delegate" destination="7ci-XQ-gFQ" id="WdO-TD-JKj"/>
                         </connections>
                     </tableView>
-                    <navigationItem key="navigationItem" id="SG0-80-TPJ"/>
+                    <navigationItem key="navigationItem" title="bawl" id="SG0-80-TPJ"/>
                     <connections>
                         <outlet property="issueTable" destination="MXw-ZY-6pf" id="qRY-Lf-9Yr"/>
                         <outlet property="issueTitle" destination="O1M-dI-1Ze" id="f0w-lf-7EM"/>
@@ -1332,7 +1332,7 @@
                             <constraint firstAttribute="bottomMargin" secondItem="ibI-TV-PAc" secondAttribute="bottom" id="wGF-Iv-G3D"/>
                         </constraints>
                     </view>
-                    <navigationItem key="navigationItem" title="Bawl" id="8T7-SA-7gQ">
+                    <navigationItem key="navigationItem" title="bawl" id="8T7-SA-7gQ">
                         <barButtonItem key="rightBarButtonItem" title="Item" id="Bqf-Ox-f82">
                             <connections>
                                 <action selector="sequeToLogInButton:" destination="7ZL-qH-qc6" id="TNT-FL-vja"/>
@@ -1412,7 +1412,7 @@
         <image name="tittle" width="284" height="152"/>
     </resources>
     <inferredMetricsTieBreakers>
-        <segue reference="JER-bu-PYI"/>
-        <segue reference="375-AO-ajD"/>
+        <segue reference="Chd-uL-rSV"/>
+        <segue reference="IRB-9q-JHA"/>
     </inferredMetricsTieBreakers>
 </document>

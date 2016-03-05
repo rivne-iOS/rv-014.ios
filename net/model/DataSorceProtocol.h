@@ -47,6 +47,7 @@
         andViewControllerHandler:(void (^)(NSString *stringAnswer, Issue *issue, NSError *error))viewControllerHandler; // e.g. user is not logined (string answer parametr)
 
 
+
 @end
 
 
