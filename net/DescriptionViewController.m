@@ -39,6 +39,7 @@
 
 @property (strong, nonatomic) IBOutlet UIButton *changeButton;
 
+@property (weak, nonatomic) IBOutlet UIView *coverScrollView;
 
 @property (strong, nonatomic) IssueChangeStatus *statusChanger;
 @property (strong, nonatomic) id <DataSorceProtocol> dataSorce;
@@ -64,6 +65,7 @@
 
 
 @property(strong, nonatomic)NSNumber *callingSegueToProfileUserId;
+
 @end
 
 @implementation DescriptionViewController
@@ -126,7 +128,17 @@
     self.avatarSize = self.contentView.frame.size.width / 10;
     
     
+    UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc] initWithTarget:self
+                                                                          action:@selector(dismissKeyboard)];
     
+    [self.coverScrollView addGestureRecognizer:tap];
+
+    
+}
+
+-(void)dismissKeyboard
+{
+    [self.addCommentDynamicTextView resignFirstResponder];
 }
 
 - (void) viewWillAppear:(BOOL)animated
@@ -194,7 +206,6 @@
     CurrentItems *cItems = [CurrentItems sharedItems];
     if (![self.issueImageView.image isEqual:cItems.issueImage])
     {
-        NSLog(@"in description issue did load: ![self.issueImageView.image isEqual:cItems.issueImage], setOutlet");
         dispatch_async(dispatch_get_main_queue(), ^{
             self.issueImageView.image = [CurrentItems sharedItems].issueImage;
         });
@@ -208,13 +219,10 @@
     for (UIView *view in self.viewsVertical)
     {
         self.contentStaticHeight += view.frame.size.height;
-        NSLog(@"append view height: %f",view.frame.size.height);
     }
     for (NSLayoutConstraint *con in self.constraintsVertical)
     {
         self.contentStaticHeight += con.constant;
-        NSLog(@"append consthaint height: %f",con.constant);
-        
     }
 
 }
@@ -275,6 +283,8 @@
 {
     if (self.addCommentDynamicTextView == nil)
         return;
+
+    self.coverScrollView.hidden = NO;  // to hook tap on screen
     
     UIView *grayView = [[UIView alloc] init];
     grayView.translatesAutoresizingMaskIntoConstraints = NO;
@@ -334,7 +344,16 @@
 
 -(void)keyboardWillHide
 {
+    [self.addCommentDynamicButton removeFromSuperview];
+    [self.addCommentDynamicGreyView removeFromSuperview];
+    [self.addCommentDynamicGreyView removeFromSuperview];
+    
+    self.addCommentDynamicButton = nil;
+    self.addCommentDynamicButton = nil;
+    self.addCommentDynamicButton = nil;
+    
     [self scrollBottomConstraint].constant = 0;
+    self.coverScrollView.hidden = YES;
     [self.view layoutIfNeeded];
     
 }
@@ -343,13 +362,7 @@
 {
     NSString *message = self.addCommentDynamicTextView.text;
     [self.addCommentDynamicTextView resignFirstResponder];
-    [self.addCommentDynamicButton removeFromSuperview];
-    [self.addCommentDynamicGreyView removeFromSuperview];
-    [self.addCommentDynamicGreyView removeFromSuperview];
     
-    self.addCommentDynamicButton = nil;
-    self.addCommentDynamicButton = nil;
-    self.addCommentDynamicButton = nil;
     
     [self requestUsersAndAddNewCommentsAndSendMessage:message];
     
