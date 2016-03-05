@@ -21,7 +21,7 @@
 @property(strong, nonatomic)NSString *issueImage;
 @property(strong, nonatomic)NSString *defaultIssueImage;
 @property(strong, nonatomic)NSString *defaultUserImage;
-@property(strong, nonatomic)NSString *getComments;
+@property(strong, nonatomic)NSString *comments;
 
 
 -(void)postRequest:(NSData*) postData
@@ -57,12 +57,11 @@
         _issueImage = @"image/";
         _defaultIssueImage = @"no_attach.png";
         _defaultUserImage = @"no_avatar.png";
-        _getComments = @"issue/commentIDNumber/comments";
+        _comments = @"issue/commentIDNumber/comments";
         
     }
     return self;
 }
-
 
 
 
@@ -89,7 +88,7 @@
 
 -(void)requestCommentWithID:(NSString*)strID andDataSorceHandler:(void(^)(NSData *data, NSError *error))dataSorceHandler
 {
-    NSString *strUrl = [[self.globalURL stringByAppendingString:self.getComments] stringByReplacingOccurrencesOfString:@"commentIDNumber" withString:strID];
+    NSString *strUrl = [[self.globalURL stringByAppendingString:self.comments] stringByReplacingOccurrencesOfString:@"commentIDNumber" withString:strID];
     [self getRequestBlankToUrl:strUrl andHandler:dataSorceHandler];
 }
 
@@ -97,7 +96,7 @@
                              andPosData:(NSData*)data
                     andDatasorceHandler:(void(^)(NSData* data, NSError *error))dataSorceHandler
 {
-    NSString *strUrl = [[self.globalURL stringByAppendingString:self.getComments] stringByReplacingOccurrencesOfString:@"commentIDNumber" withString:strID];
+    NSString *strUrl = [[self.globalURL stringByAppendingString:self.comments] stringByReplacingOccurrencesOfString:@"commentIDNumber" withString:strID];
     [self postRequest:data toURL:strUrl andHandler:dataSorceHandler];
 }
 

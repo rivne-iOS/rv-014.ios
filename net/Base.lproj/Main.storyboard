@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="9531" systemVersion="14F1509" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="U7z-LT-7dR">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="9531" systemVersion="14F27" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="U7z-LT-7dR">
     <dependencies>
         <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="9529"/>
@@ -7,7 +7,7 @@
         <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
     </dependencies>
     <scenes>
-        <!--Log In-->
+        <!--bawl-->
         <scene sceneID="eUo-En-Lv8">
             <objects>
                 <viewController id="Wyx-PR-bqC" customClass="LogInViewController" sceneMemberID="viewController">
@@ -245,7 +245,7 @@
                             <constraint firstAttribute="trailing" secondItem="ZtN-U8-kCQ" secondAttribute="trailing" id="xWD-s9-J1v"/>
                         </constraints>
                     </view>
-                    <navigationItem key="navigationItem" title="Log In" id="8yP-Mj-9Yf"/>
+                    <navigationItem key="navigationItem" title="bawl" id="8yP-Mj-9Yf"/>
                     <connections>
                         <outlet property="contentView" destination="rLC-AJ-amh" id="oEt-82-fuP"/>
                         <outlet property="loginButton" destination="Jen-pK-Flu" id="Icw-oK-9Vc"/>
@@ -259,7 +259,7 @@
             </objects>
             <point key="canvasLocation" x="1086" y="-413"/>
         </scene>
-        <!--Sign up-->
+        <!--bawl-->
         <scene sceneID="JRA-cD-xgc">
             <objects>
                 <viewController id="xSJ-uf-0GR" customClass="SingUpViewController" sceneMemberID="viewController">
@@ -463,7 +463,7 @@
                             <constraint firstItem="oJh-kA-UTn" firstAttribute="height" secondItem="ZaN-Qo-3fm" secondAttribute="height" id="vLy-Er-aeS"/>
                         </constraints>
                     </view>
-                    <navigationItem key="navigationItem" title="Sign up" id="DJJ-VE-TqD"/>
+                    <navigationItem key="navigationItem" title="bawl" id="DJJ-VE-TqD"/>
                     <connections>
                         <outlet property="backButton" destination="Hpy-AU-8e8" id="kA5-k8-5AV"/>
                         <outlet property="confirmPassword" destination="KhR-9Y-XnU" id="onO-Pg-iVg"/>
@@ -480,7 +480,7 @@
             </objects>
             <point key="canvasLocation" x="1800" y="-413"/>
         </scene>
-        <!--Map-->
+        <!--bawl-->
         <scene sceneID="Ue2-xT-0yB">
             <objects>
                 <viewController id="exP-kZ-Qky" customClass="MapViewController" sceneMemberID="viewController">
@@ -801,7 +801,7 @@
                             </mask>
                         </variation>
                     </view>
-                    <navigationItem key="navigationItem" title="Map" id="dV6-o3-yfK">
+                    <navigationItem key="navigationItem" title="bawl" id="dV6-o3-yfK">
                         <barButtonItem key="leftBarButtonItem" title="Item" id="GIE-wX-tXu">
                             <connections>
                                 <segue destination="7ZL-qH-qc6" kind="show" id="asR-3F-p9I"/>
@@ -883,7 +883,7 @@
             </objects>
             <point key="canvasLocation" x="-1078" y="308"/>
         </scene>
-        <!--Description View Controller-->
+        <!--bawl-->
         <scene sceneID="4nc-Rp-TR5">
             <objects>
                 <viewController id="PW6-qZ-q9d" customClass="DescriptionViewController" sceneMemberID="viewController">
@@ -1073,6 +1073,19 @@
                                     <constraint firstItem="xDe-do-YBG" firstAttribute="leading" secondItem="eSC-Id-pRY" secondAttribute="leading" id="UWU-7b-Vnd"/>
                                 </constraints>
                             </scrollView>
+                            <view hidden="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="SAW-bf-xKB" userLabel="cover scroll during new comment is adding">
+                                <rect key="frame" x="0.0" y="64" width="600" height="487"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="128" id="6PC-n9-jD8"/>
+                                    <constraint firstAttribute="width" constant="240" id="rdm-79-4JI"/>
+                                </constraints>
+                                <variation key="default">
+                                    <mask key="constraints">
+                                        <exclude reference="6PC-n9-jD8"/>
+                                        <exclude reference="rdm-79-4JI"/>
+                                    </mask>
+                                </variation>
+                            </view>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <constraints>
@@ -1081,13 +1094,17 @@
                             <constraint firstItem="eSC-Id-pRY" firstAttribute="leading" secondItem="sig-UO-uJx" secondAttribute="leading" id="AuY-WE-Xkf"/>
                             <constraint firstAttribute="trailing" secondItem="k64-3s-vvK" secondAttribute="trailing" id="IbN-b5-8Ge"/>
                             <constraint firstItem="eSC-Id-pRY" firstAttribute="top" secondItem="7rX-L3-WUm" secondAttribute="bottom" id="SpO-Re-JHh"/>
+                            <constraint firstItem="SAW-bf-xKB" firstAttribute="width" secondItem="eSC-Id-pRY" secondAttribute="width" id="ZWB-VR-9PY"/>
                             <constraint firstItem="xDe-do-YBG" firstAttribute="width" secondItem="sig-UO-uJx" secondAttribute="width" id="cDd-zF-WRt"/>
                             <constraint firstAttribute="trailing" secondItem="eSC-Id-pRY" secondAttribute="trailing" id="f1Q-9x-L8O"/>
                             <constraint firstItem="qY4-qQ-hOh" firstAttribute="top" secondItem="eSC-Id-pRY" secondAttribute="bottom" identifier="BottomScrollViewConstraint" id="f8O-wx-dPV"/>
+                            <constraint firstItem="SAW-bf-xKB" firstAttribute="leading" secondItem="eSC-Id-pRY" secondAttribute="leading" id="h1x-f4-DFB"/>
+                            <constraint firstItem="SAW-bf-xKB" firstAttribute="height" secondItem="eSC-Id-pRY" secondAttribute="height" id="hBn-3o-EfV"/>
+                            <constraint firstItem="SAW-bf-xKB" firstAttribute="top" secondItem="eSC-Id-pRY" secondAttribute="top" id="kos-S9-ZdY"/>
                             <constraint firstItem="k64-3s-vvK" firstAttribute="top" secondItem="7rX-L3-WUm" secondAttribute="bottom" id="tBh-sE-vZg"/>
                         </constraints>
                     </view>
-                    <navigationItem key="navigationItem" id="pyL-Qo-4km"/>
+                    <navigationItem key="navigationItem" title="bawl" id="pyL-Qo-4km"/>
                     <connections>
                         <outlet property="ScrollView" destination="eSC-Id-pRY" id="tRP-gN-luF"/>
                         <outlet property="categoryImageView" destination="Gl8-Ee-6Wb" id="hLl-hj-7IP"/>
@@ -1096,6 +1113,7 @@
                         <outlet property="commentLabelOnButton" destination="7pm-I9-YFc" id="Gt6-LP-jNG"/>
                         <outlet property="contentView" destination="xDe-do-YBG" id="RLv-Px-LR8"/>
                         <outlet property="contentViewHeightConstraint" destination="hDR-NX-AJK" id="ck5-9a-21Z"/>
+                        <outlet property="coverScrollView" destination="SAW-bf-xKB" id="Yz0-ap-dQS"/>
                         <outlet property="currentStatusLabel" destination="k24-do-pW1" id="UV5-jx-YWd"/>
                         <outlet property="descriptionLabel" destination="8A7-hb-9GL" id="hLB-91-34B"/>
                         <outlet property="issueImageView" destination="b5C-Xa-9wo" id="usc-De-PnR"/>
@@ -1116,7 +1134,7 @@
             </objects>
             <point key="canvasLocation" x="328" y="382"/>
         </scene>
-        <!--Issue History View Controller-->
+        <!--bawl-->
         <scene sceneID="deE-fx-zmW">
             <objects>
                 <tableViewController id="7ci-XQ-gFQ" customClass="IssueHistoryViewController" sceneMemberID="viewController">
@@ -1146,7 +1164,7 @@
                             <outlet property="delegate" destination="7ci-XQ-gFQ" id="WdO-TD-JKj"/>
                         </connections>
                     </tableView>
-                    <navigationItem key="navigationItem" id="SG0-80-TPJ"/>
+                    <navigationItem key="navigationItem" title="bawl" id="SG0-80-TPJ"/>
                     <connections>
                         <outlet property="issueTable" destination="MXw-ZY-6pf" id="qRY-Lf-9Yr"/>
                         <outlet property="issueTitle" destination="O1M-dI-1Ze" id="f0w-lf-7EM"/>
@@ -1333,7 +1351,7 @@
                             <constraint firstAttribute="bottom" secondItem="ibI-TV-PAc" secondAttribute="bottom" id="wGF-Iv-G3D"/>
                         </constraints>
                     </view>
-                    <navigationItem key="navigationItem" title="Bawl" id="8T7-SA-7gQ"/>
+                    <navigationItem key="navigationItem" title="bawl" id="8T7-SA-7gQ"/>
                     <simulatedStatusBarMetrics key="simulatedStatusBarMetrics"/>
                     <simulatedNavigationBarMetrics key="simulatedTopBarMetrics"/>
                     <connections>

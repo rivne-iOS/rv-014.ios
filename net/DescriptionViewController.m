@@ -39,6 +39,7 @@
 
 @property (strong, nonatomic) IBOutlet UIButton *changeButton;
 
+@property (weak, nonatomic) IBOutlet UIView *coverScrollView;
 
 @property (strong, nonatomic) IssueChangeStatus *statusChanger;
 @property (strong, nonatomic) id <DataSorceProtocol> dataSorce;
@@ -49,6 +50,9 @@
 @property (strong, nonatomic) UIView *backGreyView;
 @property (strong, nonatomic) NSMutableArray <ChangerBox*> *changerBoxArr;
 @property (strong, nonatomic) NSMutableArray <CommentBox*> *commentBoxArr;
+
+@property (strong,nonatomic) NSMutableDictionary <NSString*, UIImage*> *avatarNamesAndImagesDic;
+// @property (strong,nonatomic) NSMutableDictionary <NSString*, UIImageView*> *avatarNamesAndImageViewsDic;
 
 @property(nonatomic) CGFloat avatarSize;
 @property(nonatomic) CGFloat contentStaticHeight;
@@ -61,6 +65,7 @@
 
 
 @property(strong, nonatomic)NSNumber *callingSegueToProfileUserId;
+
 @end
 
 @implementation DescriptionViewController
@@ -69,6 +74,13 @@
 
 #pragma mark - Lasy instantiation
 
+
+-(NSMutableDictionary <NSString*, UIImage*> *)avatarNamesAndImagesDic
+{
+    if(_avatarNamesAndImagesDic==nil)
+        _avatarNamesAndImagesDic = [[NSMutableDictionary alloc] init];
+    return _avatarNamesAndImagesDic;
+}
 
 -(NSMutableArray <CommentBox*> *)commentBoxArr
 {
@@ -108,20 +120,32 @@
     [cItems.issueImageDelegates addObject:self];
     self.navigationController.navigationBar.tintColor = [UIColor whiteColor];
     self.navigationController.navigationBar.barTintColor = [UIColor bawlRedColor];
-    self.navigationController.navigationBar.titleTextAttributes = @{NSForegroundColorAttributeName : [UIColor whiteColor]};
+    UIFont *newFont = [UIFont fontWithName:@"ComicSansMS-Italic" size:25];
+    self.navigationController.navigationBar.titleTextAttributes = @{NSForegroundColorAttributeName : [UIColor whiteColor],
+                                                                    NSFontAttributeName : newFont};
     self.navigationController.navigationBar.barStyle = UIBarStyleBlack;
     
     self.avatarSize = self.contentView.frame.size.width / 10;
     
+    
+    UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc] initWithTarget:self
+                                                                          action:@selector(dismissKeyboard)];
+    
+    [self.coverScrollView addGestureRecognizer:tap];
+
+    
+}
+
+-(void)dismissKeyboard
+{
+    [self.addCommentDynamicTextView resignFirstResponder];
 }
 
 - (void) viewWillAppear:(BOOL)animated
 {
     [[NSNotificationCenter defaultCenter] addObserver:self  selector:@selector(orientationChanged:)    name:UIDeviceOrientationDidChangeNotification  object:nil];
     CurrentItems *cItems = [CurrentItems sharedItems];
-    self.title = cItems.appTitle;
     [self setDataToView];
-    [self clearOldDynamicElements];
     [self prepareUIChangeStatusElements];
     [self.tabBarController.tabBar.items objectAtIndex:1].title = @"Description";
     
@@ -147,19 +171,28 @@
                                              selector:@selector(keyboardWillHide)
                                                  name:UIKeyboardWillHideNotification
                                                object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(updateAvatarImages:)
+                                                 name:@"updateAvatarImages" object:nil];
+    
+}
+
+-(void)updateAvatarImages:(NSNotification*)notification
+{
+    NSDictionary *userInfo = notification.userInfo;
+    for (CommentBox *box in self.commentBoxArr)
+    {
+        if ([box.avatarStringName isEqualToString:userInfo.allKeys.firstObject])
+        {
+            box.avatar.image = [userInfo objectForKey:box.avatarStringName];
+        }
+    }
 }
 
 -(void)viewWillDisappear:(BOOL)animated
 {
-    [[NSNotificationCenter defaultCenter] removeObserver:self name:UIDeviceOrientationDidChangeNotification object:nil];
-
-    [[NSNotificationCenter defaultCenter] removeObserver:self
-                                                    name:UIKeyboardDidShowNotification
-                                                  object:nil];
-    
-    [[NSNotificationCenter defaultCenter] removeObserver:self
-                                                    name:UIKeyboardWillHideNotification
-                                                  object:nil];
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
+    [self clearOldDynamicElements];
 }
 
 -(void)viewDidAppear:(BOOL)animated
@@ -172,7 +205,6 @@
     CurrentItems *cItems = [CurrentItems sharedItems];
     if (![self.issueImageView.image isEqual:cItems.issueImage])
     {
-        NSLog(@"in description issue did load: ![self.issueImageView.image isEqual:cItems.issueImage], setOutlet");
         dispatch_async(dispatch_get_main_queue(), ^{
             self.issueImageView.image = [CurrentItems sharedItems].issueImage;
         });
@@ -186,13 +218,10 @@
     for (UIView *view in self.viewsVertical)
     {
         self.contentStaticHeight += view.frame.size.height;
-        NSLog(@"append view height: %f",view.frame.size.height);
     }
     for (NSLayoutConstraint *con in self.constraintsVertical)
     {
         self.contentStaticHeight += con.constant;
-        NSLog(@"append consthaint height: %f",con.constant);
-        
     }
 
 }
@@ -253,6 +282,8 @@
 {
     if (self.addCommentDynamicTextView == nil)
         return;
+
+    self.coverScrollView.hidden = NO;  // to hook tap on screen
     
     UIView *grayView = [[UIView alloc] init];
     grayView.translatesAutoresizingMaskIntoConstraints = NO;
@@ -312,15 +343,6 @@
 
 -(void)keyboardWillHide
 {
-    [self scrollBottomConstraint].constant = 0;
-    [self.view layoutIfNeeded];
-    
-}
-
--(void)sendCommentPressed
-{
-    NSString *message = self.addCommentDynamicTextView.text;
-    [self.addCommentDynamicTextView resignFirstResponder];
     [self.addCommentDynamicButton removeFromSuperview];
     [self.addCommentDynamicGreyView removeFromSuperview];
     [self.addCommentDynamicGreyView removeFromSuperview];
@@ -329,6 +351,18 @@
     self.addCommentDynamicButton = nil;
     self.addCommentDynamicButton = nil;
     
+    [self scrollBottomConstraint].constant = 0;
+    self.coverScrollView.hidden = YES;
+    [self.view layoutIfNeeded];
+    
+}
+
+-(void)sendCommentPressed
+{
+    NSString *message = self.addCommentDynamicTextView.text;
+    [self.addCommentDynamicTextView resignFirstResponder];
+    
+    
     [self requestUsersAndAddNewCommentsAndSendMessage:message];
     
 }
@@ -336,10 +370,8 @@
 -(void)requestUsersAndAddNewCommentsAndSendMessage:(NSString*)message
 {
     __weak DescriptionViewController *weakSelf = self;
-    [self.dataSorce requestAllUsers:^(NSArray<NSDictionary<NSString *,NSString *> *> *userDictionaries) {
+    [self.dataSorce requestAllUsers:^(NSArray<NSDictionary<NSString *,NSString *> *> *userDictionaries, NSError *error) {
         [weakSelf sendMessage:message andAddnewCommentsBlockWithAllUserDictionaries:userDictionaries];
-    } withErrorHandler:^(NSError *error) {
-        //error
     }];
 }
 
@@ -358,7 +390,8 @@
            {
                
                NSDictionary<NSString *,id> *commentDic = commentDics[index];
-               [weakSelf addOneComment:commentDic withIndex:index allUsersDic:allUserDictionaries];
+               NSDictionary <NSString*,id> *userDic = [self userDicFromAllUsers:allUserDictionaries andUserID:[commentDic objectForKey:@"USER_ID"]];
+               [weakSelf addOneComment:commentDic withIndex:index usersDic:userDic];
            }
            NSLog(@"weakSelf.viewBetweenCommentAndChare %@",weakSelf.viewBetweenCommentAndChare);
            weakSelf.contentViewHeightConstraint.constant = weakSelf.contentDynamicHeight + weakSelf.contentStaticHeight;
@@ -384,10 +417,8 @@
 -(void)requestUsersAndComments
 {
     __weak DescriptionViewController *weakSelf = self;
-    [self.dataSorce requestAllUsers:^(NSArray<NSDictionary<NSString *,NSString *> *> *userDictionaries) {
+    [self.dataSorce requestAllUsers:^(NSArray<NSDictionary<NSString *,NSString *> *> *userDictionaries, NSError *error) {
         [weakSelf commentBlockWithAllUserDictionaries:userDictionaries];
-    } withErrorHandler:^(NSError *error) {
-        //error
     }];
 }
 
@@ -406,14 +437,13 @@
            weakSelf.contentDynamicHeight = 0;
            if(commentDics==nil || error != nil || [commentDics isKindOfClass: [NSDictionary class]])
                return;
-           weakSelf.contentView.restorationIdentifier = @"contentView";
            for (NSInteger index=0; index<commentDics.count; ++index)
            {
                
                NSDictionary<NSString *,id> *commentDic = commentDics[index];
-               [weakSelf addOneComment:commentDic withIndex:index allUsersDic:allUserDictionaries];
+               NSDictionary <NSString*,id> *userDic = [self userDicFromAllUsers:allUserDictionaries andUserID:[commentDic objectForKey:@"USER_ID"]];
+               [weakSelf addOneComment:commentDic withIndex:index usersDic:userDic];
            }
-           NSLog(@"weakSelf.viewBetweenCommentAndChare %@",weakSelf.viewBetweenCommentAndChare);
            weakSelf.contentViewHeightConstraint.constant = weakSelf.contentDynamicHeight + weakSelf.contentStaticHeight;
            [weakSelf.view layoutIfNeeded];
        });
@@ -421,7 +451,23 @@
     
 }
 
--(void)addOneComment:(NSDictionary <NSString*, id> *)commentDic withIndex:(NSInteger)index allUsersDic:(NSArray <NSDictionary <NSString*,id> *> *)allUsersDictionaries
+-(NSDictionary <NSString*,id> *)userDicFromAllUsers:(NSArray <NSDictionary <NSString*,id> *> *)allUsersDictionaries andUserID:(NSNumber*)userId
+{
+    NSDictionary <NSString*,NSString*> *userDic = nil;
+    for (NSDictionary <NSString*,NSString*> *tUserDic in allUsersDictionaries)
+    {
+        if([tUserDic objectForKey:@"ID"].intValue == [userId intValue])
+        {
+            userDic = tUserDic;
+            break;
+        }
+    }
+    return userDic;
+}
+
+
+
+-(void)addOneComment:(NSDictionary <NSString*, id> *)commentDic withIndex:(NSInteger)index usersDic:(NSDictionary <NSString*,id> *)userDic
 {
     CommentBox *box = [[CommentBox alloc] init];
     UIView *commentView = [[UIView alloc] init];
@@ -449,10 +495,28 @@
     avatar.translatesAutoresizingMaskIntoConstraints = NO;
     avatar.restorationIdentifier = @"AvatarImageView";
     box.avatar = avatar;
+    box.avatarStringName = [userDic objectForKey:@"AVATAR"];
     [self.contentView addSubview:avatar];
     
     //comment init with image View
-    Comment *comment = [[Comment alloc] initWithCommentDictionary:commentDic andAllUsersDictionaries:allUsersDictionaries andUIImageView:(UIImageView*)avatar];
+    NSString *avatarStringName = [userDic objectForKey:@"AVATAR"];
+    UIImage *avatarImage = [self.avatarNamesAndImagesDic objectForKey:avatarStringName];
+    Comment *comment = nil;
+    if(avatarImage!=nil)
+    {
+        if(![avatarImage isEqual:[NSNull null]])
+        {
+            avatar.image = avatarImage;   
+        }
+        comment = [[Comment alloc] initWithCommentDictionary:commentDic andUsersDic:userDic  andUIImageView:nil andImageDictionary:nil];
+    }
+    else
+    {
+        comment = [[Comment alloc] initWithCommentDictionary:commentDic
+                                                 andUsersDic:userDic
+                                              andUIImageView:(UIImageView*)avatar
+                                          andImageDictionary:self.avatarNamesAndImagesDic];
+    }
 
     // id
     box.userID = comment.userId;
@@ -666,6 +730,7 @@
     
     [self.commentBoxArr makeObjectsPerformSelector:@selector(removeElementsFromSuperView)];
     [self.commentBoxArr removeAllObjects];
+    [self.avatarNamesAndImagesDic removeAllObjects];
 }
 
 -(void)prepareUIChangeStatusElements
@@ -859,7 +924,7 @@
     
     [self.dataSorce requestChangeStatusWithID:[CurrentItems sharedItems].issue.issueId
                                      toStatus:sender.restorationIdentifier
-                     andViewControllerHandler:^(NSString *stringAnswer, Issue *issue) {
+                     andViewControllerHandler:^(NSString *stringAnswer, Issue *issue, NSError *error) {
                          dispatch_async(dispatch_get_main_queue(), ^ {
                              if (stringAnswer == nil)
                              {
@@ -890,8 +955,6 @@
                                  [alert show];
                              }
                          });
-                     } andErrorHandler:^(NSError *error) {
-                         
                      }];
     
 }

@@ -55,7 +55,17 @@
         textField.attributedPlaceholder = attrStr;
         self.signupButton.backgroundColor = [UIColor bawlRedColor];
         self.backButton.backgroundColor = [UIColor bawlRedColor];
+        
+        UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc] initWithTarget:self
+                                                                              action:@selector(dismissKeyboard)];
+        
+        [self.view addGestureRecognizer:tap];
     }
+}
+
+-(void)dismissKeyboard
+{
+    [self.currentEditField resignFirstResponder];
 }
 
 - (void)viewWillAppear:(BOOL)animated
@@ -75,13 +85,7 @@
 - (void)viewWillDisappear:(BOOL)animated
 {
     [super viewWillDisappear:animated];
-    [[NSNotificationCenter defaultCenter] removeObserver:self
-                                                    name:UIKeyboardDidShowNotification
-                                                  object:nil];
-
-    [[NSNotificationCenter defaultCenter] removeObserver:self
-                                                    name:UIKeyboardWillHideNotification
-                                                  object:nil];
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
 }
 
 #define TEXTFIELD_OFFSET 5
@@ -100,44 +104,23 @@
 
 }
 
--(NSString*)pringRectforDebug:(CGRect) rect
-{
-    return [NSString stringWithFormat:@"rect: (origin: %f,%f) (size: %f, %f)", rect.origin.x, rect.origin.y, rect.size.width, rect.size.height];
-}
-
 -(void)keyboardDidShow:(NSNotification*)notification
 {
-    NSLog(@"ScrollView before: %@\n\n", self.scrollView);
     NSDictionary *dic = notification.userInfo;
     NSValue *keyboardFrame = dic[UIKeyboardFrameEndUserInfoKey];
     CGRect frame = [keyboardFrame CGRectValue];
     CGRect viewFrame = [self.view convertRect:frame fromView:nil];
     CGFloat keyboardHeight = viewFrame.size.height;
-    NSLog(@"keyboard height = %f", keyboardHeight);
     
     [self scrollBottomConstraint].constant = keyboardHeight;
     [self.view layoutIfNeeded];
-    NSLog(@"-(void)keyboardDidShow, and self.currentTextField = %@", self.currentEditField.restorationIdentifier);
 
     
-    NSLog(@"View : %@\n\n", self.view);
-    NSLog(@"ScrollView after: %@\n\n", self.scrollView);
-    NSLog(@"ContentView : %@\n\n", self.contentView);
-    NSLog(@"KeyboardHeight : %f\n\n", keyboardHeight);
-    
-    
-    
-    // code belowe don't work :( and it's important to understand why!
     if (self.currentEditField == nil)
         return;
     
     CGRect visibleRect = [self.scrollView convertRect:self.scrollView.bounds toView:self.contentView];
-    NSLog(@"VisibleRect : %@\n\n", [self pringRectforDebug:visibleRect]);
 
-    
-    NSLog(@"TextField frame : %@\n\n", [self pringRectforDebug:self.currentEditField.frame]);
-    NSLog(@"TextField bounds : %@\n\n", [self pringRectforDebug:self.currentEditField.bounds]);
-    
     CGFloat bottomCurrentFieldByScrollView = self.currentEditField.frame.origin.y - visibleRect.origin.y + self.currentEditField.bounds.size.height + TEXTFIELD_OFFSET;
     CGFloat bottomScrollView = self.scrollView.bounds.size.height;
     
@@ -150,14 +133,12 @@
           self.scrollView.contentOffset = CGPointMake(visibleRect.origin.x, newY);
         }];
         
-        NSLog(@"--------------------------------------\n\n\n\n");
     }
 
 }
 
 -(void)keyboardWillHide
 {
-    NSLog(@"-(void)keyboardWillHide");
     [self scrollBottomConstraint].constant = 0;
     [self.view layoutIfNeeded];
 }
@@ -227,11 +208,10 @@
     
 
     [self.dataSorce requestSingUpWithUser:tempUser
-                 andViewControllerHandler:^(User *resUser)
+                 andViewControllerHandler:^(User *resUser, NSError *error) 
     {
         if (resUser == nil)
         {
-            NSLog(@"fail!!!!");
             dispatch_async(dispatch_get_main_queue(), ^
                            {
                                UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Sign Up"
@@ -245,7 +225,6 @@
         }
         else
         {
-            NSLog(@"good!!!!");
             __weak SingUpViewController *weakSelf = self;
             dispatch_async(dispatch_get_main_queue(), ^
            {
@@ -255,13 +234,6 @@
         }
         
     
-    } andErrorHandler:^(NSError *error) {
-        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Sign Up!"
-                                                        message:@"Fail to Sign Up (problem with internet connection)!"
-                                                       delegate:nil
-                                              cancelButtonTitle:@"I understood"
-                                              otherButtonTitles:nil];
-        [alert show];
     }];
 }
 
