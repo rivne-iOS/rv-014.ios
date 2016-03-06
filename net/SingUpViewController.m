@@ -207,32 +207,36 @@
                                        andEmail:self.emailText.text];
     
 
+    self.signupButton.backgroundColor = [UIColor bawlRedColor05alpha];
+    self.signupButton.enabled = NO;
+    self.backButton.backgroundColor = [UIColor bawlRedColor05alpha];
+    self.backButton.enabled = NO;
+    
     [self.dataSorce requestSingUpWithUser:tempUser
-                 andViewControllerHandler:^(User *resUser, NSError *error) 
-    {
-        if (resUser == nil)
-        {
-            dispatch_async(dispatch_get_main_queue(), ^
-                           {
-                               UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Sign Up"
-                                                                               message:@"Fail to sign Up!"
-                                                                              delegate:nil
-                                                                     cancelButtonTitle:@"OK"
-                                                                     otherButtonTitles:nil];
-                               [alert show];
-                           });
-            
-        }
-        else
-        {
+                 andViewControllerHandler:^(User *resUser, NSError *error) {
+        dispatch_async(dispatch_get_main_queue(), ^ {
             __weak SingUpViewController *weakSelf = self;
-            dispatch_async(dispatch_get_main_queue(), ^
-           {
-               [CurrentItems sharedItems].user = resUser;
-               [weakSelf.navigationController popToRootViewControllerAnimated:YES];
-           });
-        }
-        
+            weakSelf.signupButton.backgroundColor = [UIColor bawlRedColor];
+            weakSelf.signupButton.enabled = YES;
+            weakSelf.backButton.backgroundColor = [UIColor bawlRedColor];
+            weakSelf.backButton.enabled = YES;
+
+            if (resUser == nil)
+            {
+                UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Sign Up"
+                                                               message:@"Fail to sign Up!"
+                                                              delegate:nil
+                                                     cancelButtonTitle:@"OK"
+                                                     otherButtonTitles:nil];
+                [alert show];
+                
+            }
+            else
+            {
+                   [CurrentItems sharedItems].user = resUser;
+                   [weakSelf.navigationController popToRootViewControllerAnimated:YES];
+            }
+        });
     
     }];
 }

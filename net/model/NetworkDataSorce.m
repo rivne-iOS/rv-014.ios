@@ -49,11 +49,12 @@
 }
 
 
--(void)requestAllUsers:(void (^)(NSArray <NSDictionary <NSString*,NSString*> *> *userDictionaries, NSError *error))handler
+-(void)requestAllUsers:(void (^)(NSArray <User *> *users, NSError *error))handler
 {
     HTTPConnector *connector = [[HTTPConnector alloc] init];
     [connector requestUsers:^(NSData *data, NSError *error) {
         NSArray <NSDictionary<NSString*,NSString*>*> *userDics = nil;
+        NSMutableArray <User*> *users = nil;
         if(data.length>0 && error==nil)
         {
             userDics= [NSJSONSerialization JSONObjectWithData:data options:0 error:NULL];
@@ -61,8 +62,19 @@
             {
                 userDics=nil;
             }
+            else
+            {
+                users = [[NSMutableArray alloc] init];
+                for (NSDictionary *userDic in userDics)
+                {
+                    User *u = [[User alloc] initWitDictionary:userDic];
+                    [users addObject:u];
+                }
+            }
+            
+            
         }
-        handler(userDics, error);
+        handler(users, error);
     }];
 }
 
@@ -198,6 +210,7 @@
                          NSMutableDictionary *userDic = [[NSJSONSerialization JSONObjectWithData:data
                                                                                    options:0
                                                                                      error:NULL] mutableCopy];
+                         NSLog(@"sign UP:\n%@", userDic);
 
                          if([userDic count]>1)
                          {

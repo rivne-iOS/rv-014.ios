@@ -370,12 +370,12 @@
 -(void)requestUsersAndAddNewCommentsAndSendMessage:(NSString*)message
 {
     __weak DescriptionViewController *weakSelf = self;
-    [self.dataSorce requestAllUsers:^(NSArray<NSDictionary<NSString *,NSString *> *> *userDictionaries, NSError *error) {
-        [weakSelf sendMessage:message andAddnewCommentsBlockWithAllUserDictionaries:userDictionaries];
+    [self.dataSorce requestAllUsers:^(NSArray<User *> *users, NSError *error) {
+        [weakSelf sendMessage:message andAddnewCommentsBlockWithAllUsers:users];
     }];
 }
 
--(void)sendMessage:(NSString*)message andAddnewCommentsBlockWithAllUserDictionaries:(NSArray<NSDictionary<NSString *,NSString *> *> *) allUserDictionaries
+-(void)sendMessage:(NSString*)message andAddnewCommentsBlockWithAllUsers:(NSArray <User *> *)users
 {
     __weak DescriptionViewController *weakSelf = self;
     
@@ -390,8 +390,8 @@
            {
                
                NSDictionary<NSString *,id> *commentDic = commentDics[index];
-               NSDictionary <NSString*,id> *userDic = [self userDicFromAllUsers:allUserDictionaries andUserID:[commentDic objectForKey:@"USER_ID"]];
-               [weakSelf addOneComment:commentDic withIndex:index usersDic:userDic];
+               User *user = [self userFromAllUsers:users withUserID:[commentDic objectForKey:@"USER_ID"]];
+               [weakSelf addOneComment:commentDic withIndex:index user:user];
            }
            NSLog(@"weakSelf.viewBetweenCommentAndChare %@",weakSelf.viewBetweenCommentAndChare);
            weakSelf.contentViewHeightConstraint.constant = weakSelf.contentDynamicHeight + weakSelf.contentStaticHeight;
@@ -417,14 +417,14 @@
 -(void)requestUsersAndComments
 {
     __weak DescriptionViewController *weakSelf = self;
-    [self.dataSorce requestAllUsers:^(NSArray<NSDictionary<NSString *,NSString *> *> *userDictionaries, NSError *error) {
-        [weakSelf commentBlockWithAllUserDictionaries:userDictionaries];
+    [self.dataSorce requestAllUsers:^(NSArray<User *> *users, NSError *error) {
+        [weakSelf commentBlockWithAllUsers:users];
     }];
 }
 
 
 
--(void)commentBlockWithAllUserDictionaries:(NSArray<NSDictionary<NSString *,NSString *> *> *) allUserDictionaries
+-(void)commentBlockWithAllUsers:(NSArray<User*> *) users
 {
     __weak DescriptionViewController *weakSelf = self;
     self.viewToConnectDynamicItems = self.viewBetweenCommentAndChare;
@@ -441,8 +441,8 @@
            {
                
                NSDictionary<NSString *,id> *commentDic = commentDics[index];
-               NSDictionary <NSString*,id> *userDic = [self userDicFromAllUsers:allUserDictionaries andUserID:[commentDic objectForKey:@"USER_ID"]];
-               [weakSelf addOneComment:commentDic withIndex:index usersDic:userDic];
+               User *user = [self userFromAllUsers:users withUserID:[commentDic objectForKey:@"USER_ID"]];
+               [weakSelf addOneComment:commentDic withIndex:index user:user];
            }
            weakSelf.contentViewHeightConstraint.constant = weakSelf.contentDynamicHeight + weakSelf.contentStaticHeight;
            [weakSelf.view layoutIfNeeded];
@@ -451,23 +451,23 @@
     
 }
 
--(NSDictionary <NSString*,id> *)userDicFromAllUsers:(NSArray <NSDictionary <NSString*,id> *> *)allUsersDictionaries andUserID:(NSNumber*)userId
+-(User *)userFromAllUsers:(NSArray<User *> *)users withUserID:(NSNumber*)userId
 {
-    NSDictionary <NSString*,NSString*> *userDic = nil;
-    for (NSDictionary <NSString*,NSString*> *tUserDic in allUsersDictionaries)
+    User *user = nil;
+    for (User *u in users)
     {
-        if([tUserDic objectForKey:@"ID"].intValue == [userId intValue])
+        if(u.userId == userId.integerValue)
         {
-            userDic = tUserDic;
+            user = u;
             break;
         }
     }
-    return userDic;
+    return user;
 }
 
 
 
--(void)addOneComment:(NSDictionary <NSString*, id> *)commentDic withIndex:(NSInteger)index usersDic:(NSDictionary <NSString*,id> *)userDic
+-(void)addOneComment:(NSDictionary <NSString*, id> *)commentDic withIndex:(NSInteger)index user:(User *) user
 {
     CommentBox *box = [[CommentBox alloc] init];
     UIView *commentView = [[UIView alloc] init];
@@ -495,11 +495,11 @@
     avatar.translatesAutoresizingMaskIntoConstraints = NO;
     avatar.restorationIdentifier = @"AvatarImageView";
     box.avatar = avatar;
-    box.avatarStringName = [userDic objectForKey:@"AVATAR"];
+    box.avatarStringName = user.avatar;
     [self.contentView addSubview:avatar];
     
     //comment init with image View
-    NSString *avatarStringName = [userDic objectForKey:@"AVATAR"];
+    NSString *avatarStringName = user.avatar;
     UIImage *avatarImage = [self.avatarNamesAndImagesDic objectForKey:avatarStringName];
     Comment *comment = nil;
     if(avatarImage!=nil)
@@ -508,12 +508,12 @@
         {
             avatar.image = avatarImage;   
         }
-        comment = [[Comment alloc] initWithCommentDictionary:commentDic andUsersDic:userDic  andUIImageView:nil andImageDictionary:nil];
+        comment = [[Comment alloc] initWithCommentDictionary:commentDic andUser:user  andUIImageView:nil andImageDictionary:nil];
     }
     else
     {
         comment = [[Comment alloc] initWithCommentDictionary:commentDic
-                                                 andUsersDic:userDic
+                                                 andUser:user
                                               andUIImageView:(UIImageView*)avatar
                                           andImageDictionary:self.avatarNamesAndImagesDic];
     }

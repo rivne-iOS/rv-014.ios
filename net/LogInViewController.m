@@ -30,6 +30,7 @@
 
 @property (weak, nonatomic) IBOutlet UIButton *loginButton;
 @property (weak, nonatomic) IBOutlet UIButton *signupButton;
+
 @end
 
 @implementation LogInViewController
@@ -177,33 +178,43 @@
     if(![self.textFieldValidator isValidFields])
         return;
     
+    self.loginButton.backgroundColor = [UIColor bawlRedColor05alpha];
+    self.signupButton.backgroundColor = [UIColor bawlRedColor05alpha];
+    self.loginButton.enabled = NO;
+    self.signupButton.enabled = NO;
+
     [self.dataSorce requestLogInWithUser:self.userTextFild.text
                                  andPass:self.passTextField.text
                 andViewControllerHandler:^(User *resUser, NSError *error) {
-                    
-        if (resUser == nil)
-        {
-            dispatch_async(dispatch_get_main_queue(), ^
-                           {
-            UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Log In"
-                                                            message:@"Fail to log in!"
-                                                           delegate:nil
-                                                  cancelButtonTitle:@"OK"
-                                                  otherButtonTitles:nil];
-            [alert show];
-                           });
-
-        }
-        else
-        {
-            
+        dispatch_async(dispatch_get_main_queue(), ^ {
+        
             __weak LogInViewController *weakSelf = self;
-            dispatch_async(dispatch_get_main_queue(), ^
+            weakSelf.loginButton.backgroundColor = [UIColor bawlRedColor];
+            weakSelf.signupButton.backgroundColor = [UIColor bawlRedColor];
+            self.loginButton.enabled = YES;
+            self.signupButton.enabled = YES;
+
+
+            if (resUser == nil)
             {
-               [CurrentItems sharedItems].user = resUser;
-               [weakSelf.navigationController popViewControllerAnimated:YES];
-           });
-        }
-    } ];
+                UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Log In"
+                                                                message:@"Fail to log in!"
+                                                               delegate:nil
+                                                      cancelButtonTitle:@"OK"
+                                                      otherButtonTitles:nil];
+                [alert show];
+
+            }
+            else
+            {
+                
+                    [CurrentItems sharedItems].user = resUser;
+                    [weakSelf.navigationController popViewControllerAnimated:YES];
+            }
+       });
+   }];
 }
+
+
+
 @end
