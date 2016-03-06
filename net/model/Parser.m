@@ -23,6 +23,8 @@
     NSDictionary *answerDic = [NSJSONSerialization JSONObjectWithData:data
                                                               options:0
                                                                 error:NULL];
+    NSLog(@"Log out:\n%@", answerDic);
+    
     return [answerDic objectForKey:stringKey];
 }
 

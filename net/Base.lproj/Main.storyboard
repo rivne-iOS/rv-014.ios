@@ -71,25 +71,6 @@
                                                     <outlet property="delegate" destination="Wyx-PR-bqC" id="bcb-FN-2pV"/>
                                                 </connections>
                                             </textField>
-                                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="eb0-in-yE6">
-                                                <rect key="frame" x="301" y="324" width="271" height="88"/>
-                                                <color key="backgroundColor" red="0.88235294119999996" green="0.21176470589999999" blue="0.33333333329999998" alpha="1" colorSpace="calibratedRGB"/>
-                                                <constraints>
-                                                    <constraint firstAttribute="width" secondItem="eb0-in-yE6" secondAttribute="height" multiplier="123:40" id="qVZ-oQ-7Ji"/>
-                                                </constraints>
-                                                <state key="normal" title="Sign up">
-                                                    <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                                                    <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
-                                                </state>
-                                                <variation key="default">
-                                                    <mask key="constraints">
-                                                        <exclude reference="qVZ-oQ-7Ji"/>
-                                                    </mask>
-                                                </variation>
-                                                <connections>
-                                                    <segue destination="xSJ-uf-0GR" kind="show" id="LDG-yb-uhV"/>
-                                                </connections>
-                                            </button>
                                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Jen-pK-Flu">
                                                 <rect key="frame" x="28" y="324" width="271" height="88"/>
                                                 <color key="backgroundColor" red="0.88235294119999996" green="0.21176470589999999" blue="0.33333333329999998" alpha="1" colorSpace="calibratedRGB"/>
@@ -110,6 +91,25 @@
                                                 </variation>
                                                 <connections>
                                                     <action selector="logInButton:" destination="Wyx-PR-bqC" eventType="touchUpInside" id="CxY-UI-gu1"/>
+                                                </connections>
+                                            </button>
+                                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="eb0-in-yE6">
+                                                <rect key="frame" x="301" y="324" width="271" height="88"/>
+                                                <color key="backgroundColor" red="0.88235294119999996" green="0.21176470589999999" blue="0.33333333329999998" alpha="1" colorSpace="calibratedRGB"/>
+                                                <constraints>
+                                                    <constraint firstAttribute="width" secondItem="eb0-in-yE6" secondAttribute="height" multiplier="123:40" id="qVZ-oQ-7Ji"/>
+                                                </constraints>
+                                                <state key="normal" title="Sign up">
+                                                    <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                                    <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                                </state>
+                                                <variation key="default">
+                                                    <mask key="constraints">
+                                                        <exclude reference="qVZ-oQ-7Ji"/>
+                                                    </mask>
+                                                </variation>
+                                                <connections>
+                                                    <segue destination="xSJ-uf-0GR" kind="show" id="1ld-ma-PvB"/>
                                                 </connections>
                                             </button>
                                         </subviews>
@@ -257,7 +257,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="moO-sj-bko" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1086" y="-413"/>
+            <point key="canvasLocation" x="1154" y="-413"/>
         </scene>
         <!--bawl-->
         <scene sceneID="JRA-cD-xgc">

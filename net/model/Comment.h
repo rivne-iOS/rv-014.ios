@@ -8,6 +8,7 @@
 
 #import <Foundation/Foundation.h>
 #import <UIKit/UIKit.h>
+#import "User.h"
 
 @interface Comment : NSObject
 
@@ -18,7 +19,7 @@
 
 
 -(instancetype)initWithCommentDictionary:(NSDictionary <NSString*,id> *)commentDictionary
-                             andUsersDic:(NSDictionary <NSString*,id> *)userDic
+                                 andUser:(User *)user
                           andUIImageView:(UIImageView*)imageView
                       andImageDictionary:(NSMutableDictionary <NSString*, UIImage*> *) dictionary;
 

@@ -20,9 +20,9 @@
 
 
 -(instancetype)initWithCommentDictionary:(NSDictionary <NSString*,id> *)commentDictionary
-                             andUsersDic:(NSDictionary <NSString*,id> *)userDic
+                             andUser:(User *)user
                           andUIImageView:(UIImageView*)imageView
-                      andImageDictionary:(NSMutableDictionary <NSString*, UIImage*> *) dictionary;
+                      andImageDictionary:(NSMutableDictionary <NSString*, UIImage*> *) dictionary
 {
     if(self = [super init])
     {
@@ -31,24 +31,20 @@
         _userId = [commentDictionary objectForKey:@"USER_ID"];
         _userMessage = [commentDictionary objectForKey:@"COMMENT"];
 
-        if(userDic == nil)
+        if(user == nil)
         {
             _userName = @"Deleted User";
             imageView.image = [UIImage imageNamed:@"deletedUser"];
         }
         else
         {
-            _userName = [userDic objectForKey:@"NAME"];
+            _userName = user.name;
             if (imageView!=nil)
             {
-                NSString *imageName = [userDic objectForKey:@"AVATAR"];
-                if ([imageName isEqual:[NSNull null]])
-                    imageName = @"defaultUser";
-                
-                NSString *avatarStringName = [userDic objectForKey:@"AVATAR"];
+                NSString *avatarStringName = user.avatar;
                 [dictionary setObject:(UIImage*)[NSNull null] forKey:avatarStringName];
                 
-                [datasorce requestImageWithName:imageName andHandler:^(UIImage *image, NSError *error) {
+                [datasorce requestImageWithName:avatarStringName andHandler:^(UIImage *image, NSError *error) {
                     _userImage = image;
                     dispatch_async(dispatch_get_main_queue(), ^{
                         imageView.image = image;
