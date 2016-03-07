@@ -233,14 +233,39 @@
             }
             else
             {
-                   [CurrentItems sharedItems].user = resUser;
-                   [weakSelf.navigationController popToRootViewControllerAnimated:YES];
+                [self logIngAfterSuccessfulSignUpWithUser:resUser.name andPass:resUser.password];
             }
         });
     
     }];
 }
 
+
+-(void)logIngAfterSuccessfulSignUpWithUser:(NSString*)user andPass:(NSString*)pass
+{
+    [self.dataSorce requestLogInWithUser:user
+                                 andPass:pass
+                andViewControllerHandler:^(User *resUser, NSError *error) {
+                    dispatch_async(dispatch_get_main_queue(), ^ {
+                        if (resUser == nil)
+                        {
+                            UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Sign Up"
+                                                                            message:@"Fail to log in with new user!"
+                                                                           delegate:nil
+                                                                  cancelButtonTitle:@"OK"
+                                                                  otherButtonTitles:nil];
+                            [alert show];
+                            
+                        }
+                        else
+                        {
+                            
+                            [CurrentItems sharedItems].user = resUser;
+                            [self.navigationController popToRootViewControllerAnimated:YES];
+                        }
+                    });
+                }];
+}
 
 
 

@@ -121,13 +121,11 @@ static int const MARKER_HIDING_RADIUS = 10;
 -(void)keyboardDidShow:(NSNotification*)notification
 {
     CGFloat bottomCurrentFieldByScrollView;
-    NSLog(@"ScrollView before: %@\n\n", self.scrollView);
     NSDictionary *dic = notification.userInfo;
     NSValue *keyboardFrame = dic[UIKeyboardFrameEndUserInfoKey];
     CGRect frame = [keyboardFrame CGRectValue];
     CGRect viewFrame = [self.view convertRect:frame fromView:nil];
     CGFloat keyboardHeight = viewFrame.size.height;
-    NSLog(@"keyboard height = %f", keyboardHeight);
     
     self.scrollViewBottomConstraint.constant = keyboardHeight;
     [self.view layoutIfNeeded];
@@ -152,14 +150,12 @@ static int const MARKER_HIDING_RADIUS = 10;
             self.scrollView.contentOffset = CGPointMake(visibleRect.origin.x, newY);
         }];
         
-        NSLog(@"--------------------------------------\n\n\n\n");
     }
     
 }
 
 -(void)keyboardWillHide
 {
-    NSLog(@"-(void)keyboardWillHide");
     self.scrollViewBottomConstraint.constant = 0;
     [self.view layoutIfNeeded];
 }
@@ -388,7 +384,6 @@ static int const MARKER_HIDING_RADIUS = 10;
     
     CurrentItems *cItems = [CurrentItems sharedItems];
     cItems.issueImage = nil;
-    NSLog(@"currents issue image is nil");
     cItems.issue = marker.userData;
     
     return NO;

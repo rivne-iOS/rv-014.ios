@@ -32,7 +32,7 @@
 @property (weak, nonatomic) IBOutlet UIView *viewBetweenCommentAndChare;
 
 @property (weak, nonatomic) IBOutlet UIView *contentView;
-@property (weak, nonatomic) IBOutlet UIScrollView *ScrollView;
+@property (weak, nonatomic) IBOutlet UIScrollView *scrollView;
 @property (strong, nonatomic) IBOutletCollection(NSLayoutConstraint) NSArray *constraintsVertical;
 @property (strong, nonatomic) IBOutletCollection(UIView) NSArray *viewsVertical;
 @property (weak, nonatomic) IBOutlet NSLayoutConstraint *contentViewHeightConstraint;
@@ -151,12 +151,10 @@
     
     if(cItems.issueImage==nil)
     {
-        NSLog(@"if(cItems.issueImage==nil) in description");
         self.issueImageView.image = nil;
     }
      else if( ![self.issueImageView.image isEqual:cItems.issueImage])
     {
-        NSLog(@"view will appear: ![self.issueImageView.image isEqual:cItems.issueImage], set uotlet.");
         self.issueImageView.image = cItems.issueImage;
     }
     
@@ -317,7 +315,7 @@
     [self.view addSubview:addCommentButton];
     [addCommentButton sizeToFit];
     
-    [grayView.topAnchor constraintEqualToAnchor:self.ScrollView.bottomAnchor].active = YES;
+    [grayView.topAnchor constraintEqualToAnchor:self.scrollView.bottomAnchor].active = YES;
     [grayView.leadingAnchor constraintEqualToAnchor:self.view.leadingAnchor].active = YES;
     [grayView.trailingAnchor constraintEqualToAnchor:self.view.trailingAnchor].active = YES;
     [grayView.heightAnchor constraintEqualToConstant:textFieldHeight].active = YES;
@@ -333,7 +331,7 @@
     
     
     [UIView animateWithDuration:0.3 animations:^{
-        self.ScrollView.contentOffset = CGPointMake(0, self.contentView.frame.size.height - self.ScrollView.frame.size.height);
+        self.scrollView.contentOffset = CGPointMake(0, self.contentView.frame.size.height - self.scrollView.frame.size.height);
     }];
     
     
@@ -383,26 +381,31 @@
     forIssueID:[CurrentItems sharedItems].issue.issueId
     andHandler:^(NSArray<NSDictionary<NSString *,id> *> *commentDics, NSError *error) {
         dispatch_async(dispatch_get_main_queue(), ^{
-           if(commentDics==nil || error != nil)
-               return;
+            if(commentDics==nil || error != nil)
+                return;
            
-           for (NSInteger index=self.commentBoxArr.count; index<commentDics.count; ++index)
-           {
+            for (NSInteger index=self.commentBoxArr.count; index<commentDics.count; ++index)
+            {
                
                NSDictionary<NSString *,id> *commentDic = commentDics[index];
                User *user = [self userFromAllUsers:users withUserID:[commentDic objectForKey:@"USER_ID"]];
                [weakSelf addOneComment:commentDic withIndex:index user:user];
-           }
-           NSLog(@"weakSelf.viewBetweenCommentAndChare %@",weakSelf.viewBetweenCommentAndChare);
-           weakSelf.contentViewHeightConstraint.constant = weakSelf.contentDynamicHeight + weakSelf.contentStaticHeight;
-           [weakSelf.view layoutIfNeeded];
+            }
+           
+            CGFloat newContentViewHeight = weakSelf.contentDynamicHeight + weakSelf.contentStaticHeight;
+            CGFloat scrollViewHeight = weakSelf.scrollView.frame.size.height;
+            if(newContentViewHeight < scrollViewHeight)
+                weakSelf.contentViewHeightConstraint.constant = scrollViewHeight;
+            else
+                weakSelf.contentViewHeightConstraint.constant = newContentViewHeight;
+
+            [weakSelf.view layoutIfNeeded];
             
-            
-            CGFloat yOffset = self.contentView.frame.size.height - self.ScrollView.frame.size.height;
+            CGFloat yOffset = self.contentView.frame.size.height - self.scrollView.frame.size.height;
             if (yOffset>0)
             {
                 [UIView animateWithDuration:0.3 animations:^{
-                    self.ScrollView.contentOffset = CGPointMake(0, yOffset);
+                    self.scrollView.contentOffset = CGPointMake(0, yOffset);
                 }];
             }
         });
@@ -444,7 +447,14 @@
                User *user = [self userFromAllUsers:users withUserID:[commentDic objectForKey:@"USER_ID"]];
                [weakSelf addOneComment:commentDic withIndex:index user:user];
            }
-           weakSelf.contentViewHeightConstraint.constant = weakSelf.contentDynamicHeight + weakSelf.contentStaticHeight;
+
+           CGFloat newContentViewHeight = weakSelf.contentDynamicHeight + weakSelf.contentStaticHeight;
+           CGFloat scrollViewHeight = weakSelf.scrollView.frame.size.height;
+           if(newContentViewHeight < scrollViewHeight)
+               weakSelf.contentViewHeightConstraint.constant = scrollViewHeight;
+           else
+               weakSelf.contentViewHeightConstraint.constant = newContentViewHeight;
+           
            [weakSelf.view layoutIfNeeded];
        });
     }];
