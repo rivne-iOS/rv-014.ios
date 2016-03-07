@@ -362,12 +362,14 @@ static int const MARKER_HIDING_RADIUS = 10;
                                                     [self selectCurrentMarker];
                                                 });
                                             } else {
-                                                UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Attention!"
-                                                                                                message:@"Troubles with connection!"
-                                                                                               delegate:nil
-                                                                                      cancelButtonTitle:@"OK"
-                                                                                      otherButtonTitles:nil];
-                                                [alert show];
+                                                dispatch_async(dispatch_get_main_queue(), ^{
+                                                    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Attention!"
+                                                                                                    message:@"Troubles with connection!"
+                                                                                                   delegate:nil
+                                                                                          cancelButtonTitle:@"OK"
+                                                                                          otherButtonTitles:nil];
+                                                    [alert show];
+                                                });
                                             }
                                         }] resume];
 }
@@ -470,8 +472,11 @@ static int const MARKER_HIDING_RADIUS = 10;
         if (self.attachmentImage != nil)
             [self.attachmentProgressView setProgress:1.0 animated:NO];
         
+        [self.tabBarController.tabBar setHidden:YES];
+        [self.view layoutIfNeeded];
         [UIView animateWithDuration:0.5 animations:^(void){
             self.scrollViewLeadingConstraint.constant = 0;
+            [self changeGeolocationButtonPosition:15.0];
             [self hideTabBar];
             [self.view layoutIfNeeded];
         }];

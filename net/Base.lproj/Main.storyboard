@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="9531" systemVersion="14F27" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="U7z-LT-7dR">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="9531" systemVersion="14F1509" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="U7z-LT-7dR">
     <dependencies>
         <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="9529"/>
@@ -781,11 +781,11 @@
                             <constraint firstItem="NYS-ZF-PWz" firstAttribute="top" secondItem="BZy-CD-oPZ" secondAttribute="bottom" id="BnB-ue-fyA"/>
                             <constraint firstItem="K9v-RP-I0I" firstAttribute="leading" secondItem="A24-z5-pzn" secondAttribute="leading" id="M0T-hk-bhC"/>
                             <constraint firstAttribute="bottomMargin" secondItem="K9v-RP-I0I" secondAttribute="bottom" id="Mec-KS-p0x"/>
+                            <constraint firstAttribute="bottomMargin" secondItem="NYS-ZF-PWz" secondAttribute="bottom" id="UJd-ka-DCQ"/>
                             <constraint firstItem="NYS-ZF-PWz" firstAttribute="leading" secondItem="A24-z5-pzn" secondAttribute="leading" id="VMc-ez-U8k"/>
                             <constraint firstItem="mxJ-z8-iEP" firstAttribute="top" secondItem="Mm0-xY-FEs" secondAttribute="bottom" constant="-120" id="jTX-PT-rWC"/>
                             <constraint firstAttribute="trailing" secondItem="Mm0-xY-FEs" secondAttribute="trailing" id="lsS-Ie-51J"/>
                             <constraint firstItem="NYS-ZF-PWz" firstAttribute="width" secondItem="A24-z5-pzn" secondAttribute="width" id="qRj-dE-SCs"/>
-                            <constraint firstItem="mxJ-z8-iEP" firstAttribute="top" secondItem="NYS-ZF-PWz" secondAttribute="bottom" id="qlL-M7-0Qk"/>
                             <constraint firstItem="Mm0-xY-FEs" firstAttribute="top" secondItem="BZy-CD-oPZ" secondAttribute="bottom" constant="400" id="rbj-wR-ZSE"/>
                             <constraint firstAttribute="bottomMargin" secondItem="oxc-Sj-Imj" secondAttribute="bottom" constant="15" id="sj2-or-008"/>
                             <constraint firstAttribute="trailing" secondItem="oxc-Sj-Imj" secondAttribute="trailing" constant="15" id="thn-8G-HF4"/>
@@ -835,7 +835,6 @@
                         <outlet property="moreButton" destination="bEb-G0-MTV" id="3Cn-PF-ZMg"/>
                         <outlet property="nameTextField" destination="Yfl-g3-YHX" id="AUB-3V-NH1"/>
                         <outlet property="scrollView" destination="NYS-ZF-PWz" id="u3t-hy-KAG"/>
-                        <outlet property="scrollViewBottomConstraint" destination="qlL-M7-0Qk" id="rQg-PK-G8K"/>
                         <outlet property="scrollViewLeadingConstraint" destination="VMc-ez-U8k" id="5Dw-9c-Zc8"/>
                         <outlet property="tapLocationLabel" destination="Seo-CW-BkQ" id="UiV-1T-hnw"/>
                         <segue destination="Wyx-PR-bqC" kind="show" identifier="fromMapToLogIn" id="JER-bu-PYI"/>
@@ -1420,6 +1419,6 @@
         <image name="tittle" width="284" height="152"/>
     </resources>
     <inferredMetricsTieBreakers>
-        <segue reference="375-AO-ajD"/>
+        <segue reference="asR-3F-p9I"/>
     </inferredMetricsTieBreakers>
 </document>
