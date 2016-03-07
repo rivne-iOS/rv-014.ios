@@ -86,8 +86,6 @@
         if ([unchangedName isEqualToString:self.issue.attachments])
         {
             self.issueImage = image;
-            NSLog(@"image downloaded and seted to current, fend issueImageDidLoad");
-            NSLog(@"issueImageDelegates: %@", self.issueImageDelegates);
             [self.issueImageDelegates makeObjectsPerformSelector:@selector(issueImageDidLoad)];
         }
     }];

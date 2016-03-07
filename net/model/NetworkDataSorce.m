@@ -210,21 +210,12 @@
                          NSMutableDictionary *userDic = [[NSJSONSerialization JSONObjectWithData:data
                                                                                    options:0
                                                                                      error:NULL] mutableCopy];
-                         NSLog(@"sign UP:\n%@", userDic);
 
                          if([userDic count]>1)
                          {
                              [userDic setObject:@"defaultUser" forKey:@"AVATAR"];
                              [[NSUserDefaults standardUserDefaults] setObject:userDic forKey:@"userDictionary"];
                              user = [[User alloc] initWitDictionary:userDic];
-                         }
-                         else
-                         {
-                             NSLog(@"Error with sign up! \n\n");
-                             for(NSString *str in [userDic allKeys])
-                             {
-                                 NSLog(@"%@ - %@", str, [userDic objectForKey:str]);
-                             }
                          }
                      }
                      viewControllerHandler(user, error);
