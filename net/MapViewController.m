@@ -516,16 +516,17 @@ static int const MARKER_HIDING_RADIUS = 10;
 {
     NSDictionary *placeDictionary = [NSJSONSerialization JSONObjectWithData:data options:0 error:NULL];
     NSArray *resultsArray = [placeDictionary valueForKey:@"results"];
+    if (resultsArray == nil) return @"";
     NSDictionary *locationDictionary = [resultsArray objectAtIndex:0];
     NSString *placeId = [locationDictionary valueForKey:@"place_id"];
     return placeId;
-    
 }
 
 -(NSString *)takeStreetFromGoogleApiPlace:(NSData *)data
 {
     NSDictionary *placeDictionary = [NSJSONSerialization JSONObjectWithData:data options:0 error:NULL];
     NSArray *resultsArray = [placeDictionary valueForKey:@"results"];
+    if (resultsArray == nil) return @"";
     NSDictionary *locationDictionary = [resultsArray objectAtIndex:0];
     NSString *street = [locationDictionary valueForKey:@"name"];
     return street;
@@ -687,8 +688,14 @@ static int const MARKER_HIDING_RADIUS = 10;
         self.scrollViewLeadingConstraint.constant = CGRectGetWidth(self.mapView.bounds);
         [self.view layoutIfNeeded];
     } completion:^(BOOL finished){
-        if (finished == YES)
+        if (finished == YES){
             [self.geolocationButton setHidden:NO];
+            if (self.mapView.selectedMarker != nil){
+                [self showTabBar];
+                if (self.tabBarController.tabBar.hidden == YES)
+                    [self.tabBarController.tabBar setHidden:NO];
+            }
+        }
     }];
 }
 
@@ -721,7 +728,7 @@ static int const MARKER_HIDING_RADIUS = 10;
                                self.descriptionTextView.text,
                                [[NSString alloc] initWithFormat:@"LatLng(%f, %f)", self.currentLocation.latitude, self.currentLocation.longitude],
                                @"NEW",
-                               [NSNumber numberWithLong:[self.categoryPicker selectedRowInComponent:0]],
+                               [NSNumber numberWithLong:([self.categoryPicker selectedRowInComponent:0] + 1)],
                                self.attachmentFilename,
                                nil];
     NSArray *addIssueKeys = [[NSArray alloc] initWithObjects:
@@ -966,6 +973,8 @@ static int const MARKER_HIDING_RADIUS = 10;
                                            mimeType:(NSString *)mimeType
                                            fileName:(NSString *)fileName
 {
+    self.addingIssueView.userInteractionEnabled = NO;
+    
     NSData *data = UIImageJPEGRepresentation(image, 1.0);
     
     NSMutableURLRequest *request = [[AFHTTPRequestSerializer serializer] multipartFormRequestWithMethod:@"POST" URLString:DOMAIN_NAME_ADD_ATTACHMENT parameters:nil constructingBodyWithBlock:^(id<AFMultipartFormData> formData) {
@@ -987,6 +996,7 @@ static int const MARKER_HIDING_RADIUS = 10;
                                   [self.attachmentSuccessfullLabel setAlpha:1.0];
                               }];
                               self.attachmentLoadButton.userInteractionEnabled = YES;
+                              self.addingIssueView.userInteractionEnabled = YES;
                           }
                       });
                   }
@@ -1056,7 +1066,7 @@ static int const MARKER_HIDING_RADIUS = 10;
                 self.tapLocationLabel.text = [self.tapLocationLabel.text stringByAppendingFormat:@"Location of issue:\n%@, %@", regionName, streetName];
             else
                 self.tapLocationLabel.text = [self.tapLocationLabel.text stringByAppendingFormat:@"Location of issue:\n%@", regionName];
-            [self fixDescriptionTextViewHeight];
+//            [self fixDescriptionTextViewHeight];
         } else {
             NSLog(@"No place details for %@", placeId);
         }
