@@ -264,8 +264,7 @@ static int const MARKER_HIDING_RADIUS = 10;
 }
 
 - (IBAction)sequeToLogInButton:(UIBarButtonItem *)sender {
-    
-    
+
     if (!self.userLogined)
     {
         self.tabBarController.tabBar.hidden = YES;
@@ -273,6 +272,9 @@ static int const MARKER_HIDING_RADIUS = 10;
     }
     else
     {
+        sender.tintColor = [sender.tintColor colorWithAlphaComponent:0.3];
+        sender.enabled = NO;
+        
         [self.dataSorce requestSignOutWithHandler:^(NSString *stringAnswer, NSError *error) {
             dispatch_async(dispatch_get_main_queue(), ^{
 
@@ -301,6 +303,9 @@ static int const MARKER_HIDING_RADIUS = 10;
             }
             [CurrentItems sharedItems].user = nil;
             self.currentUser = nil;
+            sender.tintColor = [sender.tintColor colorWithAlphaComponent:1];
+            sender.enabled = YES;
+                
 
             });
         }];
