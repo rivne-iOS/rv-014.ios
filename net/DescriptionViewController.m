@@ -46,6 +46,7 @@
 
 @property (strong, nonatomic) NSArray <NSString*> *stringNewStatuses;
 @property (strong, nonatomic) UIView *viewToConnectDynamicItems;
+@property (strong, nonatomic) UIView *viewToConnectChangeStatusItems;
 
 @property (strong, nonatomic) UIView *backGreyView;
 @property (strong, nonatomic) NSMutableArray <ChangerBox*> *changerBoxArr;
@@ -253,6 +254,21 @@
 
 - (IBAction)addNewComment:(UIButton *)sender
 {
+    
+    User *currentUser =  [CurrentItems sharedItems].user;
+    if (currentUser == nil)
+    {
+        // no user
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Add comment"
+                                                        message:@"You have to log in first."
+                                                       delegate:nil
+                                              cancelButtonTitle:@"OK"
+                                              otherButtonTitles:nil];
+        [alert show];
+
+        return;
+    }
+    
     UITextView *addCommentTextView = [[UITextView alloc] init];
     addCommentTextView.translatesAutoresizingMaskIntoConstraints = NO;
     addCommentTextView.backgroundColor = [UIColor whiteColor];
@@ -561,10 +577,12 @@
     
     NSMutableParagraphStyle *paragraph= [[NSMutableParagraphStyle alloc] init];
     paragraph.alignment = NSTextAlignmentJustified;
-    NSDictionary *attributes = @{NSParagraphStyleAttributeName : paragraph,
+    NSDictionary *attributes = @{NSFontAttributeName : commentLabelName.font,
+                                 NSParagraphStyleAttributeName : paragraph,
                                  NSBaselineOffsetAttributeName : [NSNumber numberWithFloat:0]};
     commentLabelMessage.attributedText = [[NSAttributedString alloc] initWithString:comment.userMessage
                                                                          attributes:attributes];
+//    commentLabelMessage.text = comment.userMessage;
     commentLabelMessage.numberOfLines = 0;
     UIFont *oldFont = commentLabelMessage.font;
     commentLabelMessage.font = [UIFont fontWithName:oldFont.fontName size:oldFont.pointSize-5];
@@ -590,6 +608,7 @@
     CGFloat messageTrailingOffset = 4;
     CGFloat messageBottomOffset = 5;
     CGFloat commentViewOffset = 8;
+    CGFloat commentMessageBigTexttOffset = 10;
     CGFloat messageAndNameLabelWidth = self.contentView.frame.size.width
                                         - commentViewOffset*2
                                         - avatarLeadingOffset
@@ -600,8 +619,10 @@
     
     
     CGRect nameLabelRect = [commentLabelName.text boundingRectWithSize:CGSizeMake(messageAndNameLabelWidth, MAXFLOAT)
-                                                                options:NSStringDrawingUsesLineFragmentOrigin
-                                                             attributes:@{NSFontAttributeName : commentLabelName.font}
+                                                                options:NSStringDrawingTruncatesLastVisibleLine
+                                                             attributes:@{NSFontAttributeName : commentLabelName.font,
+                                                                          NSParagraphStyleAttributeName : paragraph,
+                                                                          NSBaselineOffsetAttributeName : [NSNumber numberWithFloat:0]}
                                                                 context:nil];
     CGFloat nameLabelHeight = nameLabelRect.size.height;
     
@@ -617,7 +638,7 @@
     {
         box.isNeedResize = YES;
         box.isBig = NO;
-        box.messageBigHeight = messageLabelHeight;
+        box.messageBigHeight = messageLabelHeight + commentMessageBigTexttOffset;
     }
     else
     {
@@ -803,7 +824,7 @@
     [cancelButton.leadingAnchor constraintEqualToAnchor:self.view.leadingAnchor].active=YES;
     [cancelButton.trailingAnchor constraintEqualToAnchor:self.view.trailingAnchor].active = YES;
     [cancelButton.topAnchor constraintEqualToAnchor:self.view.centerYAnchor].active=YES;
-    self.viewToConnectDynamicItems = cancelButton;
+    self.viewToConnectChangeStatusItems = cancelButton;
     
     CGFloat firstOffset = 8;
     for (NSInteger a =self.stringNewStatuses.count; a>0; --a)
@@ -854,10 +875,10 @@
         [self.view addSubview:newStatusButton];
         [newStatusButton.leadingAnchor constraintEqualToAnchor:self.view.leadingAnchor].active=YES;
         [newStatusButton.trailingAnchor constraintEqualToAnchor:self.view.trailingAnchor].active = YES;
-        [newStatusButton.bottomAnchor constraintEqualToAnchor:self.viewToConnectDynamicItems.topAnchor constant:-firstOffset].active=YES;
+        [newStatusButton.bottomAnchor constraintEqualToAnchor:self.viewToConnectChangeStatusItems.topAnchor constant:-firstOffset].active=YES;
         [newStatusButton.heightAnchor constraintEqualToConstant:newStatusButton.frame.size.height+15].active=YES;
         firstOffset = 1;
-        self.viewToConnectDynamicItems = newStatusButton;
+        self.viewToConnectChangeStatusItems = newStatusButton;
         
         [self.view addSubview:newStatusImage];
         [newStatusImage.leadingAnchor constraintEqualToAnchor:newStatusButton.leadingAnchor constant:15].active = YES;
@@ -921,13 +942,11 @@
                              [box.label removeFromSuperview];
                              [box.image removeFromSuperview];
                          }
-                         
+                         [self.changerBoxArr removeAllObjects];
                      }];
     
+    [self.backGreyView removeFromSuperview];
     
-    
-    
-
     
     if ([sender.restorationIdentifier isEqualToString:@"cancel"])
         return;
@@ -948,10 +967,12 @@
                                  [CurrentItems sharedItems].issue = issue;
                                  [[NSNotificationCenter defaultCenter] postNotificationName:@"renewMap" object:self];
                                  
-                                 [self setDataToView];
-                                 [self clearOldDynamicElements];
+                                 // [self setDataToView];
+                                 self.currentStatusLabel.text = issue.status;
+
+                                 // [self clearOldDynamicElements];
                                  [self prepareUIChangeStatusElements];
-                                 [self requestUsersAndComments];
+                                 // [self requestUsersAndComments];
                                  
                              }
                              else

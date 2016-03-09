@@ -233,7 +233,7 @@
             }
             else
             {
-                [self logIngAfterSuccessfulSignUpWithUser:resUser.name andPass:resUser.password];
+                [self logIngAfterSuccessfulSignUpWithUser:resUser.login andPass:resUser.password];
             }
         });
     

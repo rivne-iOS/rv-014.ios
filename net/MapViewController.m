@@ -275,8 +275,6 @@ static int const MARKER_HIDING_RADIUS = 10;
     {
         [self.dataSorce requestSignOutWithHandler:^(NSString *stringAnswer, NSError *error) {
             dispatch_async(dispatch_get_main_queue(), ^{
-            [CurrentItems sharedItems].user = nil;
-            self.currentUser = nil;
 
             if([stringAnswer isEqualToString:[@"Bye " stringByAppendingString:self.currentUser.name]])
             {
@@ -301,6 +299,9 @@ static int const MARKER_HIDING_RADIUS = 10;
                 [alert show];
 
             }
+            [CurrentItems sharedItems].user = nil;
+            self.currentUser = nil;
+
             });
         }];
         
