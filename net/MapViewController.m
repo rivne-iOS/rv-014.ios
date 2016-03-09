@@ -275,14 +275,14 @@ static int const MARKER_HIDING_RADIUS = 10;
     {
         [self.dataSorce requestSignOutWithHandler:^(NSString *stringAnswer, NSError *error) {
             dispatch_async(dispatch_get_main_queue(), ^{
-            
+            [CurrentItems sharedItems].user = nil;
+            self.currentUser = nil;
+
             if([stringAnswer isEqualToString:[@"Bye " stringByAppendingString:self.currentUser.name]])
             {
                 // alert - good
                 self.navigationItem.rightBarButtonItem.title = @"Log In";
                 self.navigationItem.leftBarButtonItem = nil;
-                self.currentUser = nil;
-                [[NSUserDefaults standardUserDefaults] objectForKey:@"userDictionary"];
                 UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Log Out"
                                                                 message:@"You loged out successfully!"
                                                                delegate:nil
