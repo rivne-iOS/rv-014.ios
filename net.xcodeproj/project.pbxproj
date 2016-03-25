@@ -36,11 +36,11 @@
 		84E2CF401C77742D0032F444 /* AvatarView.m in Sources */ = {isa = PBXBuildFile; fileRef = 84E2CF3F1C77742D0032F444 /* AvatarView.m */; };
 		84E3347F1C4435E800BEE6BA /* MapViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 84E3347E1C4435E800BEE6BA /* MapViewController.m */; };
 		84E334821C4436B200BEE6BA /* SingUpViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 84E334811C4436B200BEE6BA /* SingUpViewController.m */; };
-		84E43F8D1CA5E2A400F1DF9E /* Model.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 84E43F8B1CA5E2A400F1DF9E /* Model.xcdatamodeld */; };
 		84E43F971CA5E60C00F1DF9E /* CDIssue+CoreDataProperties.m in Sources */ = {isa = PBXBuildFile; fileRef = 84E43F901CA5E60C00F1DF9E /* CDIssue+CoreDataProperties.m */; };
 		84E43F981CA5E60C00F1DF9E /* CDIssue.m in Sources */ = {isa = PBXBuildFile; fileRef = 84E43F921CA5E60C00F1DF9E /* CDIssue.m */; };
 		84E43F991CA5E60C00F1DF9E /* CDUser+CoreDataProperties.m in Sources */ = {isa = PBXBuildFile; fileRef = 84E43F941CA5E60C00F1DF9E /* CDUser+CoreDataProperties.m */; };
 		84E43F9A1CA5E60C00F1DF9E /* CDUser.m in Sources */ = {isa = PBXBuildFile; fileRef = 84E43F961CA5E60C00F1DF9E /* CDUser.m */; };
+		84E43F9D1CA5E85700F1DF9E /* Model.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 84E43F9B1CA5E85700F1DF9E /* Model.xcdatamodeld */; };
 		84E4C7BC1C8AF16600577215 /* Comic_Sans_MS_i.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 84E4C7BB1C8AF16600577215 /* Comic_Sans_MS_i.ttf */; };
 		84E7BF461C430AA600E66585 /* NetworkDataSorce.m in Sources */ = {isa = PBXBuildFile; fileRef = 84E7BF451C430AA600E66585 /* NetworkDataSorce.m */; };
 		CE8BAD001C6B39B4006951D7 /* ProfileViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = CE8BACFF1C6B39B4006951D7 /* ProfileViewController.m */; };
@@ -121,7 +121,6 @@
 		84E3347E1C4435E800BEE6BA /* MapViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MapViewController.m; sourceTree = "<group>"; };
 		84E334801C4436B200BEE6BA /* SingUpViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SingUpViewController.h; sourceTree = "<group>"; };
 		84E334811C4436B200BEE6BA /* SingUpViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SingUpViewController.m; sourceTree = "<group>"; };
-		84E43F8C1CA5E2A400F1DF9E /* Model.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = Model.xcdatamodel; sourceTree = "<group>"; };
 		84E43F8F1CA5E60C00F1DF9E /* CDIssue+CoreDataProperties.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "CDIssue+CoreDataProperties.h"; path = "model/coreData/CDIssue+CoreDataProperties.h"; sourceTree = "<group>"; };
 		84E43F901CA5E60C00F1DF9E /* CDIssue+CoreDataProperties.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "CDIssue+CoreDataProperties.m"; path = "model/coreData/CDIssue+CoreDataProperties.m"; sourceTree = "<group>"; };
 		84E43F911CA5E60C00F1DF9E /* CDIssue.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CDIssue.h; path = model/coreData/CDIssue.h; sourceTree = "<group>"; };
@@ -130,6 +129,7 @@
 		84E43F941CA5E60C00F1DF9E /* CDUser+CoreDataProperties.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "CDUser+CoreDataProperties.m"; path = "model/coreData/CDUser+CoreDataProperties.m"; sourceTree = "<group>"; };
 		84E43F951CA5E60C00F1DF9E /* CDUser.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CDUser.h; path = model/coreData/CDUser.h; sourceTree = "<group>"; };
 		84E43F961CA5E60C00F1DF9E /* CDUser.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = CDUser.m; path = model/coreData/CDUser.m; sourceTree = "<group>"; };
+		84E43F9C1CA5E85700F1DF9E /* Model.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = Model.xcdatamodel; sourceTree = "<group>"; };
 		84E4C7BB1C8AF16600577215 /* Comic_Sans_MS_i.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = Comic_Sans_MS_i.ttf; path = ressource/Comic_Sans_MS_i.ttf; sourceTree = "<group>"; };
 		84E7BF431C430A3700E66585 /* DataSorceProtocol.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = DataSorceProtocol.h; path = model/DataSorceProtocol.h; sourceTree = "<group>"; };
 		84E7BF441C430AA600E66585 /* NetworkDataSorce.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = NetworkDataSorce.h; path = model/NetworkDataSorce.h; sourceTree = "<group>"; };
@@ -320,7 +320,7 @@
 		84E43F8E1CA5E5EB00F1DF9E /* coreData */ = {
 			isa = PBXGroup;
 			children = (
-				84E43F8B1CA5E2A400F1DF9E /* Model.xcdatamodeld */,
+				84E43F9B1CA5E85700F1DF9E /* Model.xcdatamodeld */,
 				84E43F8F1CA5E60C00F1DF9E /* CDIssue+CoreDataProperties.h */,
 				84E43F901CA5E60C00F1DF9E /* CDIssue+CoreDataProperties.m */,
 				84E43F911CA5E60C00F1DF9E /* CDIssue.h */,
@@ -549,11 +549,11 @@
 				CEF2B6201C75D96700F4B2F5 /* UIViewController+backViewController.m in Sources */,
 				8460F99F1C3C651500ECB3A4 /* HTTPConnector.m in Sources */,
 				841429551C5FEEDE0092C0C5 /* Reachability.m in Sources */,
+				84E43F9D1CA5E85700F1DF9E /* Model.xcdatamodeld in Sources */,
 				8460F9731C3C531E00ECB3A4 /* AppDelegate.m in Sources */,
 				CEFEC2181C85DF0600822013 /* UIScrollView+getContentSize.m in Sources */,
 				CEC6F6351C5B6FB6002321AA /* CustomTableCell.m in Sources */,
 				845245A71C4E5923000755AC /* DescriptionViewController.m in Sources */,
-				84E43F8D1CA5E2A400F1DF9E /* Model.xcdatamodeld in Sources */,
 				8460F9A21C3C666100ECB3A4 /* Parser.m in Sources */,
 				84E43F971CA5E60C00F1DF9E /* CDIssue+CoreDataProperties.m in Sources */,
 				CEF2B61D1C74761000F4B2F5 /* UIView+Addition.m in Sources */,
@@ -784,13 +784,14 @@
 /* End XCConfigurationList section */
 
 /* Begin XCVersionGroup section */
-		84E43F8B1CA5E2A400F1DF9E /* Model.xcdatamodeld */ = {
+		84E43F9B1CA5E85700F1DF9E /* Model.xcdatamodeld */ = {
 			isa = XCVersionGroup;
 			children = (
-				84E43F8C1CA5E2A400F1DF9E /* Model.xcdatamodel */,
+				84E43F9C1CA5E85700F1DF9E /* Model.xcdatamodel */,
 			);
-			currentVersion = 84E43F8C1CA5E2A400F1DF9E /* Model.xcdatamodel */;
-			path = Model.xcdatamodeld;
+			currentVersion = 84E43F9C1CA5E85700F1DF9E /* Model.xcdatamodel */;
+			name = Model.xcdatamodeld;
+			path = model/coreData/Model.xcdatamodeld;
 			sourceTree = "<group>";
 			versionGroupType = wrapper.xcdatamodel;
 		};
