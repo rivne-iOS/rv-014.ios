@@ -51,11 +51,11 @@ typedef enum : NSUInteger {
 //@property (strong, nonatomic) NSNumber *PRIORITY_ID;
 //@property (strong, nonatomic) NSString *STATUS;
 
+@property (strong, nonatomic) NSNumber *issueId;
 @property (strong, nonatomic) NSString *attachments;
 @property (strong, nonatomic) NSString *categoryId;
 @property (strong, nonatomic) NSString *issueDescription;
 @property (strong, nonatomic) NSArray *history;
-@property (strong, nonatomic) NSNumber *issueId;
 @property (strong, nonatomic) NSString *mapPointer;
 //@property (strong, nonatomic) NSString *name;
 @property (strong, nonatomic) NSNumber *priorityId;
