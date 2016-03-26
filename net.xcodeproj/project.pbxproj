@@ -27,6 +27,7 @@
 		8460F99F1C3C651500ECB3A4 /* HTTPConnector.m in Sources */ = {isa = PBXBuildFile; fileRef = 8460F99E1C3C651500ECB3A4 /* HTTPConnector.m */; };
 		8460F9A21C3C666100ECB3A4 /* Parser.m in Sources */ = {isa = PBXBuildFile; fileRef = 8460F9A11C3C666100ECB3A4 /* Parser.m */; };
 		847595461C455C0F00E1BF87 /* Podfile in Resources */ = {isa = PBXBuildFile; fileRef = 847595451C455C0F00E1BF87 /* Podfile */; };
+		8483D63C1CA691D000782A61 /* CoreDataSorce.m in Sources */ = {isa = PBXBuildFile; fileRef = 8483D63B1CA691D000782A61 /* CoreDataSorce.m */; };
 		849930A01C5915E100EDBF5E /* IssueCategory.m in Sources */ = {isa = PBXBuildFile; fileRef = 8499309F1C5915E100EDBF5E /* IssueCategory.m */; };
 		849E9B1B1C709BB200DA527E /* CurrentItems.m in Sources */ = {isa = PBXBuildFile; fileRef = 849E9B1A1C709BB200DA527E /* CurrentItems.m */; };
 		84D93FC91C5A245800D4E96D /* IssueChangeStatus.m in Sources */ = {isa = PBXBuildFile; fileRef = 84D93FC81C5A245800D4E96D /* IssueChangeStatus.m */; };
@@ -103,6 +104,8 @@
 		8460F9A01C3C666100ECB3A4 /* Parser.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Parser.h; path = model/Parser.h; sourceTree = "<group>"; };
 		8460F9A11C3C666100ECB3A4 /* Parser.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = Parser.m; path = model/Parser.m; sourceTree = "<group>"; };
 		847595451C455C0F00E1BF87 /* Podfile */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = Podfile; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.ruby; };
+		8483D63A1CA691D000782A61 /* CoreDataSorce.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CoreDataSorce.h; path = model/coreData/CoreDataSorce.h; sourceTree = "<group>"; };
+		8483D63B1CA691D000782A61 /* CoreDataSorce.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = CoreDataSorce.m; path = model/coreData/CoreDataSorce.m; sourceTree = "<group>"; };
 		8499309E1C5915E100EDBF5E /* IssueCategory.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = IssueCategory.h; path = model/IssueCategory.h; sourceTree = "<group>"; };
 		8499309F1C5915E100EDBF5E /* IssueCategory.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = IssueCategory.m; path = model/IssueCategory.m; sourceTree = "<group>"; };
 		849E9B191C709BB200DA527E /* CurrentItems.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CurrentItems.h; path = model/CurrentItems.h; sourceTree = "<group>"; };
@@ -329,6 +332,8 @@
 				84E43F941CA5E60C00F1DF9E /* CDUser+CoreDataProperties.m */,
 				84E43F951CA5E60C00F1DF9E /* CDUser.h */,
 				84E43F961CA5E60C00F1DF9E /* CDUser.m */,
+				8483D63A1CA691D000782A61 /* CoreDataSorce.h */,
+				8483D63B1CA691D000782A61 /* CoreDataSorce.m */,
 			);
 			name = coreData;
 			sourceTree = "<group>";
@@ -569,6 +574,7 @@
 				84E2CF401C77742D0032F444 /* AvatarView.m in Sources */,
 				84E43F9A1CA5E60C00F1DF9E /* CDUser.m in Sources */,
 				84E43F991CA5E60C00F1DF9E /* CDUser+CoreDataProperties.m in Sources */,
+				8483D63C1CA691D000782A61 /* CoreDataSorce.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -715,14 +715,6 @@ static int const MARKER_HIDING_RADIUS = 10;
 
 -(NSDictionary *)getJsonFromAddingNewIssueView
 {
-    //    JSON example
-    //    {
-    //        "name": "Huge traffic jam",
-    //        "desc": "Many cars stucked in the long row.",
-    //        "point": "LatLng(50.55845, 26.3072)",
-    //        "status": "NEW",
-    //        "category": 3,
-    //    }
     NSArray *addIssueValues = [[NSArray alloc] initWithObjects:
                                self.nameTextField.text,
                                self.descriptionTextView.text,
@@ -783,39 +775,7 @@ static int const MARKER_HIDING_RADIUS = 10;
     }
 }
 
-//-(void)requestAddingAttachmentToIssue
-//{
-//    NSURL *url = [NSURL URLWithString:DOMAIN_NAME_ADD_ATTACHMENT];
-//    NSURLSessionConfiguration *config = [NSURLSessionConfiguration defaultSessionConfiguration];
-//    NSURLSession *session = [NSURLSession sessionWithConfiguration:config];
-//
-//    NSString *boundary = [self generateBoundaryString];
-//    
-//    // configure the request
-//    NSMutableURLRequest *request = [[NSMutableURLRequest alloc] initWithURL:url];
-//    [request setHTTPMethod:@"POST"];
-//    
-//    // set content type
-//    NSString *contentType = [NSString stringWithFormat:@"multipart/form-data; boundary=%@", boundary];
-//    [request setValue:contentType forHTTPHeaderField: @"Content-Type"];
-//    
-//    // create body
-//    NSData *httpBody = [self createBodyWithBoundary:boundary image:self.attachmentImage fieldName:@"file"];
-//    
-//    request.HTTPBody = httpBody;
-//    
-//    NSURLSessionTask *task = [session dataTaskWithRequest:request completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
-//        if (error) {
-//            NSLog(@"Error = %@", error);
-//            return;
-//        }
-//        
-//        NSDictionary *attachmentServerResponse = [NSJSONSerialization JSONObjectWithData:data options:0                                                                                                   error:NULL];
-//        self.attachmentFilename = attachmentServerResponse[@"filename"];
-//        [self requestAddingNewIssue:[self getJsonFromAddingNewIssueView]];
-//    }];
-//    [task resume];
-//}
+
 
 -(void)renewMap
 {
@@ -841,27 +801,6 @@ static int const MARKER_HIDING_RADIUS = 10;
 
 -(void)initializeImagePickerController
 {
-//    UIActivityIndicatorView *indicator = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleWhiteLarge];
-//    [self.addingIssueView addSubview:indicator];
-//    indicator.translatesAutoresizingMaskIntoConstraints = NO;
-//    [self.addingIssueView addConstraint:[NSLayoutConstraint constraintWithItem:indicator
-//                                                                     attribute:NSLayoutAttributeCenterX
-//                                                                     relatedBy:NSLayoutRelationEqual
-//                                                                        toItem:self.addingIssueView
-//                                                                     attribute:NSLayoutAttributeCenterX
-//                                                                    multiplier:1.0
-//                                                                      constant:0.0]];
-//    [self.addingIssueView addConstraint:[NSLayoutConstraint constraintWithItem:indicator
-//                                                                     attribute:NSLayoutAttributeCenterY
-//                                                                     relatedBy:NSLayoutRelationEqual
-//                                                                        toItem:self.addingIssueView
-//                                                                     attribute:NSLayoutAttributeCenterY
-//                                                                    multiplier:1.0
-//                                                                      constant:0.0]];
-//    indicator.color = [UIColor blackColor];
-//    [self.addingIssueView layoutIfNeeded];
-//    [self.view bringSubviewToFront:indicator];
-    
     UIImagePickerController *imagePickerController = [[UIImagePickerController alloc] init];
     imagePickerController.sourceType = UIImagePickerControllerSourceTypePhotoLibrary;
     imagePickerController.delegate = self;
@@ -914,30 +853,6 @@ static int const MARKER_HIDING_RADIUS = 10;
     [alert show];
 }
 
-//-(NSData *)createBodyWithBoundary:(NSString *)boundary
-//                            image:(UIImage *)image
-//                        fieldName:(NSString *)fieldName
-//{
-//    NSMutableData *httpBody = [NSMutableData data];
-//    
-//    NSData *data = UIImageJPEGRepresentation(image, 1.0);
-//    
-//    [httpBody appendData:[[NSString stringWithFormat:@"--%@\r\n", boundary] dataUsingEncoding:NSUTF8StringEncoding]];
-//    [httpBody appendData:[[NSString stringWithFormat:@"Content-Disposition: form-data; name=\"%@\"; filename=\"%@\"\r\n", fieldName, @"image_name.jpg"] dataUsingEncoding:NSUTF8StringEncoding]];
-//    [httpBody appendData:[[NSString stringWithFormat:@"Content-Type: %@\r\n\r\n", @"image/jpeg"] dataUsingEncoding:NSUTF8StringEncoding]];
-//    [httpBody appendData:data];
-//    [httpBody appendData:[@"\r\n" dataUsingEncoding:NSUTF8StringEncoding]];
-//    
-//    [httpBody appendData:[[NSString stringWithFormat:@"--%@--\r\n", boundary] dataUsingEncoding:NSUTF8StringEncoding]];
-//    
-//    return httpBody;
-//}
-//
-//- (NSString *)generateBoundaryString
-//{
-//    return [NSString stringWithFormat:@"Boundary-%@", [[NSUUID UUID] UUIDString]];
-//
-//}
 
 -(void)clearAllFields
 {
@@ -1066,7 +981,6 @@ static int const MARKER_HIDING_RADIUS = 10;
                 self.tapLocationLabel.text = [self.tapLocationLabel.text stringByAppendingFormat:@"Location of issue:\n%@, %@", regionName, streetName];
             else
                 self.tapLocationLabel.text = [self.tapLocationLabel.text stringByAppendingFormat:@"Location of issue:\n%@", regionName];
-//            [self fixDescriptionTextViewHeight];
         } else {
             NSLog(@"No place details for %@", placeId);
         }

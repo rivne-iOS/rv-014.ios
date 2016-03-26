@@ -32,8 +32,8 @@
 @property(strong, nonatomic) UIImage *issueImage;
 @property(strong, nonatomic) NSMutableArray<id<UserImageDelegate>> *userImageDelegates;
 @property(strong, nonatomic) NSMutableArray<id<IssueImageDelegate>> *issueImageDelegates;
-
-
+@property(strong, nonatomic) UIManagedDocument *managedDocument;
+@property(strong, nonatomic) NSManagedObjectContext *managedObjectContext;
 
 +(instancetype)alloc __attribute__((unavailable("not available, use sharedItems")));
 -(instancetype)init __attribute__((unavailable("not available, use sharedItems")));
@@ -47,6 +47,8 @@
 
 -(void)setUser:(User *)user;
 -(void)setIssue:(Issue *)issue;
+
+-(void)startInitManagedObjectcontext;
 
 
 @end
