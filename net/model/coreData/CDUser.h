@@ -8,12 +8,16 @@
 
 #import <Foundation/Foundation.h>
 #import <CoreData/CoreData.h>
+#import "User.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
 @interface CDUser : NSManagedObject
 
-// Insert code here to declare functionality of your managed object subclass
++(CDUser*)syncFromUser:(User*)user withContext:(NSManagedObjectContext*)context;
++(void)suncFromUsers:(NSArray<User*>*)users withContext:(NSManagedObjectContext*)context;
+
+
 
 @end
 
