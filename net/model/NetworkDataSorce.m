@@ -11,6 +11,8 @@
 #import "User.h"
 #import "Issue.h"
 #import "Parser.h"
+#import "CurrentItems.h"
+#import "CDUser.h"
 
 #import <CoreText/CTFontManager.h>
 
@@ -69,6 +71,11 @@
                 {
                     User *u = [[User alloc] initWitDictionary:userDic];
                     [users addObject:u];
+                }
+                CurrentItems *ci = [CurrentItems sharedItems];
+                if (ci.managedObjectContext != nil)
+                {
+                    [CDUser syncFromUsers:users withContext:ci.managedObjectContext];
                 }
             }
             
@@ -216,6 +223,11 @@
                              [userDic setObject:@"defaultUser" forKey:@"AVATAR"];
                              [[NSUserDefaults standardUserDefaults] setObject:userDic forKey:@"userDictionary"];
                              user = [[User alloc] initWitDictionary:userDic];
+                             CurrentItems *ci = [CurrentItems sharedItems];
+                             if(ci.managedObjectContext != nil)
+                             {
+                                 [CDUser syncFromUser:user withContext:ci.managedObjectContext];
+                             }
                          }
                      }
                      viewControllerHandler(user, error);

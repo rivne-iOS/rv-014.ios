@@ -17,6 +17,8 @@
 #import "IssueCategories.h"
 #import "DescriptionViewController.h"
 #import "UIColor+Bawl.h"
+#import "NotificationsNames.h"
+
 @import MobileCoreServices;
 
 #define TEXTFIELD_OFFSET 5
@@ -90,11 +92,12 @@ static int const MARKER_HIDING_RADIUS = 10;
     [self addBorderColor];
     [self customiseProgressBarView];
     [IssueCategories earlyPreparing];
+    [[CurrentItems sharedItems] startInitManagedObjectcontext];
     [self requestCategories];
     
 }
 
--(void)addKeyboardObserver
+-(void)addObservers
 {
     [[NSNotificationCenter defaultCenter] addObserver:self
                                              selector:@selector(keyboardDidShow:)
@@ -105,17 +108,19 @@ static int const MARKER_HIDING_RADIUS = 10;
                                              selector:@selector(keyboardWillHide)
                                                  name:UIKeyboardWillHideNotification
                                                object:nil];
+    [[NSNotificationCenter defaultCenter] addObserverForName:ManagedObjectDidInitNotification
+                                                      object:nil
+                                                       queue:[NSOperationQueue mainQueue]
+                                                  usingBlock:^(NSNotification * _Nonnull note) {
+                                                      [self showAlert:@"ManagedObjectContext" withMessage:@"ManagedObjectContext is inited"];
+                                                  }];
+    
 }
 
--(void)removeKeyboardObserver
+-(void)removeObservers
 {
-    [[NSNotificationCenter defaultCenter] removeObserver:self
-                                                    name:UIKeyboardDidShowNotification
-                                                  object:nil];
-    
-    [[NSNotificationCenter defaultCenter] removeObserver:self
-                                                    name:UIKeyboardWillHideNotification
-                                                  object:nil];
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
+
 }
 
 -(void)keyboardDidShow:(NSNotification*)notification
@@ -195,7 +200,7 @@ static int const MARKER_HIDING_RADIUS = 10;
 
 -(void)viewWillAppear:(BOOL)animated
 {
-    [self addKeyboardObserver];
+    [self addObservers];
     [self.geolocationButton setHidden:NO];
     
     if(self.currentUser==nil)
@@ -240,7 +245,7 @@ static int const MARKER_HIDING_RADIUS = 10;
 
 -(void)viewWillDisappear:(BOOL)animated
 {
-    [self removeKeyboardObserver];
+    [self removeObservers];
     [self.timerForMapRenew invalidate];
 }
 

@@ -112,6 +112,7 @@
 		849E9B1A1C709BB200DA527E /* CurrentItems.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = CurrentItems.m; path = model/CurrentItems.m; sourceTree = "<group>"; };
 		84D93FC71C5A245800D4E96D /* IssueChangeStatus.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = IssueChangeStatus.h; path = model/IssueChangeStatus.h; sourceTree = "<group>"; };
 		84D93FC81C5A245800D4E96D /* IssueChangeStatus.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = IssueChangeStatus.m; path = model/IssueChangeStatus.m; sourceTree = "<group>"; };
+		84DBF3E21CA80307001D1EAC /* NotificationsNames.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NotificationsNames.h; sourceTree = "<group>"; };
 		84E19B1F1C4C131E00AABD7D /* TextFieldValidation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TextFieldValidation.h; path = model/TextFieldValidation.h; sourceTree = "<group>"; };
 		84E19B201C4C131E00AABD7D /* TextFieldValidation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = TextFieldValidation.m; path = model/TextFieldValidation.m; sourceTree = "<group>"; };
 		84E2CF0F1C766E5C0032F444 /* Comment.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Comment.h; path = model/Comment.h; sourceTree = "<group>"; };
@@ -280,7 +281,60 @@
 		8460F9961C3C5C0000ECB3A4 /* model */ = {
 			isa = PBXGroup;
 			children = (
+				84DBF3E21CA80307001D1EAC /* NotificationsNames.h */,
 				84E43F8E1CA5E5EB00F1DF9E /* coreData */,
+				84DBF3E11CA80270001D1EAC /* base elements */,
+				84DBF3DE1CA801EF001D1EAC /* UI */,
+				84DBF3DF1CA80205001D1EAC /* singleton */,
+				84DBF3E01CA80258001D1EAC /* category */,
+			);
+			name = model;
+			sourceTree = "<group>";
+		};
+		84DBF3DE1CA801EF001D1EAC /* UI */ = {
+			isa = PBXGroup;
+			children = (
+				84E2CF0F1C766E5C0032F444 /* Comment.h */,
+				84E2CF101C766E5C0032F444 /* Comment.m */,
+				84E19B1F1C4C131E00AABD7D /* TextFieldValidation.h */,
+				84E19B201C4C131E00AABD7D /* TextFieldValidation.m */,
+				84D93FC71C5A245800D4E96D /* IssueChangeStatus.h */,
+				84D93FC81C5A245800D4E96D /* IssueChangeStatus.m */,
+			);
+			name = UI;
+			sourceTree = "<group>";
+		};
+		84DBF3DF1CA80205001D1EAC /* singleton */ = {
+			isa = PBXGroup;
+			children = (
+				849E9B191C709BB200DA527E /* CurrentItems.h */,
+				849E9B1A1C709BB200DA527E /* CurrentItems.m */,
+				84378ACC1C75C3640063CC0F /* IssueCategories.h */,
+				84378ACD1C75C3640063CC0F /* IssueCategories.m */,
+			);
+			name = singleton;
+			sourceTree = "<group>";
+		};
+		84DBF3E01CA80258001D1EAC /* category */ = {
+			isa = PBXGroup;
+			children = (
+				CEF2B61B1C74761000F4B2F5 /* UIView+Addition.h */,
+				CEF2B61C1C74761000F4B2F5 /* UIView+Addition.m */,
+				CEF2B61E1C75D96700F4B2F5 /* UIViewController+backViewController.h */,
+				CEF2B61F1C75D96700F4B2F5 /* UIViewController+backViewController.m */,
+				CEF2B6211C771BAB00F4B2F5 /* NSString+stringIsEmpry.h */,
+				CEF2B6221C771BAB00F4B2F5 /* NSString+stringIsEmpry.m */,
+				CECCC9091C8058F800CD3228 /* NSMutableArray+isEmpty.h */,
+				CECCC90A1C8058F800CD3228 /* NSMutableArray+isEmpty.m */,
+				CEFEC2161C85DF0600822013 /* UIScrollView+getContentSize.h */,
+				CEFEC2171C85DF0600822013 /* UIScrollView+getContentSize.m */,
+			);
+			name = category;
+			sourceTree = "<group>";
+		};
+		84DBF3E11CA80270001D1EAC /* base elements */ = {
+			isa = PBXGroup;
+			children = (
 				8460F9931C3C537900ECB3A4 /* User.h */,
 				8460F9941C3C537900ECB3A4 /* User.m */,
 				8460F9971C3C5C3B00ECB3A4 /* Issue.h */,
@@ -294,30 +348,10 @@
 				84E7BF431C430A3700E66585 /* DataSorceProtocol.h */,
 				84E7BF441C430AA600E66585 /* NetworkDataSorce.h */,
 				84E7BF451C430AA600E66585 /* NetworkDataSorce.m */,
-				84E19B1F1C4C131E00AABD7D /* TextFieldValidation.h */,
-				84E19B201C4C131E00AABD7D /* TextFieldValidation.m */,
-				84D93FC71C5A245800D4E96D /* IssueChangeStatus.h */,
-				84D93FC81C5A245800D4E96D /* IssueChangeStatus.m */,
 				8499309E1C5915E100EDBF5E /* IssueCategory.h */,
 				8499309F1C5915E100EDBF5E /* IssueCategory.m */,
-				849E9B191C709BB200DA527E /* CurrentItems.h */,
-				849E9B1A1C709BB200DA527E /* CurrentItems.m */,
-				84378ACC1C75C3640063CC0F /* IssueCategories.h */,
-				84378ACD1C75C3640063CC0F /* IssueCategories.m */,
-				84E2CF0F1C766E5C0032F444 /* Comment.h */,
-				84E2CF101C766E5C0032F444 /* Comment.m */,
-				CEF2B61B1C74761000F4B2F5 /* UIView+Addition.h */,
-				CEF2B61C1C74761000F4B2F5 /* UIView+Addition.m */,
-				CEF2B61E1C75D96700F4B2F5 /* UIViewController+backViewController.h */,
-				CEF2B61F1C75D96700F4B2F5 /* UIViewController+backViewController.m */,
-				CEF2B6211C771BAB00F4B2F5 /* NSString+stringIsEmpry.h */,
-				CEF2B6221C771BAB00F4B2F5 /* NSString+stringIsEmpry.m */,
-				CECCC9091C8058F800CD3228 /* NSMutableArray+isEmpty.h */,
-				CECCC90A1C8058F800CD3228 /* NSMutableArray+isEmpty.m */,
-				CEFEC2161C85DF0600822013 /* UIScrollView+getContentSize.h */,
-				CEFEC2171C85DF0600822013 /* UIScrollView+getContentSize.m */,
 			);
-			name = model;
+			name = "base elements";
 			sourceTree = "<group>";
 		};
 		84E43F8E1CA5E5EB00F1DF9E /* coreData */ = {

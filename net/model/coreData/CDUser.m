@@ -33,7 +33,7 @@
 {
     CDUser *cdUser = nil;
     
-    NSPredicate *predicate = [NSPredicate predicateWithFormat:@"userId = @%", user.userId];
+    NSPredicate *predicate = [NSPredicate predicateWithFormat:@"userId = %d", user.userId];
     NSFetchRequest *request = [[NSFetchRequest alloc] initWithEntityName:@"CDUser"];
     request.predicate = predicate;
     NSError *error= nil;
@@ -52,7 +52,15 @@
         // add new user
         cdUser = [NSEntityDescription insertNewObjectForEntityForName:@"CDUser"
                                       inManagedObjectContext:context];
+        cdUser.userId = [NSNumber numberWithInteger:user.userId];
+        cdUser.name = user.name;
+        cdUser.login = user.login;
+        cdUser.email = user.email;
+        cdUser.avatarString = user.avatar;
+        
+        
         [CDUser updateAvatarforCDUser:cdUser];
+        NSLog(@"Add new user to CD");
     }
     else
     {
@@ -69,6 +77,7 @@
             cdUser.avatarString = user.avatar;
             [CDUser updateAvatarforCDUser:cdUser];
         }
+        NSLog(@"Update user with CD");
         
     }
     
@@ -85,20 +94,25 @@
              NSUInteger pos = cdUser.avatarString.length-3;
              NSRange range = NSMakeRange(pos, 3);
              NSString *fileExtension = [cdUser.avatarString substringWithRange:range];
-             if ([fileExtension isEqualToString:@"png"])
+             if ([fileExtension isEqualToString:@"png"] || [cdUser.avatarString isEqualToString:@"defaultUser"])
              {
                  cdUser.avatarData = UIImagePNGRepresentation(image);
+                 NSLog(@"Update user avadtar in CD (png) for avatar: %@", cdUser.avatarString);
              }
              else if ([fileExtension isEqualToString:@"jpg"])
              {
                  cdUser.avatarData = UIImageJPEGRepresentation(image, 1.0);
+                 NSLog(@"Update user avadtar in CD (jpg) for avatar: %@", cdUser.avatarString	);
+
              }
              else
              {
                  dispatch_async(dispatch_get_main_queue(), ^{
-                     UIAlertView *alert = [[UIAlertView alloc] init];
-                     alert.title = @"Error in updateAvatarforCDUser";
-                     alert.message = [NSString stringWithFormat:@"file name is - %@", cdUser.avatarString];
+                     UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error in updateAvatarforCDUser"
+                                                                     message:[NSString stringWithFormat:@"file name is - %@", cdUser.avatarString]
+                                                                    delegate:nil
+                                                           cancelButtonTitle:@"OK"
+                                                           otherButtonTitles:nil];
                      [alert show];
                  });
              }
@@ -109,7 +123,7 @@
 
 
 
-+(void)suncFromUsers:(NSArray<User*>*)users withContext:(NSManagedObjectContext*)context
++(void)syncFromUsers:(NSArray<User*>*)users withContext:(NSManagedObjectContext*)context
 {
     for (User * user in users)
     {

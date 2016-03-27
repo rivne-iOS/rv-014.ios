@@ -8,7 +8,7 @@
 
 #import "CurrentItems.h"
 #import "NetworkDataSorce.h"
-
+#import "NotificationsNames.h"
 
 
 
@@ -16,6 +16,8 @@
 
 @property(strong, nonatomic) id<DataSorceProtocol> dataSorce;
 @property(strong, nonatomic) NSURL* fullURLforUIManagedDocument;
+
+@property(nonatomic) BOOL isInitManagedObjectcontextStarted;
 
 @end
 
@@ -55,13 +57,15 @@
 
 -(NSManagedObjectContext*)managedObjectContext
 {
-    if (_managedObjectContext==nil)
-       [self startInitManagedObjectcontext];
+    if (_managedObjectContext==nil && !self.isInitManagedObjectcontextStarted)
+        [self startInitManagedObjectcontext];
     return _managedObjectContext;
 }
 
 -(void)startInitManagedObjectcontext
 {
+    self.isInitManagedObjectcontextStarted = YES;
+    
     // if it already inited - we do nothing
     if (self.managedObjectContext!=nil)
         return;
@@ -93,7 +97,9 @@
     {
         if (self.managedDocument.documentState == UIDocumentStateNormal)
         {
+
             self.managedObjectContext = self.managedDocument.managedObjectContext;
+            [[NSNotificationCenter defaultCenter] postNotificationName:ManagedObjectDidInitNotification object:self];
         }
         else
         {
@@ -142,6 +148,7 @@
     {
         _userImageDelegates = [[NSMutableArray alloc] init];
         _issueImageDelegates = [[NSMutableArray alloc] init];
+        _isInitManagedObjectcontextStarted = NO;
     }
     return self;
 }
