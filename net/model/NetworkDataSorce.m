@@ -59,7 +59,7 @@
         NSMutableArray <User*> *users = nil;
         if(data.length>0 && error==nil)
         {
-            userDics= [NSJSONSerialization JSONObjectWithData:data options:0 error:NULL];
+            userDics= [NSJSONSerialization JSONObjectWithData:data options:0 error:&error];
             if (![userDics isKindOfClass:[NSArray class]] || error != nil)
             {
                 userDics=nil;
@@ -85,6 +85,34 @@
     }];
 }
 
+-(void)requestAllIssues:(void (^)(NSArray <Issue *> *issues, NSError *error))handler
+{
+    HTTPConnector *connector = [[HTTPConnector alloc] init];
+    [connector requestIssues:^(NSData *data, NSError *error) {
+        
+        NSArray <NSDictionary*> *issueDics = nil;
+        NSMutableArray <Issue*> *issues = nil;
+        
+        if(data.length>0 && error == nil)
+        {
+            issueDics = [NSJSONSerialization JSONObjectWithData:data options:0 error:&error];
+            if(![issueDics isKindOfClass:[NSArray class]] || error!=nil)
+            {
+                issueDics=nil;
+            }
+            else
+            {
+                issues = [[NSMutableArray alloc] init];
+                for (NSDictionary *issueDic in issueDics)
+                {
+                    Issue *i = [[Issue alloc] initWithDictionary:issueDic];
+                    [issues addObject:i];
+                }
+            }
+        }
+        handler(issues, error);
+    }];
+}
 
 
 -(void)requestCommentsWithIssueID:(NSNumber*)issueID

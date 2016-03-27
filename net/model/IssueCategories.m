@@ -9,6 +9,7 @@
 #import "IssueCategories.h"
 #import "NetworkDataSorce.h"
 #import "CurrentItems.h"
+#import "NotificationsNames.h"
 
 static IssueCategories *standartCategories_ = nil;
 
@@ -20,7 +21,13 @@ static IssueCategories *standartCategories_ = nil;
     {
         id<DataSorceProtocol> dataSorce = [[NetworkDataSorce alloc] init];
         [dataSorce requestCategories:^(NSArray<IssueCategory *> *issueCategories, NSError *error) {
-            _categories = issueCategories;
+            if (issueCategories != nil)
+            {
+                _categories = issueCategories;
+                [[NSNotificationCenter defaultCenter] postNotificationName:IssueCategoriesDidLoadNotification object:self];
+            }
+            
+            
         }];
     }
     return self;

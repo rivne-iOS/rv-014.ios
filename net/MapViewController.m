@@ -93,7 +93,6 @@ static int const MARKER_HIDING_RADIUS = 10;
     [self customiseProgressBarView];
     [IssueCategories earlyPreparing];
     [[CurrentItems sharedItems] startInitManagedObjectcontext];
-    [self requestCategories];
     
 }
 
@@ -113,6 +112,12 @@ static int const MARKER_HIDING_RADIUS = 10;
                                                        queue:[NSOperationQueue mainQueue]
                                                   usingBlock:^(NSNotification * _Nonnull note) {
                                                       [self showAlert:@"ManagedObjectContext" withMessage:@"ManagedObjectContext is inited"];
+                                                  }];
+    [[NSNotificationCenter defaultCenter] addObserverForName:IssueCategoriesDidLoadNotification
+                                                      object:nil
+                                                       queue:[NSOperationQueue mainQueue]
+                                                  usingBlock:^(NSNotification * _Nonnull note) {
+                                                     [self.categoryPicker reloadAllComponents];
                                                   }];
     
 }
@@ -335,54 +340,46 @@ static int const MARKER_HIDING_RADIUS = 10;
 #pragma mark Requests
 -(void)requestIssues
 {
-        NSURL *url = [NSURL URLWithString:DOMAIN_NAME_ALL_ISSUES];
-        NSURLRequest *request = [NSURLRequest requestWithURL:url];
-    
-        [[[NSURLSession sharedSession]dataTaskWithRequest:request
-                                        completionHandler:^(NSData * _Nullable data, NSURLResponse * _Nullable response, NSError * _Nullable connectionError) {
-                                            if (data.length > 0 && connectionError == nil){
-                                        
-                                                NSArray *issuesDictionaryArray = [NSJSONSerialization JSONObjectWithData:data options:0                                                                                                    error:NULL];
-                                                
-                                                NSMutableArray <Issue*> *issuesClassArray = [[NSMutableArray alloc] init];
-                                                for (NSDictionary *issue in issuesDictionaryArray) {
-                                                    [issuesClassArray addObject:[[Issue alloc] initWithDictionary:issue]];
-                                                }
-                                                
-                                                dispatch_async(dispatch_get_main_queue(), ^{
-                                                    
-                                                    [self.mapView clear];
-                                                    [self.arrayOfMarkers removeAllObjects];
-                                                    
-                                                    self.arrayOfMarkers = [[NSMutableArray alloc] init];
-                                                    for (Issue *issue in issuesClassArray) {
-                                                        if ([issue.status isEqualToString:@"TO_RESOLVE"] || [issue.status isEqualToString:@"APPROVED"]
-                                                            || (self.currentUser.role==ADMIN || self.currentUser.role==MANAGER)
-                                                            ){
-                                                            GMSMarker *marker = [[GMSMarker alloc] init];
-                                                            marker.position = CLLocationCoordinate2DMake(issue.getLatitude, issue.getLongitude);
-                                                            marker.userData = issue;
-                                                            marker.title = issue.name;
-                                                            marker.icon = [self changeIconColor:issue];
-                                                            marker.map = self.mapView;
-                                                            
-                                                            [self.arrayOfMarkers addObject:marker];
-                                                        }
-                                                    }
-                                                    [self optimizeUIByHidingMarkers];
-                                                    [self selectCurrentMarker];
-                                                });
-                                            } else {
-                                                dispatch_async(dispatch_get_main_queue(), ^{
-                                                    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Attention!"
-                                                                                                    message:@"Troubles with connection!"
-                                                                                                   delegate:nil
-                                                                                          cancelButtonTitle:@"OK"
-                                                                                          otherButtonTitles:nil];
-                                                    [alert show];
-                                                });
-                                            }
-                                        }] resume];
+    [self.dataSorce requestAllIssues:^(NSArray<Issue *> *issues, NSError *error) {
+       if (issues!=nil)
+       {
+           dispatch_async(dispatch_get_main_queue(), ^{
+               
+               [self.mapView clear];
+               [self.arrayOfMarkers removeAllObjects];
+               
+               self.arrayOfMarkers = [[NSMutableArray alloc] init];
+               for (Issue *issue in issues) {
+                   if ([issue.status isEqualToString:@"TO_RESOLVE"] || [issue.status isEqualToString:@"APPROVED"]
+                       || (self.currentUser.role==ADMIN || self.currentUser.role==MANAGER)
+                       ){
+                       GMSMarker *marker = [[GMSMarker alloc] init];
+                       marker.position = CLLocationCoordinate2DMake(issue.getLatitude, issue.getLongitude);
+                       marker.userData = issue;
+                       marker.title = issue.name;
+                       marker.icon = [self changeIconColor:issue];
+                       marker.map = self.mapView;
+                       
+                       [self.arrayOfMarkers addObject:marker];
+                   }
+               }
+               [self optimizeUIByHidingMarkers];
+               [self selectCurrentMarker];
+           });
+       }
+       else
+       {
+           dispatch_async(dispatch_get_main_queue(), ^{
+               UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Attention!"
+                                                               message:@"Troubles with connection!"
+                                                              delegate:nil
+                                                     cancelButtonTitle:@"OK"
+                                                     otherButtonTitles:nil];
+               [alert show];
+           });
+ 
+       }
+    }];
 }
 
 -(BOOL)mapView:(GMSMapView *)mapView didTapMarker:(GMSMarker *)marker
@@ -553,9 +550,6 @@ static int const MARKER_HIDING_RADIUS = 10;
         UINavigationController *destController = (UINavigationController *)viewController;
         [destController popToRootViewControllerAnimated:NO];
         IssueHistoryViewController *issueHistoryViewController = (IssueHistoryViewController *)destController.topViewController;
-//        issueHistoryViewController.title = self.title;
-//        issueHistoryViewController.isLogged = self.userLogined;
-//        issueHistoryViewController.dataSorce = self.dataSorce;
         issueHistoryViewController.mapDelegate = self;
     }
     return YES;
@@ -642,35 +636,14 @@ static int const MARKER_HIDING_RADIUS = 10;
 
 - (NSInteger)pickerView:(UIPickerView *)pickerView numberOfRowsInComponent:(NSInteger)component
 {
-    return self.categoryClassArray.count;
+    return [[[IssueCategories standartCategories] categories] count] ;
 }
 
 - (NSString*)pickerView:(UIPickerView *)pickerView titleForRow:(NSInteger)row forComponent:(NSInteger)component
 {
-    return [self.categoryClassArray[row] name];
-}
-
--(void)requestCategories
-{
-    NSURL *url = [NSURL URLWithString:DOMAIN_NAME_ALL_CATEGORIES];
-    NSURLRequest *request = [NSURLRequest requestWithURL:url];
-    [[[NSURLSession sharedSession]dataTaskWithRequest:request
-                                    completionHandler:^(NSData * _Nullable data, NSURLResponse * _Nullable response, NSError * _Nullable connectionError) {
-                                        if (data.length > 0 && connectionError == nil)
-                                        {
-                                            NSArray *categoryDictionaryArray = [NSJSONSerialization JSONObjectWithData:data options:0                                                                                                   error:NULL];
-                                            
-                                            self.categoryClassArray = [[NSMutableArray alloc] init];
-                                            
-                                            for (NSDictionary *category in categoryDictionaryArray) {
-                                                [self.categoryClassArray addObject:[[IssueCategory alloc] initWithDictionary:category]];
-                                            }
-                                            
-                                            dispatch_async(dispatch_get_main_queue(), ^{
-                                                [self.categoryPicker reloadAllComponents];
-                                            }
-                                                           );}
-                                    }] resume];
+    
+    NSArray * categories = [[IssueCategories standartCategories] categories];
+    return [categories[row] name];
 }
 
 -(void)addBorderColor

@@ -11,5 +11,7 @@
 
 
 #define ManagedObjectDidInitNotification @"ManagedObjectDdidInitNotification"
+#define IssueCategoriesDidLoadNotification @"IssueCategoriesDidLoadNotification" 
+
 
 #endif /* NotificationsNames_h */

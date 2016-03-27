@@ -20,6 +20,7 @@
 -(void)requestCategories:(void (^)(NSArray<IssueCategory*> * issueCategories, NSError *error))viewControllerHandler;
 
 -(void)requestAllUsers:(void (^)(NSArray <User *> *users, NSError *error))handler;
+-(void)requestAllIssues:(void (^)(NSArray <Issue *> *issues, NSError *error))handler;
 
 
 -(void)requestCommentsWithIssueID:(NSNumber*)issueID

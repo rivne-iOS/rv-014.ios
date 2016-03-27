@@ -11,7 +11,7 @@
 
 @property(strong, nonatomic)NSString *globalURL;
 @property(strong, nonatomic)NSString *allPersURL;
-@property(strong, nonatomic)NSString *allPointsURL;
+@property(strong, nonatomic)NSString *allIssues;
 @property(strong, nonatomic)NSString *userLogIn;
 @property(strong, nonatomic)NSString *userSingUp;
 @property(strong, nonatomic)NSString *userSignOut;
@@ -47,7 +47,7 @@
     {
         _globalURL = @"https://bawl-rivne.rhcloud.com/";
         _allPersURL = @"users/all";
-        _allPointsURL = @"issue/all";
+        _allIssues = @"issue/all";
         _userLogIn = @"users/auth/login";
         _userSingUp = @"users";
         _userSignOut = @"users/auth/logout";
@@ -63,6 +63,10 @@
     return self;
 }
 
+-(void)requestIssues:(void(^)(NSData *data, NSError *error))dataSorceHandler
+{
+    [self getRequestBlankToUrl:[self.globalURL stringByAppendingString:self.allIssues] andHandler:dataSorceHandler];
+}
 
 
 -(void)requestUsers:(void(^)(NSData* data, NSError *error))dataSorceHandler
